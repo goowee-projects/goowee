@@ -61,5 +61,4 @@ signing {
 
     useInMemoryPgpKeys(key, pass)
     sign publishing.publications.mavenJava
-    sign configurations.runtimeElements
 }

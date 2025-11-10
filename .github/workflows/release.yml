@@ -36,14 +36,18 @@ jobs:
           git commit -m "${VERSION}" || echo "No changes"
           git push origin release/${VERSION}
 
-      - name: Build and publish
+      - name: Build
+        run: |
+          ./gradlew clean build
+
+      - name: Publish to Maven Central (Sonatype)
         env:
           SONATYPE_USERNAME: ${{ secrets.SONATYPE_USERNAME }}
           SONATYPE_PASSWORD: ${{ secrets.SONATYPE_PASSWORD }}
           GPG_PRIVATE_KEY: ${{ secrets.GPG_PRIVATE_KEY }}
           GPG_PASSPHRASE: ${{ secrets.GPG_PASSPHRASE }}
         run: |
-          ./gradlew clean build publishToSonatype closeAndReleaseSonatypeStagingRepository
+          ./gradlew publishToSonatype closeAndReleaseSonatypeStagingRepository
 
       - name: Generate changelog
         id: changelog

@@ -59,6 +59,11 @@ signing {
     def key = System.getenv("GPG_PRIVATE_KEY")
     def pass = System.getenv("GPG_PASSPHRASE")
 
-    useInMemoryPgpKeys(key, pass)
-    sign publishing.publications.mavenJava
+    if (key && pass) {
+        useInMemoryPgpKeys(key, pass)
+        sign publishing.publications.mavenJava
+
+    } else {
+        logger.lifecycle("GPG keys not found — skipping signing (probably local build)")
+    }
 }

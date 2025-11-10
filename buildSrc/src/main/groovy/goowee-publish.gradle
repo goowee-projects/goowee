@@ -56,9 +56,10 @@ publishing {
 }
 
 signing {
+    useInMemoryPgpKeys(
+            System.getenv("GOOWEE_PRIVATE_KEY"),
+            System.getenv("GOOWEE_KEYCHAIN_PASSWORD")
+    )
     sign publishing.publications.mavenJava
     sign configurations.runtimeElements
-
-    // Send the Goowee public key to a public server for Maven Central to work
-    // gpg --keyserver keyserver.ubuntu.com --send-keys 320BDF4E3F5990F2F3AE8DC93470E26E4FB7C68E
 }

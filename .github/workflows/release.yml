@@ -38,7 +38,7 @@ jobs:
 
       - name: Import GPG key
         run: |
-          echo "${{ secrets.GOOWEE_PRIVATE_KEY }}" | base64 --decode > private.key
+          echo "${{ secrets.GPG_PRIVATE_KEY }}" | base64 --decode > private.key
           gpg --batch --import private.key
           rm private.key
 

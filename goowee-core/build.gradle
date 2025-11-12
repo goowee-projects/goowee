@@ -5,12 +5,6 @@ plugins {
 dependencies {
     api project(":commons-utils")
 
-    // Apache HttpClient 5
-    api 'org.apache.httpcomponents.client5:httpclient5'
-    implementation 'org.apache.httpcomponents.client5:httpclient5-fluent'
-    implementation 'org.apache.httpcomponents.core5:httpcore5'
-    implementation 'org.apache.httpcomponents.core5:httpcore5-h2'
-
     // Security (to use the @Secured annotation)
     api "org.apache.grails:grails-spring-security:7.0.0"
 

@@ -12,11 +12,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.http
+package goowee.commons.http
 
 import groovy.json.JsonOutput
 import groovy.json.JsonSlurper
-import org.apache.hc.client5.http.classic.methods.*
+import org.apache.hc.client5.http.classic.methods.HttpDelete
+import org.apache.hc.client5.http.classic.methods.HttpGet
+import org.apache.hc.client5.http.classic.methods.HttpPatch
+import org.apache.hc.client5.http.classic.methods.HttpPost
+import org.apache.hc.client5.http.classic.methods.HttpPut
+import org.apache.hc.client5.http.classic.methods.HttpUriRequestBase
 import org.apache.hc.client5.http.config.RequestConfig
 import org.apache.hc.client5.http.impl.classic.CloseableHttpClient
 import org.apache.hc.client5.http.impl.classic.HttpClients
@@ -27,6 +32,8 @@ import org.apache.hc.core5.util.Timeout
 
 /**
  * Utility class for executing HTTP requests using Apache HttpClient 5.
+ * We use Apache HTTP Client since it is compatible with SAP Cloud SDK
+ * (https://sap.github.io/cloud-sdk/).
  *
  * <p>This class provides static methods to perform standard REST operations:
  * GET, POST, PUT, PATCH, DELETE. It supports JSON payloads and responses,

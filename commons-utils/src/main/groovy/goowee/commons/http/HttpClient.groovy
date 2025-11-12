@@ -180,6 +180,39 @@ class HttpClient {
     }
 
     /**
+     * Executes an HTTP POST request with multipart/form-data content.
+     * <p>
+     * Use this method when you need to send a multipart request body
+     * (for example text fields + JSON + file uploads) via POST.
+     * The provided {@link HttpMultipart} builder handles constructing
+     * the multipart entity including the boundary and content-type headers.
+     * </p>
+     *
+     * <p>Example usage:</p>
+     * <pre>{@code
+     * def multipart = HttpMultipart.create()
+     *     .addText("description", "Test upload")
+     *     .addJson("metadata", [id: 123, name:"Example"])
+     *     .addFile("file", new File("/tmp/test.pdf"))
+     *
+     * def response = HttpClient.post(client, "https://api.example.com/upload", multipart, ['Authorization':'Bearer token'])
+     * }</pre>
+     *
+     * @param client    the {@link CloseableHttpClient} instance used to perform the HTTP request
+     * @param uri       the target URI to call (absolute URL)
+     * @param multipart an {@link HttpMultipart} instance containing text, JSON or file parts
+     * @param headers   optional map of additional HTTP headers (e.g. Authorization)
+     * @return the response body as a String; empty string if no body is returned
+     * @throws Exception if the HTTP response status code is not in the 2xx range
+     */
+    static String post(CloseableHttpClient client, String uri, HttpMultipart multipart, Map<String, String> headers = [:]) {
+        HttpPost request = new HttpPost(uri)
+        headers.each { k, v -> request.setHeader(k, v) }
+        request.setEntity(multipart.build())
+        return callAsString(client, request, headers)
+    }
+
+    /**
      * Executes an HTTP PATCH request with a String body and returns the response as a String.
      *
      * @param client HttpClient instance
@@ -210,19 +243,81 @@ class HttpClient {
         return patch(client, uri, jsonBody, headers)
     }
 
-/**
- * Executes an HTTP PUT request with a JSON body and returns the response as a String.
- *
- * @param client HttpClient instance
- * @param uri URI of the request
- * @param body Map representing the JSON body
- * @param headers Optional map of headers
- * @return The response body as String
- * @throws Exception if the HTTP response status is not 2xx
- */
+    /**
+     * Executes an HTTP PATCH request with multipart/form-data content.
+     * <p>
+     * This method allows partial updates of a resource using multipart content.
+     * Under the hood it uses the HTTP PATCH verb, sending text, JSON or file parts
+     * via the provided {@link HttpMultipart} builder.
+     * </p>
+     *
+     * <p>Example usage:</p>
+     * <pre>{@code
+     * def multipart = HttpMultipart.create()
+     *     .addText("comment", "Updated description")
+     *     .addFile("attachment", new File("/tmp/photo.jpg"))
+     *
+     * def response = HttpClient.patch(client, "https://api.example.com/item/99", multipart, ['Authorization':'Bearer token'])
+     * }</pre>
+     *
+     * @param client    the {@link CloseableHttpClient} instance used to perform the HTTP request
+     * @param uri       the target URI to call (absolute URL)
+     * @param multipart an {@link HttpMultipart} instance containing text, JSON or file parts
+     * @param headers   optional map of additional HTTP headers (e.g. Authorization)
+     * @return the response body as a String; empty string if no body is returned
+     * @throws Exception if the HTTP response status code is not in the 2xx range
+     */
+    static String patch(CloseableHttpClient client, String uri, HttpMultipart multipart, Map<String, String> headers = [:]) {
+        HttpPatch request = new HttpPatch(uri)
+        headers.each { k, v -> request.setHeader(k, v) }
+        request.setEntity(multipart.build())
+        return callAsString(client, request, headers)
+    }
+
+    /**
+     * Executes an HTTP PUT request with a JSON body and returns the response as a String.
+     *
+     * @param client HttpClient instance
+     * @param uri URI of the request
+     * @param body Map representing the JSON body
+     * @param headers Optional map of headers
+     * @return The response body as String
+     * @throws Exception if the HTTP response status is not 2xx
+     */
     static String put(CloseableHttpClient client, String uri, Map body = [:], Map<String, String> headers = [:]) {
         HttpPut request = new HttpPut(uri)
         request.setEntity(new StringEntity(JsonOutput.toJson(body), ContentType.APPLICATION_JSON))
+        return callAsString(client, request, headers)
+    }
+
+    /**
+     * Executes an HTTP PUT request with multipart/form-data content.
+     * <p>
+     * Similar to the POST version but uses the HTTP PUT verb.
+     * Typically used when you need to update a resource by sending multipart content
+     * (for example metadata + files) via PUT.
+     * </p>
+     *
+     * <p>Example usage:</p>
+     * <pre>{@code
+     * def multipart = HttpMultipart.create()
+     *     .addJson("metadata", [id: 456, action:"update"])
+     *     .addFile("document", new File("/tmp/doc.pdf"))
+     *
+     * def response = HttpClient.put(client, "https://api.example.com/resource/456", multipart, ['Authorization':'Bearer token'])
+     * }</pre>
+     *
+     * @param client    the {@link CloseableHttpClient} instance used to perform the HTTP request
+     * @param uri       the target URI to call (absolute URL)
+     * @param multipart an {@link HttpMultipart} instance containing text, JSON or file parts
+     * @param headers   optional map of additional HTTP headers (e.g. Authorization)
+     * @return the response body as a String; empty string if no body is returned
+     * @throws Exception if the HTTP response status code is not in the 2xx range
+     */
+    static String put(CloseableHttpClient client, String uri, HttpMultipart multipart, Map<String, String> headers = [:]) {
+        HttpPut request = new HttpPut(uri)
+        headers.each { k, v -> request.setHeader(k, v) }
+        request.setEntity(multipart.build())
         return callAsString(client, request, headers)
     }
 

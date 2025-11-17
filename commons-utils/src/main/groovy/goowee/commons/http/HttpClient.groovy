@@ -69,7 +69,7 @@ class HttpClient {
      * CloseableHttpClient client = HttpClient.create(10, true)
      * </pre>
      */
-    static CloseableHttpClient create(Integer timeoutSeconds = 30, Boolean forceCertificateVerification = false) {
+    static CloseableHttpClient create(Integer timeoutSeconds = 30, Boolean forceCertificateVerification = true) {
         return forceCertificateVerification
                 ? createValidCertHttpClient(timeoutSeconds)
                 : createNoCertHttpClient(timeoutSeconds)

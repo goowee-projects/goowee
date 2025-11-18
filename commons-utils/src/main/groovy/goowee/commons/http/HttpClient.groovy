@@ -207,7 +207,7 @@ class HttpClient {
      * @param responseType how the response body should be interpreted (STRING, MAP, BYTES)
      * @return a structured {@link HttpResponse} containing the result
      */
-    static HttpResponse call(CloseableHttpClient client, HttpRequest request, HttpResponseType responseType = HttpResponseType.MAP) {
+    static HttpResponse call(CloseableHttpClient client, HttpRequest request, HttpResponseType responseType = HttpResponseType.JSON) {
         HttpUriRequestBase httpRequest = buildHttpRequest(request)
 
         if (!request.hasHeader("Accept")) {
@@ -217,15 +217,15 @@ class HttpClient {
         try {
             return client.execute(httpRequest) { response ->
                 switch (responseType) {
-                    case HttpResponseType.STRING: return handleStringResponse(response)
-                    case HttpResponseType.MAP: return handleMapResponse(response)
+                    case HttpResponseType.RAW: return handleRawResponse(response)
+                    case HttpResponseType.JSON: return handleJsonResponse(response)
                     case HttpResponseType.BYTES: return handleBytesResponse(response)
                     default: throw new IllegalArgumentException("Unsupported ResponseType: $responseType")
                 }
             }
 
         } catch (Exception e) {
-            return HttpResponse.error(-1, e.message, null, null)
+            throw new Exception("Error calling '${request.method} ${request.url}': ${e.message ?: e.cause.message}")
         }
     }
 
@@ -240,7 +240,7 @@ class HttpClient {
         return call(client, request, HttpResponseType.BYTES)
     }
 
-    private static HttpResponse handleStringResponse(ClassicHttpResponse response) {
+    private static HttpResponse handleRawResponse(ClassicHttpResponse response) {
         Integer status = response.code
         String raw = response.entity ? EntityUtils.toString(response.entity) : ''
 
@@ -251,7 +251,7 @@ class HttpClient {
         }
     }
 
-    private static HttpResponse handleMapResponse(ClassicHttpResponse response) {
+    private static HttpResponse handleJsonResponse(ClassicHttpResponse response) {
         Integer status = response.code
         String json = response.entity ? EntityUtils.toString(response.entity) : ''
 

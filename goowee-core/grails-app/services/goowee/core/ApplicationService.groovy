@@ -14,6 +14,7 @@
  */
 package goowee.core
 
+import goowee.commons.utils.FileUtils
 import goowee.elements.Elements
 import goowee.exceptions.ArgsException
 import goowee.exceptions.GooweeException
@@ -404,6 +405,10 @@ class ApplicationService implements LinkGeneratorAware {
 
     String getApplicationName() {
         return grailsApplication.config.getProperty('info.app.name', String)
+    }
+
+    String getApplicationDir() {
+        return "${FileUtils.workingDirectory}${applicationName}/"
     }
 
     private void performInitialization() {

@@ -16,6 +16,7 @@ package goowee.types
 
 import goowee.properties.TenantPropertyService
 import grails.gorm.multitenancy.CurrentTenant
+import grails.gorm.transactions.Transactional
 import groovy.transform.CompileStatic
 
 /**
@@ -23,6 +24,7 @@ import groovy.transform.CompileStatic
  */
 
 @CurrentTenant
+@Transactional
 @CompileStatic
 class QuantityService {
 

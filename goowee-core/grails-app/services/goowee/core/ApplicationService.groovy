@@ -19,11 +19,10 @@ import goowee.elements.Elements
 import goowee.exceptions.ArgsException
 import goowee.exceptions.GooweeException
 import goowee.properties.SystemPropertyService
-import goowee.properties.TenantPropertyService
 import goowee.tenants.TenantService
 import goowee.utils.EnvUtils
 import grails.core.GrailsApplication
-import grails.gorm.multitenancy.Tenants
+import grails.gorm.transactions.Transactional
 import grails.util.Holders
 import grails.web.servlet.mvc.GrailsHttpSession
 import groovy.transform.CompileDynamic
@@ -39,7 +38,6 @@ import jakarta.servlet.ServletContext
  *
  * @author Gianluca Sartori
  */
-
 @Slf4j
 @CompileStatic
 class ApplicationService implements LinkGeneratorAware {
@@ -48,7 +46,6 @@ class ApplicationService implements LinkGeneratorAware {
     ServletContext servletContext
     ConnectionSourceService connectionSourceService
     TenantService tenantService
-    TenantPropertyService tenantPropertyService
     SystemPropertyService systemPropertyService
 
     private static Map<String, List> credits = [:]
@@ -137,10 +134,15 @@ class ApplicationService implements LinkGeneratorAware {
         log.info "-" * 78
 
         performInitialization()
+
         executeBeforeInit()
         executeOnInit()
-        executeOnTenantInit()
         executeAfterInit()
+
+        executeBeforeTenantInit()
+        executeOnTenantInit()
+        executeAfterTenantInit()
+
         performFinalization()
     }
 
@@ -229,25 +231,40 @@ class ApplicationService implements LinkGeneratorAware {
     }
 
     /**
-     * Used by the application to register a closure containing tenant initialisation
+     * Used by plugins to register a closure containing tenant pre-initialisation
      * @param closure a closure containing tenant initialisation
      */
+    void beforeTenantInit(@DelegatesTo(ApplicationService) Closure closure = { /* No setup */ }) {
+        registerBootEvent('beforeTenantInit', closure)
+    }
+
+    /**
+     * Used by plugins to register a closure containing tenant post-initialisation
+     * @param closure a closure containing tenant initialisation
+     */
+    void afterTenantInit(@DelegatesTo(ApplicationService) Closure closure = { /* No setup */ }) {
+        registerBootEvent('afterTenantInit', closure)
+    }
+
+/**
+ * Used by the application to register a closure containing tenant initialisation
+ * @param closure a closure containing tenant initialisation
+ */
     void onTenantInit(@DelegatesTo(ApplicationService) Closure closure = { /* No setup */ }) {
         registerBootEvent('onTenantInit', closure)
     }
 
-    /**
-     * Used by plugins to register a closure containing their initialisation scripts.
-     * @param closure a closure containing specific application initialisation directives
-     */
+/**
+ * Used by plugins to register a closure containing initialisation scripts.
+ * @param closure a closure containing specific application pre-initialisation directives
+ */
     void beforeInit(@DelegatesTo(ApplicationService) Closure closure = { /* No setup */ }) {
         registerBootEvent('beforeInit', closure)
     }
 
     /**
-     * Used by plugins to register a closure containing their initialisation scripts.
-     *
-     * @param closure a closure containing specific application initialisation directives
+     * Used by plugins to register a closure containing initialisation scripts.
+     * @param closure a closure containing specific application post-initialisation directives
      */
     void afterInit(@DelegatesTo(ApplicationService) Closure closure = { /* No setup */ }) {
         registerBootEvent('afterInit', closure)
@@ -255,7 +272,6 @@ class ApplicationService implements LinkGeneratorAware {
 
     /**
      * Used by plugins to register a closure containing their initialisation scripts.
-     *
      * @param closure a closure containing specific application initialisation directives
      */
     private void registerOnInit(@DelegatesTo(ApplicationService) Closure closure = { /* No setup */ }) {
@@ -282,7 +298,7 @@ class ApplicationService implements LinkGeneratorAware {
         }
     }
 
-    void executeOnInstall(String tenantId) {
+    void executeOnTenantInstall(String tenantId) {
         if (hasBootEvents('onTenantInstall') || hasBootEvents('onDevInstall')) {
             log.info "-" * 78
             log.info "${tenantId} Tenant - INSTALLING"
@@ -306,6 +322,19 @@ class ApplicationService implements LinkGeneratorAware {
     }
 
     @CompileDynamic
+    @Transactional
+    Boolean getSystemInstalled() {
+        return TSystemInstall.count() > 0
+    }
+
+    @CompileDynamic
+    @Transactional
+    Boolean isPluginInstalled(String pluginName) {
+        return TSystemInstall.where { plugin == pluginName }.count() > 0
+    }
+
+    @CompileDynamic
+    @Transactional
     private void executeInstall(String listName, String tenantId, Boolean isDev = false, Boolean sort = false) {
         Map<String, Closure> eventList = getBootEvents(listName)
         Map revisionList = sort ? eventList.sort() : eventList
@@ -323,12 +352,10 @@ class ApplicationService implements LinkGeneratorAware {
 
             log.info "${tenantId} Tenant - Executing '${revisionName}'..."
 
-            Tenants.withId(tenantId) {
-                if (closure.maximumNumberOfParameters == 1) {
-                    closure.call(tenantId)
-                } else {
-                    closure.call(tenantId, pluginName)
-                }
+            if (closure.maximumNumberOfParameters == 1) {
+                closure.call(tenantId)
+            } else {
+                closure.call(tenantId, pluginName)
             }
 
             new TSystemInstall(
@@ -371,24 +398,26 @@ class ApplicationService implements LinkGeneratorAware {
         executeBootEvents('onInit')
     }
 
+    private void executeAfterInit() {
+        executeBootEvents('afterInit')
+    }
+
+    private void executeBeforeTenantInit() {
+        tenantService.eachTenant { String tenantId ->
+            executeBootEvents('beforeTenantInit', tenantId)
+        }
+    }
+
     private void executeOnTenantInit() {
         tenantService.eachTenant { String tenantId ->
             executeBootEvents('onTenantInit', tenantId)
         }
     }
 
-    private void executeAfterInit() {
-        executeBootEvents('afterInit')
-    }
-
-    @CompileDynamic
-    Boolean getSystemInstalled() {
-        return TSystemInstall.count() > 0
-    }
-
-    @CompileDynamic
-    Boolean isPluginInstalled(String pluginName) {
-        return TSystemInstall.where { plugin == pluginName }.count() > 0
+    private void executeAfterTenantInit() {
+        tenantService.eachTenant { String tenantId ->
+            executeBootEvents('afterTenantInit', tenantId)
+        }
     }
 
     void registerCredits(String task, String... people) {
@@ -420,11 +449,6 @@ class ApplicationService implements LinkGeneratorAware {
 
     private void performFinalization() {
         registerUserMenuCredits()
-
-        systemPropertyService.validateAll()
-        tenantService.eachTenant { String tenantId ->
-            tenantPropertyService.validateAll()
-        }
     }
 
     void registerPrettyPrinter(String name, String template) {

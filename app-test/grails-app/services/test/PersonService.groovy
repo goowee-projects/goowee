@@ -14,44 +14,79 @@
  */
 package test
 
+import goowee.exceptions.ArgsException
+import grails.gorm.DetachedCriteria
 import grails.gorm.multitenancy.CurrentTenant
-import grails.gorm.services.Service
+import grails.gorm.transactions.Transactional
 
 @CurrentTenant
-@Service(TPerson)
-abstract class PersonService {
-    protected abstract TPerson get(Serializable id)
-    protected abstract TPerson getByName(String name)
+@Transactional
+class PersonService {
 
-    protected abstract Long count()
-    protected abstract List<TPerson> list(Map args)
-    protected abstract List<TPerson> listByNameLike(String name, Map args)
-    protected abstract Long countByNameLike(String name)
-    protected abstract TPerson save(TPerson obj)
-    protected abstract TPerson update(Serializable id, String name)
-    protected abstract TPerson delete(Serializable id)
+    private DetachedCriteria<TPerson> buildQuery(Map filterParams) {
+        def query = TPerson.where {}
 
-    TPerson create(Map properties) {
-        TPerson obj = new TPerson(properties)
-        obj.validate()
+        if (filterParams.containsKey('id')) query = query.where { id == filterParams.id }
 
-        if (obj.hasErrors()) {
-            return obj
+        if (filterParams.find) {
+            String search = filterParams.find.replaceAll('\\*', '%')
+            query = query.where {
+                name =~ "%${search}%"
+            }
         }
 
-        return save(obj)
+        // Add additional filters here
+
+        return query
     }
 
-    TPerson update(Serializable id, Map properties) {
+    TPerson get(Serializable id) {
+        // Add single-sided relationships here (Eg. references to other Domain Objects)
+        Map fetch = [
+                company: 'join',
+        ]
+
+        return buildQuery(id: id).get(fetch: fetch)
+    }
+
+    List<TPerson> list(Map filterParams = [:], Map fetchParams = [:]) {
+        if (!fetchParams.sort) fetchParams.sort = [dateCreated: 'asc']
+
+        // Add single-sided relationships here (Eg. references to other DomainObjects)
+        // DO NOT add hasMany relationships, you are going to have troubles with pagination
+        fetchParams.fetch = [
+                company: 'join',
+        ]
+
+        def query = buildQuery(filterParams)
+        return query.list(fetchParams)
+    }
+
+    Number count(Map filterParams = [:]) {
+        def query = buildQuery(filterParams)
+        return query.count()
+    }
+
+    TPerson create(Map args = [:]) {
+        if (args.failOnError == null) args.failOnError = false
+
+        TPerson obj = new TPerson(args)
+        obj.save(flush: true, failOnError: args.failOnError)
+        return obj
+    }
+
+    TPerson update(Map args = [:]) {
+        Serializable id = ArgsException.requireArgument(args, 'id')
+        if (args.failOnError == null) args.failOnError = false
+
         TPerson obj = get(id)
-        obj.properties = properties
-        obj.validate()
-
-        if (obj.hasErrors()) {
-            return obj
-        }
-
-        return update(id, obj.name)
+        obj.properties = args
+        obj.save(flush: true, failOnError: args.failOnError)
+        return obj
     }
 
+    void delete(Serializable id) {
+        TPerson obj = get(id)
+        obj.delete(flush: true, failOnError: true)
+    }
 }

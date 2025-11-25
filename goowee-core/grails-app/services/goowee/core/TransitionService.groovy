@@ -16,6 +16,7 @@ package goowee.core
 
 import goowee.elements.Transition
 import grails.gorm.multitenancy.CurrentTenant
+import grails.gorm.transactions.Transactional
 import grails.plugin.springwebsocket.WebSocket
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
@@ -25,7 +26,6 @@ import groovy.util.logging.Slf4j
  */
 
 @Slf4j
-@CurrentTenant
 @CompileStatic
 class TransitionService implements WebSocket {
 

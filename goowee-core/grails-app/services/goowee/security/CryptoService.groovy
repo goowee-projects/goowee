@@ -27,7 +27,6 @@ import groovy.util.logging.Slf4j
 
 @Slf4j
 @CompileStatic
-@CurrentTenant
 class CryptoService {
 
     ApplicationService applicationService

@@ -19,8 +19,8 @@ import goowee.commons.utils.FileUtils
 import goowee.core.ApplicationService
 import goowee.core.ConnectionSourceService
 import goowee.core.TSystemInstall
-import goowee.properties.SystemPropertyService
 import goowee.exceptions.ArgsException
+import goowee.properties.SystemPropertyService
 import goowee.security.TRoleGroup
 import goowee.security.TRoleGroupRole
 import goowee.security.TUser
@@ -29,6 +29,7 @@ import goowee.utils.ResourceUtils
 import grails.gorm.DetachedCriteria
 import grails.gorm.multitenancy.CurrentTenant
 import grails.gorm.multitenancy.Tenants
+import grails.gorm.transactions.Transactional
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
@@ -39,6 +40,7 @@ import org.grails.datastore.mapping.core.connections.ConnectionSource
  */
 
 @Slf4j
+@Transactional
 @CompileStatic
 class TenantService {
 
@@ -212,13 +214,11 @@ class TenantService {
 
     void provisionTenant(String tenantId) {
         applicationService.executeOnPluginInstall(tenantId)
-        applicationService.executeOnInstall(tenantId)
+        applicationService.executeOnTenantInstall(tenantId)
     }
 
     void provisionTenantUpdate(String tenantId) {
-        withTenant(tenantId) {
-            applicationService.executeOnUpdate(tenantId)
-        }
+        applicationService.executeOnUpdate(tenantId)
     }
 
     @CompileDynamic
@@ -265,5 +265,4 @@ class TenantService {
             roleGroup.delete(flush: true, failOnError: true)
         }
     }
-
 }

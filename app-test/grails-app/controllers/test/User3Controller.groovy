@@ -14,14 +14,11 @@
  */
 package test
 
-
-import goowee.elements.components.Table
 import goowee.elements.ElementsController
-import grails.gorm.multitenancy.CurrentTenant
+import goowee.elements.components.Table
 import grails.plugin.springsecurity.annotation.Secured
 
 @Secured(['ROLE_3'])
-@CurrentTenant
 class User3Controller implements ElementsController {
 
     def index() {

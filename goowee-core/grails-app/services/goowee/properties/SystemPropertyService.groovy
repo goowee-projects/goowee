@@ -20,10 +20,10 @@ import goowee.core.ApplicationService
 import goowee.core.TSystemProperty
 import goowee.exceptions.ArgsException
 import grails.gorm.DetachedCriteria
+import grails.gorm.transactions.Transactional
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-
 import jakarta.annotation.PostConstruct
 
 /**
@@ -31,6 +31,7 @@ import jakarta.annotation.PostConstruct
  */
 
 @Slf4j
+@Transactional
 @CompileStatic
 class SystemPropertyService extends PropertyService {
 

@@ -15,11 +15,11 @@
 package test
 
 import custom.CustomPage
+import goowee.elements.ElementsController
 import goowee.elements.components.Form
 import goowee.elements.components.Label
 import goowee.elements.components.Table
 import goowee.elements.components.TableRow
-import goowee.elements.ElementsController
 import goowee.security.SecurityService
 import grails.plugin.springsecurity.annotation.Secured
 

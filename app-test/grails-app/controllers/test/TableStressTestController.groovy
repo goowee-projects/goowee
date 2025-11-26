@@ -14,17 +14,16 @@
  */
 package test
 
-
+import goowee.elements.ElementsController
 import goowee.elements.contents.ContentTable
 import goowee.elements.controls.Checkbox
 import goowee.elements.controls.Select
 import goowee.elements.controls.TextField
-import goowee.elements.ElementsController
 import goowee.types.Money
-import grails.gorm.multitenancy.CurrentTenant
 
-@CurrentTenant
 class TableStressTestController implements ElementsController {
+
+    PersonService personService
 
     private rowsQty = 100
     private colsQtyPerType = 50
@@ -95,7 +94,7 @@ class TableStressTestController implements ElementsController {
                     addField(
                             class: Select,
                             id: 'user1',
-                            optionsFromRecordset: TPerson.list(),
+                            optionsFromRecordset: personService.list(),
                             keys: ['id'],
                     )
                     addField(

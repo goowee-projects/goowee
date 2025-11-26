@@ -15,12 +15,13 @@
 package goowee.audit
 
 import goowee.commons.utils.DateUtils
-import goowee.elements.Elements
 import goowee.core.WebRequestAware
+import goowee.elements.Elements
 import goowee.security.CryptoService
 import goowee.security.SecurityService
 import grails.gorm.DetachedCriteria
 import grails.gorm.multitenancy.CurrentTenant
+import grails.gorm.transactions.Transactional
 import groovy.json.JsonBuilder
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
@@ -38,6 +39,7 @@ import java.time.LocalTime
  */
 
 @CurrentTenant
+@Transactional
 @CompileStatic
 class AuditService implements WebRequestAware {
 

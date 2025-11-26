@@ -15,11 +15,10 @@
 package goowee.core
 
 import goowee.properties.TenantPropertyService
-import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.web.servlet.ServletContextInitializer
-
 import jakarta.servlet.ServletContext
 import jakarta.servlet.ServletException
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.web.servlet.ServletContextInitializer
 
 /**
  * @author Gianluca Sartori

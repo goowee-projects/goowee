@@ -14,27 +14,21 @@
  */
 package test
 
+import goowee.elements.ElementsController
 import goowee.elements.components.Form
 import goowee.elements.components.Header
 import goowee.elements.components.Table
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
-import goowee.elements.ElementsController
-import goowee.elements.controls.Checkbox
-import goowee.elements.controls.DateField
-import goowee.elements.controls.MoneyField
-import goowee.elements.controls.NumberField
-import goowee.elements.controls.QuantityField
-import goowee.elements.controls.Select
-import goowee.elements.controls.TextField
-import goowee.elements.controls.Upload
+import goowee.elements.controls.*
 import goowee.elements.style.TextAlign
 import goowee.elements.style.TextDefault
-import grails.gorm.multitenancy.CurrentTenant
 
-@CurrentTenant
 class CrudCustomController implements ElementsController {
+
+    PersonService personService
+    CompanyService companyService
 
     def index() {
 
@@ -264,26 +258,17 @@ class CrudCustomController implements ElementsController {
             }
         }
 
-        // QUERY
-        //
-        def query = TPerson.where {} // def user1 = user1 }
-
-        def filters = table.filterParams
-        //if (filters.user1) query = query.where {user1.username == filters.user1}
-        if (filters.dateFrom) query = query.where { dateCreated >= filters.dateFrom.atTime(0, 0) }
-        if (filters.dateTo) query = query.where { dateCreated <= filters.dateTo.atTime(23, 59) }
-
         // VALUES
         //
         println actionSession
-        table.body = query.list(table.fetchParams)
-        table.paginate = query.count()
-        table2.body = query.list(table2.fetchParams)
+        table.body = personService.list(table.filterParams, table.fetchParams)
+        table.paginate = personService.count(table.filterParams)
+        table2.body = personService.list(table2.filterParams, table2.fetchParams)
         table2.footer = [[dateCreated: 'TOTAL']]
-        table2.paginate = query.count()
+        table2.paginate = personService.count(table2.filterParams)
         table2.pagination.reset()
-        table3.body = query.list(table3.fetchParams)
-        table3.paginate = query.count()
+        table3.body = personService.list(table3.filterParams, table3.fetchParams)
+        table3.paginate = personService.count(table3.filterParams)
 
         display content: c
     }
@@ -297,7 +282,7 @@ class CrudCustomController implements ElementsController {
             addField(
                     class: Select,
                     id: 'company',
-                    optionsFromRecordset: TCompany.list(),
+                    optionsFromRecordset: companyService.list(),
             )
             addField(
                     class: TextField,
@@ -349,23 +334,29 @@ class CrudCustomController implements ElementsController {
         display content: c, modal: true, wide: true
     }
 
-    def onCreate(TPerson obj) {
-        obj.save(flush: true)
+    def onCreate() {
+        def obj = personService.create(params)
         if (obj.hasErrors()) {
             display errors: obj
+            return
+        }
+
+        if (params.embedded) {
+            display returnPoint(person: obj.id) + [modal: true]
         } else {
             display action: 'index'
         }
     }
 
-    def edit(TPerson obj) {
+    def edit() {
         def c = buildForm(create: false)
+        def obj = personService.get(params.id)
         c.form.values = obj
         display content: c, modal: true, wide: true
     }
 
-    def onEdit(TPerson obj) {
-        obj.save(flush: true)
+    def onEdit() {
+        def obj = personService.update(params)
         if (obj.hasErrors()) {
             display errors: obj
         } else {
@@ -373,10 +364,11 @@ class CrudCustomController implements ElementsController {
         }
     }
 
-    def onDelete(TPerson obj) {
+    def onDelete() {
         try {
-            obj.delete(flush: true, failOnError: true)
+            personService.delete(params.id)
             display action: 'index'
+
         } catch (e) {
             e.printStackTrace()
             display exception: e

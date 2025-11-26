@@ -14,14 +14,11 @@
  */
 package test
 
-
+import goowee.elements.ElementsController
 import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentTable
-import goowee.elements.ElementsController
-import grails.gorm.multitenancy.CurrentTenant
 
-@CurrentTenant
 class CrudRestController implements ElementsController {
 
     String LAYOUT = 'W_T002_Artidoli_dettaglio'

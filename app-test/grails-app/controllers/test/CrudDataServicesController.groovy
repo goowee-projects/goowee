@@ -14,27 +14,19 @@
  */
 package test
 
+import goowee.elements.ElementsController
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentTable
-import goowee.elements.ElementsController
-import goowee.elements.controls.Checkbox
-import goowee.elements.controls.DateField
-import goowee.elements.controls.MoneyField
-import goowee.elements.controls.NumberField
-import goowee.elements.controls.QuantityField
-import goowee.elements.controls.Select
-import goowee.elements.controls.TextField
-import goowee.elements.controls.Textarea
-import goowee.elements.controls.Upload
+import goowee.elements.controls.*
 import goowee.types.Type
 
 import java.time.LocalDate
 
 class CrudDataServicesController implements ElementsController {
 
-    PersonService personService
+    PersonDataService personDataService
 
     def index() {
         def c = createContent(ContentTable)
@@ -85,8 +77,8 @@ class CrudDataServicesController implements ElementsController {
 
         // VALUES
         //
-        c.table.body = personService.listByNameLike(filters.name ?: '%', c.table.fetchParams)
-        c.table.paginate = personService.countByNameLike(filters.name ?: '%')
+        c.table.body = personDataService.listByNameLike(filters.name ?: '%', c.table.fetchParams)
+        c.table.paginate = personDataService.countByNameLike(filters.name ?: '%')
 
         display content: c
     }
@@ -191,7 +183,7 @@ class CrudDataServicesController implements ElementsController {
     }
 
     def onCreate() {
-        TPerson obj = personService.create(params)
+        TPerson obj = personDataService.create(params)
         if (obj.hasErrors()) {
             display errors: obj
             return
@@ -205,7 +197,7 @@ class CrudDataServicesController implements ElementsController {
     }
 
     def onEdit() {
-        TPerson obj = personService.update(params.id, params)
+        TPerson obj = personDataService.update(params.id, params)
         if (obj.hasErrors()) {
             display errors: obj
             return
@@ -216,7 +208,7 @@ class CrudDataServicesController implements ElementsController {
 
     def onDelete() {
         try {
-            personService.delete(params.id)
+            personDataService.delete(params.id)
             display action: 'index'
 
         } catch (e) {

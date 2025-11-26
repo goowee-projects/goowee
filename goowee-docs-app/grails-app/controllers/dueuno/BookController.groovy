@@ -14,12 +14,12 @@
  */
 package goowee
 
+import goowee.core.ElementsController
 import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentTable
 import goowee.elements.controls.Select
 import goowee.elements.controls.TextField
-import goowee.core.ElementsController
 
 class BookController implements ElementsController {
 

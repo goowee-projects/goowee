@@ -17,23 +17,19 @@ package goowee.security
 import goowee.audit.AuditOperation
 import goowee.audit.AuditService
 import goowee.commons.utils.StringUtils
-import goowee.core.PrettyPrinterDecimalFormat
-import goowee.elements.pages.ShellService
-import goowee.core.ApplicationService
-import goowee.core.Feature
-import goowee.core.LinkGeneratorAware
+import goowee.core.*
 import goowee.elements.Menu
-import goowee.properties.SystemPropertyService
-import goowee.core.WebRequestAware
+import goowee.elements.pages.Shell
+import goowee.elements.pages.ShellService
 import goowee.exceptions.ArgsException
 import goowee.exceptions.GooweeException
-import goowee.elements.pages.Shell
-import goowee.tenants.TTenant
+import goowee.properties.SystemPropertyService
 import goowee.properties.TenantPropertyService
+import goowee.tenants.TTenant
 import goowee.tenants.TenantService
 import goowee.utils.EnvUtils
 import grails.gorm.DetachedCriteria
-import grails.gorm.multitenancy.CurrentTenant
+import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.SpringSecurityUtils
 import groovy.transform.CompileDynamic
@@ -50,7 +46,7 @@ import org.springframework.security.web.authentication.rememberme.TokenBasedReme
  */
 
 @Slf4j
-@CurrentTenant
+@Transactional
 @CompileStatic
 class SecurityService implements WebRequestAware, LinkGeneratorAware {
 
@@ -104,6 +100,61 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
                 order: 9000000,
                 authorities: [ROLE_ADMIN, ROLE_SECURITY],
         )
+    }
+
+    void install() {
+        String defaultTenantId = tenantService.defaultTenantId
+        createGroup(failOnError: true, ignoreGroupNameCollisions: true, tenantId: defaultTenantId, name: GROUP_USERS, authorities: [ROLE_USER], deletable: false)
+        createGroup(failOnError: true, ignoreGroupNameCollisions: true, tenantId: defaultTenantId, name: GROUP_SUPERADMINS, authorities: [ROLE_SUPERADMIN], deletable: false)
+        createAuthority(ROLE_SECURITY)
+
+        createSystemUser(
+                tenantId: defaultTenantId,
+                groups: [GROUP_SUPERADMINS],
+                firstname: 'Super',
+                lastname: 'Admin',
+                username: USERNAME_SUPERADMIN,
+                password: USERNAME_SUPERADMIN,
+                sessionDuration: EnvUtils.isDevelopment() ? 60 : 5, // always 5 minutes in production for the SuperAdmin
+                rememberMeDuration: EnvUtils.isDevelopment() ? 12 * 60 : 5, // always 5 minutes in production for the SuperAdmin
+        )
+    }
+
+    void tenantInstall() {
+        String tenantId = tenantService.currentTenantId
+
+        createGroup(failOnError: true, ignoreGroupNameCollisions: true, tenantId: tenantId, name: GROUP_USERS, authorities: [ROLE_USER], deletable: false)
+        createGroup(failOnError: true, ignoreGroupNameCollisions: true, tenantId: tenantId, name: GROUP_DEVELOPERS, authorities: [ROLE_DEVELOPER], deletable: false)
+        createGroup(failOnError: true, ignoreGroupNameCollisions: true, tenantId: tenantId, name: GROUP_ADMINS, authorities: [ROLE_ADMIN], deletable: false)
+
+        String username = buildAdminUsername()
+        createSystemUser(
+                tenantId: tenantId,
+                username: username,
+                password: username,
+                firstname: tenantId,
+                lastname: 'Admin',
+                sessionDuration: EnvUtils.isDevelopment() ? 60 : 15, // defaults to 15 minutes in production for the Admin
+                rememberMeDuration: EnvUtils.isDevelopment() ? 12 * 60 : 15, // defaults to 15 minutes in production for the Admin
+                admin: true,
+        )
+
+        tenantPropertyService.setBoolean('USER_CAN_CHANGE_PASSWORD', true)
+        tenantPropertyService.setString('SESSION_COOKIE_NAME', applicationService.applicationName.toUpperCase() + '-SESSION')
+        tenantPropertyService.setNumber('SESSION_DEFAULT_DURATION', 5)
+        tenantPropertyService.setString('REMEMBER_ME_COOKIE_NAME', applicationService.applicationName.toUpperCase() + '-REMEMBER-ME')
+        tenantPropertyService.setNumber('REMEMBER_ME_DEFAULT_DURATION', 10080) // One week in minutes
+
+        tenantPropertyService.setBoolean('REMEMBER_ME_ENABLED', true)
+        tenantPropertyService.setBoolean('LOGIN_AUTOCOMPLETE', true)
+        tenantPropertyService.setString('LOGIN_LANDING_URL', '')
+        tenantPropertyService.setString('LOGOUT_LANDING_URL', '')
+        tenantPropertyService.setString('LOGIN_REGISTRATION_URL', '')
+        tenantPropertyService.setString('LOGIN_PASSWORD_RECOVERY_URL', '')
+        tenantPropertyService.setString('LOGIN_COPY', 'Copyright &copy; <a href="https://dueuno.com">Dueuno</a><br/>All rights reserved')
+
+        tenantPropertyService.setString('LOGIN_BACKGROUND_IMAGE', linkPublicResource(tenantId, '/brand/login-background.jpg', false))
+        tenantPropertyService.setString('LOGIN_LOGO', linkPublicResource(tenantId, '/brand/login-logo.png', false))
     }
 
     void registerFeatures() {
@@ -406,7 +457,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         initializeShell()
 
         // Executes custom login code
-        applicationService.executeBootEvents('afterLogin', tenantService.currentTenantId, session)
+        applicationService.executeBootEvents('afterLogin', session)
 
         String tenantId = tenantService.currentTenantId
         log.info "${tenantId} Tenant - Login '${currentUsername}', language '${currentLanguage}', authorised for ${currentUserAuthorities}"
@@ -449,7 +500,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
      */
     void executeAfterLogout() {
         auditService.log(AuditOperation.LOGOUT, "-")
-        applicationService.executeBootEvents('afterLogout', tenantService.currentTenantId)
+        applicationService.executeBootEvents('afterLogout')
         executeLogout()
     }
 
@@ -1091,7 +1142,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         return results
     }
 
-    String getAdminUsername() {
+    String buildAdminUsername() {
         String tenantId = tenantService.currentTenantId
         if (tenantId == tenantService.defaultTenantId) {
             return 'admin'
@@ -1100,59 +1151,5 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
             TTenant tenant = tenantService.getByTenantId(tenantId)
             return tenant.tenantId.toLowerCase() + 'admin'
         }
-    }
-
-    void install() {
-        String tenantId = tenantService.currentTenantId
-        String defaultTenantId = tenantService.defaultTenantId
-
-        createGroup(failOnError: true, ignoreGroupNameCollisions: true, tenantId: defaultTenantId, name: GROUP_SUPERADMINS, authorities: [ROLE_SUPERADMIN], deletable: false)
-        createGroup(failOnError: true, ignoreGroupNameCollisions: true, tenantId: tenantId, name: GROUP_USERS, authorities: [ROLE_USER], deletable: false)
-        createGroup(failOnError: true, ignoreGroupNameCollisions: true, tenantId: tenantId, name: GROUP_DEVELOPERS, authorities: [ROLE_DEVELOPER], deletable: false)
-        createGroup(failOnError: true, ignoreGroupNameCollisions: true, tenantId: tenantId, name: GROUP_ADMINS, authorities: [ROLE_ADMIN], deletable: false)
-
-        createAuthority(ROLE_SECURITY)
-
-        if (tenantId == defaultTenantId) {
-            createSystemUser(
-                    tenantId: defaultTenantId,
-                    groups: [GROUP_SUPERADMINS],
-                    firstname: 'Super',
-                    lastname: 'Admin',
-                    username: USERNAME_SUPERADMIN,
-                    password: USERNAME_SUPERADMIN,
-                    sessionDuration: EnvUtils.isDevelopment() ? 60 : 5, // always 5 minutes in production for the SuperAdmin
-                    rememberMeDuration: EnvUtils.isDevelopment() ? 12 * 60 : 5, // always 5 minutes in production for the SuperAdmin
-            )
-        }
-
-        String username = getAdminUsername()
-        createSystemUser(
-                tenantId: tenantId,
-                username: username,
-                password: username,
-                firstname: tenantId,
-                lastname: 'Admin',
-                sessionDuration: EnvUtils.isDevelopment() ? 60 : 15, // defaults to 15 minutes in production for the Admin
-                rememberMeDuration: EnvUtils.isDevelopment() ? 12 * 60 : 15, // defaults to 15 minutes in production for the Admin
-                admin: true,
-        )
-
-        tenantPropertyService.setBoolean('USER_CAN_CHANGE_PASSWORD', true)
-        tenantPropertyService.setString('SESSION_COOKIE_NAME', applicationService.applicationName.toUpperCase() + '-SESSION')
-        tenantPropertyService.setNumber('SESSION_DEFAULT_DURATION', 5)
-        tenantPropertyService.setString('REMEMBER_ME_COOKIE_NAME', applicationService.applicationName.toUpperCase() + '-REMEMBER-ME')
-        tenantPropertyService.setNumber('REMEMBER_ME_DEFAULT_DURATION', 10080) // One week in minutes
-
-        tenantPropertyService.setBoolean('REMEMBER_ME_ENABLED', true)
-        tenantPropertyService.setBoolean('LOGIN_AUTOCOMPLETE', true)
-        tenantPropertyService.setString('LOGIN_LANDING_URL', '')
-        tenantPropertyService.setString('LOGOUT_LANDING_URL', '')
-        tenantPropertyService.setString('LOGIN_REGISTRATION_URL', '')
-        tenantPropertyService.setString('LOGIN_PASSWORD_RECOVERY_URL', '')
-        tenantPropertyService.setString('LOGIN_COPY', 'Copyright &copy; <a href="https://goowee.org">The Goowee Team</a><br/>All rights reserved')
-
-        tenantPropertyService.setString('LOGIN_BACKGROUND_IMAGE', linkPublicResource(tenantId, '/brand/login-background.jpg', false))
-        tenantPropertyService.setString('LOGIN_LOGO', linkPublicResource(tenantId, '/brand/login-logo.png', false))
     }
 }

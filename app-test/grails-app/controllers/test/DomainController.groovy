@@ -14,10 +14,10 @@
  */
 package test
 
+import goowee.elements.ElementsController
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentTable
-import goowee.elements.ElementsController
 
 class DomainController implements ElementsController {
 

@@ -14,45 +14,27 @@
  */
 package test
 
-import goowee.elements.components.Button
-import goowee.elements.components.Label
-import goowee.elements.components.Separator
-import goowee.elements.components.Table
-import goowee.elements.components.TableRow
-import goowee.elements.contents.ContentForm
 import goowee.core.ApplicationService
 import goowee.elements.ElementsController
-import goowee.elements.controls.Checkbox
-import goowee.elements.controls.DateField
-import goowee.elements.controls.DateTimeField
-import goowee.elements.controls.EmailField
-import goowee.elements.controls.MoneyField
-import goowee.elements.controls.NumberField
-import goowee.elements.controls.PasswordField
-import goowee.elements.controls.QuantityField
-import goowee.elements.controls.Select
-import goowee.elements.controls.TextField
-import goowee.elements.controls.Textarea
-import goowee.elements.controls.TimeField
-import goowee.elements.controls.Upload
-import goowee.elements.controls.UrlField
+import goowee.elements.components.*
+import goowee.elements.contents.ContentForm
+import goowee.elements.controls.*
 import goowee.elements.style.Color
 import goowee.elements.style.TextAlign
 import goowee.elements.style.TextTransform
 import goowee.elements.style.TextWrap
 import goowee.types.QuantityService
 import goowee.types.QuantityUnit
-import grails.gorm.multitenancy.CurrentTenant
 
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-@CurrentTenant
 class FormController implements ElementsController {
 
     ApplicationService applicationService
     QuantityService quantityService
+    PersonService personService
 
     def index() {
         def c = createContent(ContentForm)
@@ -156,7 +138,7 @@ class FormController implements ElementsController {
             def user1 = addField(
                     class: Select,
                     id: 'user1',
-                    optionsFromRecordset: TPerson.list(),
+                    optionsFromRecordset: personService.list(),
                     keys: ['id'],
                     value: params.person,
                     help: 'Questo è un messaggio di aiuto per te che non sai cosa diavolo fare',
@@ -196,7 +178,7 @@ class FormController implements ElementsController {
             addField(
                     class: Select,
                     id: 'userTrans',
-                    optionsFromRecordset: TPerson.list(),
+                    optionsFromRecordset: personService.list(),
                     transformer: 'T_PERSON',
             )
             addField(
@@ -345,7 +327,7 @@ class FormController implements ElementsController {
             addField(
                     class: Select,
                     id: 'user2',
-                    optionsFromRecordset: TPerson.list(),
+                    optionsFromRecordset: personService.list(),
                     keys: ['id'],
                     search: false,
             )
@@ -510,9 +492,8 @@ class FormController implements ElementsController {
             actions.addAction(action: 'test4')
             actions.addAction(action: 'test5')
             actions.addAction(action: 'test6')
-            def query = TPerson.where {}
-            body = query.list(max: 10)
-            paginate = query.count()
+            body = personService.list(max: 10)
+            paginate = personService.count()
         }
 
         display content: c, modal: modal, wide: wide, fullscreen: fullscreen, animate: animate, closeButton: closeButton

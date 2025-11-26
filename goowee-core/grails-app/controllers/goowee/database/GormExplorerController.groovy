@@ -25,20 +25,12 @@ import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentForm
-import goowee.elements.controls.Checkbox
-import goowee.elements.controls.DateField
-import goowee.elements.controls.DateTimeField
-import goowee.elements.controls.NumberField
-import goowee.elements.controls.Select
-import goowee.elements.controls.TextField
-import goowee.elements.controls.Textarea
-import goowee.elements.controls.TimeField
+import goowee.elements.controls.*
 import goowee.elements.style.TextDefault
 import goowee.tenants.TenantService
 import goowee.types.CustomType
 import goowee.types.Types
 import grails.gorm.DetachedCriteria
-import grails.gorm.multitenancy.CurrentTenant
 import grails.plugin.springsecurity.annotation.Secured
 import jakarta.annotation.PostConstruct
 
@@ -46,7 +38,6 @@ import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-@CurrentTenant
 @Secured(['ROLE_DEVELOPER'])
 class GormExplorerController implements ElementsController {
 

@@ -14,6 +14,8 @@
  */
 package goowee.tenants
 
+import goowee.core.ConnectionSourceService
+import goowee.elements.ElementsController
 import goowee.elements.components.Label
 import goowee.elements.components.Separator
 import goowee.elements.components.TableRow
@@ -22,9 +24,6 @@ import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentTable
 import goowee.elements.controls.Select
 import goowee.elements.controls.TextField
-import goowee.core.ConnectionSourceService
-import goowee.elements.ElementsController
-import goowee.security.SecurityService
 import goowee.elements.style.Color
 import goowee.elements.style.TextTransform
 import goowee.utils.EnvUtils
@@ -162,7 +161,6 @@ class TenantController implements ElementsController {
     }
 
     def onCreate() {
-        params.provision = true
         def obj
         try {
             obj = tenantService.create(params)
@@ -176,6 +174,7 @@ class TenantController implements ElementsController {
             return
         }
 
+        tenantService.provision(obj.tenantId)
         display action: 'index'
     }
 

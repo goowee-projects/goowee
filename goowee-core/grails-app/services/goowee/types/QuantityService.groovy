@@ -15,14 +15,12 @@
 package goowee.types
 
 import goowee.properties.TenantPropertyService
-import grails.gorm.multitenancy.CurrentTenant
 import groovy.transform.CompileStatic
 
 /**
  * @author Gianluca Sartori
  */
 
-@CurrentTenant
 @CompileStatic
 class QuantityService {
 

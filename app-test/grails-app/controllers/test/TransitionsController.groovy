@@ -14,39 +14,28 @@
  */
 package test
 
+import goowee.elements.ComponentEvent
+import goowee.elements.ElementsController
 import goowee.elements.components.Button
 import goowee.elements.components.Form
 import goowee.elements.components.Label
 import goowee.elements.components.Separator
 import goowee.elements.contents.ContentForm
-import goowee.elements.ComponentEvent
-import goowee.elements.ElementsController
-import goowee.elements.controls.Checkbox
-import goowee.elements.controls.DateField
-import goowee.elements.controls.DateTimeField
-import goowee.elements.controls.MoneyField
-import goowee.elements.controls.MultipleCheckbox
-import goowee.elements.controls.NumberField
-import goowee.elements.controls.QuantityField
-import goowee.elements.controls.Select
-import goowee.elements.controls.TextField
-import goowee.elements.controls.Textarea
-import goowee.elements.controls.TimeField
-import goowee.security.SecurityService
+import goowee.elements.controls.*
 import goowee.elements.style.TextStyle
+import goowee.security.SecurityService
 import goowee.types.Money
 import goowee.types.Quantity
 import goowee.types.QuantityUnit
-import grails.gorm.multitenancy.CurrentTenant
 
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
 
-@CurrentTenant
 class TransitionsController implements ElementsController {
 
     SecurityService securityService
+    PersonService personService
 
     def index() {
         // PAGE SETUP
@@ -124,7 +113,7 @@ class TransitionsController implements ElementsController {
             addField(
                     class: Select,
                     id: 'user1',
-                    optionsFromRecordset: TPerson.list(),
+                    optionsFromRecordset: personService.list(),
                     keys: ['id'],
                     loading: true,
                     onChange: 'onSelectChange',
@@ -206,7 +195,7 @@ class TransitionsController implements ElementsController {
             addField(
                     class: MultipleCheckbox,
                     id: 'multiple',
-                    optionsFromRecordset: TPerson.list(max: 5),
+                    optionsFromRecordset: personService.list(max: 5),
                     keys: ['id'],
                     cols: 12,
             )
@@ -313,7 +302,7 @@ class TransitionsController implements ElementsController {
         t.set('btn4Field', 'display', true)
         t.set('select2', 'options',
                 Select.optionsFromRecordset(
-                        recordset: TPerson.list(),
+                        recordset: personService.list(),
                         keys: ['id'],
                 ))
         t.set('modal.select2', 'readonly', false)
@@ -362,7 +351,7 @@ class TransitionsController implements ElementsController {
         def t = createTransition()
         t.set('select3', 'options',
                 Select.optionsFromRecordset(
-                        recordset: TPerson.list(),
+                        recordset: personService.list(),
                         keys: ['name'],
                 ))
         t.setValue('select3', 'admin')
@@ -375,7 +364,7 @@ class TransitionsController implements ElementsController {
         def t = createTransition()
         t.set('searchfield', 'options',
                 Select.optionsFromRecordset(
-                        recordset: TPerson.findAllByNameLike("%${params.searchfield}%"),
+                        recordset: personService.list(name: params.searchfield),
                         keys: ['id'],
                 )
         )

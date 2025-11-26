@@ -14,17 +14,15 @@
  */
 package test
 
+import goowee.elements.ElementsController
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentTable
 import goowee.elements.controls.TextField
-import goowee.elements.ElementsController
 import goowee.elements.style.TextDefault
-import grails.gorm.multitenancy.CurrentTenant
 import grails.plugin.springsecurity.annotation.Secured
 
-@CurrentTenant
 @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
 class PublicPageController implements ElementsController {
 

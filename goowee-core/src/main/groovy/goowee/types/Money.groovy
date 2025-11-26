@@ -14,9 +14,9 @@
  */
 package goowee.types
 
-import goowee.elements.controls.MoneyField
 import goowee.core.PrettyPrinter
 import goowee.core.PrettyPrinterProperties
+import goowee.elements.controls.MoneyField
 import goowee.exceptions.ArgsException
 import grails.gorm.MultiTenant
 import grails.gorm.annotation.Entity

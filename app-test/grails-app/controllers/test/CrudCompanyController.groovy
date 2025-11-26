@@ -14,13 +14,10 @@
  */
 package test
 
-
+import goowee.elements.ElementsController
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentTable
-import goowee.elements.ElementsController
-import grails.gorm.multitenancy.CurrentTenant
 
-@CurrentTenant
 class CrudCompanyController implements ElementsController {
 
     def index() {

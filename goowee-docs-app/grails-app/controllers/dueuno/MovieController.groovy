@@ -14,15 +14,14 @@
  */
 package goowee
 
+import goowee.core.ElementsController
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentTable
 import goowee.elements.controls.NumberField
 import goowee.elements.controls.TextField
-import goowee.core.ElementsController
 import grails.plugin.springsecurity.annotation.Secured
-
 import jakarta.annotation.PostConstruct
 
 @Secured(['ROLE_USER', /* other ROLE_... */])

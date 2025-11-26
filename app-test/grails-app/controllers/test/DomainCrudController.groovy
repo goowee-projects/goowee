@@ -14,16 +14,14 @@
  */
 package test
 
+import goowee.elements.ElementsController
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentTable
 import goowee.elements.controls.Checkbox
 import goowee.elements.controls.TextField
-import goowee.elements.ElementsController
-import grails.gorm.multitenancy.CurrentTenant
 
-@CurrentTenant
 class DomainCrudController implements ElementsController {
 
     def index() {

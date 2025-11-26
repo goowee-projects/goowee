@@ -25,7 +25,6 @@ import java.nio.file.FileSystems
 import java.nio.file.Path
 import java.nio.file.PathMatcher
 import java.nio.file.Paths
-import java.io.*
 
 /**
  * Utility class for working with FTPS (FTP over SSL/TLS).

@@ -17,37 +17,14 @@ package test
 import goowee.commons.utils.DateUtils
 import goowee.core.ApplicationService
 import goowee.elements.ElementsController
-import goowee.elements.components.Button
-import goowee.elements.components.Form
-import goowee.elements.components.Image
-import goowee.elements.components.Label
-import goowee.elements.components.Link
-import goowee.elements.components.Table
-import goowee.elements.components.TableRow
-import goowee.elements.controls.Checkbox
-import goowee.elements.controls.DateField
-import goowee.elements.controls.DateTimeField
-import goowee.elements.controls.MoneyField
-import goowee.elements.controls.MonthField
-import goowee.elements.controls.NumberField
-import goowee.elements.controls.PasswordField
-import goowee.elements.controls.QuantityField
-import goowee.elements.controls.Select
-import goowee.elements.controls.TextField
-import goowee.elements.controls.TextFieldInputMode
-import goowee.elements.controls.Textarea
-import goowee.elements.controls.TimeField
+import goowee.elements.components.*
+import goowee.elements.controls.*
+import goowee.elements.style.*
 import goowee.security.SecurityService
 import goowee.security.TUser
-import goowee.elements.style.*
-import goowee.types.Money
-import goowee.types.Quantity
-import goowee.types.QuantityService
-import goowee.types.QuantityUnit
-import goowee.types.Type
-import grails.gorm.multitenancy.CurrentTenant
-
+import goowee.types.*
 import jakarta.servlet.ServletContext
+
 import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.LocalTime
@@ -57,13 +34,13 @@ class MyType {
 }
 
 
-@CurrentTenant
 class SandboxController implements ElementsController {
 
     ServletContext servletContext
     ApplicationService applicationService
     QuantityService quantityService
     SecurityService securityService
+    PersonService personService
 
     def handleException(Exception e) {
         display exception: e
@@ -401,7 +378,7 @@ Grails application running at http://localhost:9992/test in environment: develop
 //            addField(
 //                    class: MultipleCheckbox,
 //                    id: 'employees',
-//                    optionsFromRecordset: TPerson.list(),
+//                    optionsFromRecordset: personService.list(),
 ////                    value: TCompany.get(2).employees,
 //            )
 //            addField(
@@ -503,8 +480,8 @@ Grails application running at http://localhost:9992/test in environment: develop
 
             }
             max = 10
-            body = TPerson.list(max: 10)
-            paginate = TPerson.count()
+            body = personService.list(max: 10)
+            paginate = personService.count()
         }
 
         c.addComponent(
@@ -548,7 +525,7 @@ Grails application running at http://localhost:9992/test in environment: develop
             ]
             body.eachRow { TableRow row, Map values ->
             }
-            body = TPerson.list(max: 10)
+            body = personService.list(max: 10)
         }
 //
 //        def form = c.addComponent(Form)
@@ -859,7 +836,7 @@ Grails application running at http://localhost:9992/test in environment: develop
     def onSearch() {
         def t = createTransition()
         t.set('select1', 'options', Select.optionsFromRecordset(
-                recordset: TPerson.where { name =~ "%${params.select1}%" }.list(),
+                recordset: personService.list(name: params.select1),
         ))
         display transition: t
     }

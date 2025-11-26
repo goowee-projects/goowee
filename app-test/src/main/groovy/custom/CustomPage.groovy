@@ -1,8 +1,8 @@
 package custom
 
+import goowee.elements.Page
 import goowee.elements.components.Header
 import goowee.elements.contents.ContentBlank
-import goowee.elements.Page
 
 class CustomPage extends Page {
 

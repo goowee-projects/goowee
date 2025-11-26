@@ -1,8 +1,8 @@
 package goowee.pages
 
-import goowee.elements.pages.ShellService
 import goowee.core.ApplicationService
 import goowee.core.WebRequestAware
+import goowee.elements.pages.ShellService
 
 /**
  * @author Gianluca Sartori

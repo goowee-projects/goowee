@@ -14,16 +14,14 @@
  */
 package test
 
+import goowee.elements.ElementsController
 import goowee.elements.components.Form
 import goowee.elements.components.Grid
 import goowee.elements.components.Label
 import goowee.elements.controls.NumberField
 import goowee.elements.controls.TextField
-import goowee.elements.ElementsController
 import goowee.elements.style.TextAlign
-import grails.gorm.multitenancy.CurrentTenant
 
-@CurrentTenant
 class GridController implements ElementsController {
 
     def index() {

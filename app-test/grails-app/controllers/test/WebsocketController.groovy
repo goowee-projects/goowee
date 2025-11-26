@@ -14,18 +14,16 @@
  */
 package test
 
+import goowee.core.TransitionService
+import goowee.elements.ElementsController
 import goowee.elements.components.Button
 import goowee.elements.components.Form
 import goowee.elements.components.Separator
 import goowee.elements.controls.Checkbox
 import goowee.elements.controls.Select
 import goowee.elements.controls.TextField
-import goowee.elements.ElementsController
-import goowee.core.TransitionService
 import goowee.security.SecurityService
-import grails.gorm.multitenancy.CurrentTenant
 
-@CurrentTenant
 class WebsocketController implements ElementsController {
 
     TransitionService transitionService

@@ -15,10 +15,13 @@
 package goowee.elements.pages
 
 import goowee.commons.utils.LogUtils
-import goowee.core.*
+import goowee.core.ApplicationService
+import goowee.core.LinkGeneratorAware
+import goowee.core.WebRequestAware
 import goowee.exceptions.GooweeException
 import goowee.properties.SystemPropertyService
 import goowee.properties.TenantPropertyService
+import goowee.tenants.TenantService
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
@@ -30,12 +33,14 @@ import groovy.util.logging.Slf4j
 @CompileStatic
 class ShellService implements WebRequestAware, LinkGeneratorAware {
 
+    ApplicationService applicationService
+    TenantService tenantService
     SystemPropertyService systemPropertyService
     TenantPropertyService tenantPropertyService
-    ApplicationService applicationService
     PageService pageService
 
-    void install(String tenantId) {
+    void tenantInstall() {
+        String tenantId = tenantService.currentTenantId
         tenantPropertyService.setString('LOGO', linkPublicResource(tenantId, '/brand/logo.png', false))
     }
 

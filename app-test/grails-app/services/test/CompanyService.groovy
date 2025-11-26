@@ -17,15 +17,17 @@ package test
 import goowee.exceptions.ArgsException
 import grails.gorm.DetachedCriteria
 import grails.gorm.multitenancy.CurrentTenant
-import org.grails.datastore.gorm.GormEntity
-import test.TCompany
+import grails.gorm.transactions.Transactional
 
 @CurrentTenant
-class DomainCrudService {
+@Transactional
+class CompanyService {
+    
     private DetachedCriteria<TCompany> buildQuery(Map filterParams) {
         def query = TCompany.where {}
 
         if (filterParams.containsKey('id')) query = query.where { id == filterParams.id }
+        if (filterParams.containsKey('name')) query = query.where { name == filterParams.name }
 
         if (filterParams.find) {
             String search = filterParams.find.replaceAll('\\*', '%')
@@ -39,8 +41,13 @@ class DomainCrudService {
         return query
     }
 
-    GormEntity get(GormEntity entity, Serializable id) {
-        return entity.get(id)
+    TCompany get(Serializable id) {
+        // Add single-sided relationships here (Eg. references to other Domain Objects)
+        Map fetch = [
+                employees: 'join',
+        ]
+
+        return buildQuery(id: id).get(fetch: fetch)
     }
 
     List<TCompany> list(Map filterParams = [:], Map fetchParams = [:]) {
@@ -48,8 +55,8 @@ class DomainCrudService {
 
         // Add single-sided relationships here (Eg. references to other DomainObjects)
         // DO NOT add hasMany relationships, you are going to have troubles with pagination
-        fetchParams.fetch = [
-                relationshipName: 'join',
+        fetchParams.fetch = [:
+//                employees: 'join',
         ]
 
         def query = buildQuery(filterParams)

@@ -19,13 +19,7 @@ import goowee.core.PrettyPrinterDecimalFormat
 import goowee.elements.ElementsController
 import goowee.elements.components.Separator
 import goowee.elements.contents.ContentForm
-import goowee.elements.controls.Checkbox
-import goowee.elements.controls.EmailField
-import goowee.elements.controls.PasswordField
-import goowee.elements.controls.Select
-import goowee.elements.controls.TelephoneField
-import goowee.elements.controls.TextField
-import goowee.elements.controls.Textarea
+import goowee.elements.controls.*
 import goowee.elements.style.TextDefault
 import goowee.properties.TenantPropertyService
 import grails.plugin.springsecurity.annotation.Secured

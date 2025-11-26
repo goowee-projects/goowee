@@ -14,6 +14,9 @@
  */
 package goowee.security
 
+import goowee.core.ApplicationService
+import goowee.core.Feature
+import goowee.elements.ElementsController
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
@@ -21,9 +24,6 @@ import goowee.elements.contents.ContentTable
 import goowee.elements.controls.MultipleCheckbox
 import goowee.elements.controls.Select
 import goowee.elements.controls.TextField
-import goowee.core.ApplicationService
-import goowee.elements.ElementsController
-import goowee.core.Feature
 import goowee.elements.style.TextTransform
 import goowee.tenants.TenantService
 import grails.plugin.springsecurity.annotation.Secured

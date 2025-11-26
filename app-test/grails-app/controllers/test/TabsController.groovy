@@ -14,21 +14,15 @@
  */
 package test
 
-import goowee.elements.components.Button
-import goowee.elements.components.Form
-import goowee.elements.components.FormField
-import goowee.elements.components.Separator
-import goowee.elements.components.Table
+import goowee.elements.ComponentEvent
+import goowee.elements.ElementsController
+import goowee.elements.components.*
 import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.controls.Select
 import goowee.elements.controls.TextField
-import goowee.elements.ComponentEvent
-import goowee.elements.ElementsController
 import goowee.elements.style.TextDefault
-import grails.gorm.multitenancy.CurrentTenant
 
-@CurrentTenant
 class TabsController implements ElementsController {
 
     def index() {

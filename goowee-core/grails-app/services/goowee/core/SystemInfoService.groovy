@@ -18,9 +18,8 @@ import goowee.utils.EnvUtils
 import grails.core.GrailsApplication
 import grails.plugins.GrailsPluginManager
 import groovy.transform.CompileStatic
-import org.springframework.beans.factory.annotation.Autowired
-
 import jakarta.servlet.ServletContext
+import org.springframework.beans.factory.annotation.Autowired
 
 import java.lang.management.ManagementFactory
 

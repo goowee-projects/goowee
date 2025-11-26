@@ -14,9 +14,8 @@
  */
 package test
 
-
-import goowee.elements.contents.ContentTable
 import goowee.elements.ElementsController
+import goowee.elements.contents.ContentTable
 import goowee.types.Money
 
 class DemoController implements ElementsController {

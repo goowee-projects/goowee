@@ -15,29 +15,21 @@
 package test
 
 import goowee.commons.utils.SqlUtils
+import goowee.core.ApplicationService
+import goowee.elements.ElementsController
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentTable
-import goowee.core.ApplicationService
-import goowee.elements.ElementsController
-import goowee.elements.controls.Checkbox
-import goowee.elements.controls.DateField
-import goowee.elements.controls.MoneyField
-import goowee.elements.controls.NumberField
-import goowee.elements.controls.Select
-import goowee.elements.controls.TextField
-import goowee.elements.controls.Upload
+import goowee.elements.controls.*
 import goowee.types.Money
 import goowee.types.Quantity
 import goowee.types.QuantityUnit
 import goowee.types.Type
-import grails.gorm.multitenancy.CurrentTenant
-
 import jakarta.annotation.PostConstruct
+
 import java.time.LocalDate
 
-@CurrentTenant
 class CrudSqlController implements ElementsController {
 
     ApplicationService applicationService

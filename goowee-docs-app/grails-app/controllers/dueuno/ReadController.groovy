@@ -14,11 +14,10 @@
  */
 package goowee
 
-
+import goowee.core.ElementsController
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.Select
 import goowee.elements.controls.Textarea
-import goowee.core.ElementsController
 
 class ReadController implements ElementsController {
 

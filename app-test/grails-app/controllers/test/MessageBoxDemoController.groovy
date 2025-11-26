@@ -14,14 +14,12 @@
  */
 package test
 
-import goowee.elements.contents.ContentForm
-import goowee.elements.controls.Select
 import goowee.elements.Elements
 import goowee.elements.ElementsController
+import goowee.elements.contents.ContentForm
+import goowee.elements.controls.Select
 import goowee.elements.style.TextDefault
-import grails.gorm.multitenancy.CurrentTenant
 
-@CurrentTenant
 class MessageBoxDemoController implements ElementsController {
 
     def index() {

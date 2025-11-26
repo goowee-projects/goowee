@@ -14,11 +14,11 @@
  */
 package test
 
+import goowee.elements.ElementsController
 import goowee.elements.components.Button
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.TextField
 import goowee.elements.controls.Upload
-import goowee.elements.ElementsController
 import goowee.tenants.TenantService
 
 class UploadController implements ElementsController {

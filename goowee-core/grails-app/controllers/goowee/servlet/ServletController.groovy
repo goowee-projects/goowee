@@ -16,7 +16,6 @@ package goowee.servlet
 
 import goowee.elements.Elements
 import groovy.util.logging.Slf4j
-
 import jakarta.servlet.Servlet
 
 //

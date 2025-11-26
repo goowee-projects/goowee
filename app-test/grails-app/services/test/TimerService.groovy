@@ -1,11 +1,7 @@
 package test
 
-import goowee.elements.components.Button
-import goowee.elements.components.Form
-import goowee.elements.components.Grid
-import goowee.elements.components.Label
-import goowee.elements.components.Table
 import goowee.elements.Component
+import goowee.elements.components.*
 import goowee.elements.style.TextAlign
 import goowee.elements.style.TextStyle
 import groovy.util.logging.Slf4j

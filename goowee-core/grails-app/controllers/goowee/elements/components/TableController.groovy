@@ -17,10 +17,9 @@ package goowee.elements.components
 /**
  * @author Gianluca Sartori
  */
-import goowee.commons.utils.DateUtils
+
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
-import jakarta.servlet.http.HttpServletResponse
 
 @Slf4j
 @CompileStatic

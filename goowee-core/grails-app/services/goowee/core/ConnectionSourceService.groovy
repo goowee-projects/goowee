@@ -16,6 +16,7 @@ package goowee.core
 
 import goowee.exceptions.ArgsException
 import grails.gorm.DetachedCriteria
+import grails.gorm.transactions.Transactional
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
@@ -32,6 +33,7 @@ import java.sql.DriverManager
  */
 
 @Slf4j
+@Transactional
 @CompileStatic
 class ConnectionSourceService {
 

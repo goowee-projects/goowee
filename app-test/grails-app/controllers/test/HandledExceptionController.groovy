@@ -14,12 +14,12 @@
  */
 package test
 
+import goowee.elements.ElementsController
 import goowee.elements.components.Button
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.TextField
-import goowee.elements.ElementsController
-import goowee.exceptions.GooweeException
 import goowee.elements.style.TextDefault
+import goowee.exceptions.GooweeException
 import groovy.util.logging.Slf4j
 
 @Slf4j

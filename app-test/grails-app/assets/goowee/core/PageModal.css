@@ -82,6 +82,10 @@
     padding-right: .25rem;
 }
 
+#page-modal-header > .component-button i {
+    font-size: .9rem;
+}
+
 #page-modal-body .simplebar-content > :nth-child(2) {
     margin-top: 0 !important;
 }

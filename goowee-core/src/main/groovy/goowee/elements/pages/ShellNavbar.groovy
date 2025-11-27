@@ -16,6 +16,7 @@ package goowee.elements.pages
 
 import goowee.elements.Component
 import goowee.elements.components.Button
+import goowee.elements.components.Link
 import goowee.exceptions.ArgsException
 import groovy.transform.CompileStatic
 
@@ -28,6 +29,7 @@ class ShellNavbar extends Component {
 
     Shell shell
     Button home
+    Link logo
 
     ShellNavbar(Map args) {
         super(args)
@@ -35,11 +37,21 @@ class ShellNavbar extends Component {
         viewPath = '/goowee/elements/pages/'
 
         shell = (Shell) ArgsException.requireArgument(args, 'shell')
-        home = (Button) createControl(
+        home = (Button) createComponent(
                 class: Button,
                 id: 'home',
                 controller: 'shell',
                 icon: 'fa-solid fa-home',
+                text: '',
+                tooltip: 'shell.home.menu',
+                animate: 'fade',
+        )
+        logo = (Link) createComponent(
+                class: Link,
+                id: 'logo',
+                controller: 'shell',
+                image: shell.config.display.logo,
+                imageFromAssets: false,
                 text: '',
                 animate: 'fade',
         )

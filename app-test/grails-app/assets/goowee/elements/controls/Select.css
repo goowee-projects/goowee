@@ -42,7 +42,9 @@
 .select2-container--bootstrap-5 .select2-selection--multiple .select2-selection__rendered .select2-selection__choice .select2-selection__choice__remove:after {
     color: rgba(var(--elements-main-text), .7);
     font-family: FontAwesome;
+    font-size: .9rem;
     content: "\f00d";
+    padding-top: .01rem;
     padding-right: .5rem;
 }
 

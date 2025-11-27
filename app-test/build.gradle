@@ -20,27 +20,3 @@ dependencies {
     // LDAP
     implementation "org.apache.grails:grails-spring-security-ldap:7.0.0"
 }
-
-bootRun {
-    jvmArgs(
-            "-Xms2g",
-            "-Xmx2g",
-    )
-}
-
-configurations.all {
-    resolutionStrategy {
-        cacheChangingModulesFor 0, "seconds"
-    }
-}
-
-assets {
-    skipNonDigests = true
-    minifyCss = true
-    minifyJs = true
-    minifyOptions = [
-            //SIMPLE (default) or ADVANCED or WHITESPACE_ONLY
-            optimizationLevel: "SIMPLE",
-            excludes: ["**/libs/**"]
-    ]
-}

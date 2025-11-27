@@ -10,6 +10,10 @@
     box-shadow: none;
 }
 
+#shell-menu .nav-link span {
+    padding-left: .25rem;
+}
+
 #shell-menu {
     position: fixed;
     width: 15rem;

@@ -91,7 +91,7 @@ class CrudController implements ElementsController {
                     addField(
                             class: Select,
                             id: 'company',
-                            optionsFromRecordset: personService.list(),
+                            optionsFromRecordset: companyService.list(),
                             transformer: 'TRANSFORM_ME',
 //                            renderTextPrefix: true,
                             multiple: true,

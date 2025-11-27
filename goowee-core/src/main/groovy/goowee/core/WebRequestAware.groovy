@@ -318,7 +318,7 @@ trait WebRequestAware {
      */
     String prettyPrint(Object value, PrettyPrinterProperties properties = new PrettyPrinterProperties()) {
         if (properties.locale == null) properties.locale = locale
-        if (properties.decimalFormat == null) properties.decimalFormat = decimalFormat.toString()
+        if (properties.decimalFormat == null) properties.decimalFormat = decimalFormat
         if (properties.prefixedUnit == null) properties.prefixedUnit = prefixedUnit
         if (properties.symbolicCurrency == null) properties.symbolicCurrency = symbolicCurrency
         if (properties.symbolicQuantity == null) properties.symbolicQuantity = symbolicQuantity
@@ -368,8 +368,8 @@ trait WebRequestAware {
      * Returns the 'decimal symbol' format configured by the current user in its user profile.
      * @return The 'decimal symbol' format configured by the current user in its user profile
      */
-    PrettyPrinterDecimalFormat getDecimalFormat() {
-        return session['_21DecimalFormat'] as PrettyPrinterDecimalFormat ?: PrettyPrinterDecimalFormat.ISO_COM
+    String getDecimalFormat() {
+        return session['_21DecimalFormat'] ?: PrettyPrinterDecimalFormat.ISO_COM as String
     }
 
     /**
@@ -482,7 +482,6 @@ trait WebRequestAware {
 
     /**
      * Sets the 'fontSize' parameter configured by the current user in its user profile
-     *
      * @param value The 'fontSize' parameter configured by the current user in its user profile
      */
     void setFontSize(Integer value) {
@@ -495,7 +494,23 @@ trait WebRequestAware {
      */
     Integer getFontSize() {
         Integer fontSize = session['_21FontSize'] as Integer
-        return fontSize ?: 16
+        return fontSize ?: 14
+    }
+
+    /**
+     * Sets the 'guiStyle' parameter configured by the current user in its user profile
+     * @param value The 'guiStyle' parameter configured by the current user in its user profile
+     */
+    void setGuiStyle(String value) {
+        session['_21GuiStyle'] = value
+    }
+
+    /**
+     * Returns the 'guiStyle' parameter configured by the current user in its user profile
+     * @return the 'guiStyle' parameter configured by the current user in its user profile
+     */
+    String getGuiStyle() {
+        return session['_21GuiStyle'] ?: GuiStyle.ROUNDED as String
     }
 
     /**

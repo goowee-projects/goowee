@@ -15,6 +15,7 @@
 package goowee.security
 
 import goowee.core.ApplicationService
+import goowee.core.GuiStyle
 import goowee.core.PrettyPrinterDecimalFormat
 import goowee.elements.ElementsController
 import goowee.elements.components.Separator
@@ -370,7 +371,8 @@ class UserController implements ElementsController {
                         class: NumberField,
                         id: 'fontSize',
                         defaultValue: 14,
-                        cols: 6,
+                        cols: 3,
+                        colsSmall: 6,
                 )
             } else {
                 addField(
@@ -379,10 +381,18 @@ class UserController implements ElementsController {
                         optionsFromList: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                         defaultValue: 14,
                         renderTextPrefix: false,
-                        cols: 6,
+                        cols: 3,
                         colsSmall: 6,
                 )
             }
+            addField(
+                    class: Select,
+                    id: 'guiStyle',
+                    optionsFromEnum: GuiStyle,
+                    textPrefix: 'default',
+                    cols: 3,
+                    colsSmall: 6,
+            )
             addField(
                     class: Checkbox,
                     id: 'animations',

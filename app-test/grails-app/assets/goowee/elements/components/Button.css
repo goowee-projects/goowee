@@ -4,8 +4,13 @@ button,
 .input-group button,
 .dropdown-toggle {
     border-radius: var(--bs-border-radius-lg);
-    padding: var(--elements-spacing-y) var(--elements-spacing-x);
+    padding: var(--elements-spacing-y) .5rem;
     border: none;
+}
+
+.component-button button {
+    padding-left: .75rem;
+    padding-right: .75rem;
 }
 
 .component-button .component-button-default-action {

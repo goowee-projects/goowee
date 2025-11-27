@@ -43,6 +43,7 @@
     color: rgba(var(--elements-main-text), .7);
     font-family: FontAwesome;
     content: "\f00d";
+    padding-top: .1rem;
     padding-right: .5rem;
 }
 

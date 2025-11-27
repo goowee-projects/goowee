@@ -15,6 +15,7 @@
 package goowee.security
 
 import goowee.core.ApplicationService
+import goowee.core.GuiStyle
 import goowee.core.PrettyPrinterDecimalFormat
 import goowee.elements.ElementsController
 import goowee.elements.components.Separator
@@ -142,7 +143,15 @@ class UserProfileController implements ElementsController {
                     optionsFromList: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                     defaultValue: 14,
                     renderTextPrefix: false,
-                    cols: 6,
+                    cols: 3,
+                    colsSmall: 6,
+            )
+            addField(
+                    class: Select,
+                    id: 'guiStyle',
+                    optionsFromEnum: GuiStyle,
+                    textPrefix: 'default',
+                    cols: 3,
                     colsSmall: 6,
             )
             addField(
@@ -242,6 +251,7 @@ class UserProfileController implements ElementsController {
         twelveHours = (params.twelveHours == 'false') ? false : true
         firstDaySunday = (params.firstDaySunday == 'false') ? false : true
         fontSize = params.fontSize as Integer
+        guiStyle = params.guiStyle as String
         animations = params.animations as Boolean
 
         display controller: securityService.userLandingPage ?: 'shell', direct: true

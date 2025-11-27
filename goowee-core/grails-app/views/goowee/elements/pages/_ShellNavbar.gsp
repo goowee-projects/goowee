@@ -18,10 +18,12 @@
         </div>
     </g:if>
 
-    <img id="shell-navbar-logo"
-         class="mx-auto"
-         src="${c.shell.config.display.logo}"
-    />
+    <div id="shell-navbar-logo" class="mx-auto">
+        <render:component instance="${c.logo}"/>
+<!--        <img class="mx-auto"-->
+<!--             src="${c.shell.config.display.logo}"-->
+<!--        />-->
+    </div>
 
     <!--    <div class="shell-navbar-notifications-toggle">-->
     <!--        <button type="button" class="btn btn-secondary text-dark"-->

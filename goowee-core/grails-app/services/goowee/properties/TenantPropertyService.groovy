@@ -15,6 +15,7 @@
 package goowee.properties
 
 import goowee.commons.utils.StringUtils
+import goowee.core.GuiStyle
 import goowee.exceptions.ArgsException
 import goowee.security.CryptoService
 import goowee.tenants.TTenantProperty
@@ -53,6 +54,9 @@ class TenantPropertyService extends PropertyService {
         setString('ICON_STYLE', 'fa-solid', 'fa-solid')
         // See: /assets/goowee/libs/FONTAWESOME-README.TXT, use one of:
         // fa-solid, fa-regular, fa-light, fa-thin, fa-duotone, fa-brand
+        // Other
+        setNumber('FONT_SIZE', 14, 14)
+        setString('GUI_STYLE', GuiStyle.ROUNDED as String)
 
         // Colors
         setString('MAIN_TEXT_COLOR', '#333030', '#333030')

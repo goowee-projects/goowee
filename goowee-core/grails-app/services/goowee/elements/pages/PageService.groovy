@@ -70,7 +70,7 @@ class PageService implements WebRequestAware, LinkGeneratorAware {
      */
     public <T> T createPage(Class<T> clazz, Map args = [:]) {
         if (!securityService.isLoggedIn()) {
-            fontSize = systemPropertyService.getNumber('FONT_SIZE', true) as Integer
+            fontSize = tenantPropertyService.getNumber('FONT_SIZE', true) as Integer
         }
 
         return Component.createInstance(clazz, clazz.simpleName.uncapitalize(), initialize(args))

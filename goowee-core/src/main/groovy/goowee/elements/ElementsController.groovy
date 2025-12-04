@@ -18,8 +18,8 @@ import goowee.commons.utils.LogUtils
 import goowee.core.LinkGeneratorAware
 import goowee.core.WebRequestAware
 import goowee.elements.contents.ContentHeader
-import goowee.elements.pages.PageBlank
 import goowee.elements.pages.PageService
+import goowee.elements.pages.PageWebsocket
 import goowee.exceptions.GooweeException
 import grails.artefact.Controller
 import grails.artefact.Enhances
@@ -121,7 +121,7 @@ trait ElementsController implements Controller, RestResponder, WebRequestAware, 
     }
 
     private Page getMainPage() {
-        return getPageService().mainPage ?: createPage(PageBlank)
+        return getPageService().mainPage ?: createPage(PageWebsocket)
     }
 
     /**

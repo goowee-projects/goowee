@@ -35,6 +35,7 @@ import grails.plugin.springsecurity.SpringSecurityUtils
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+import jakarta.servlet.http.HttpServletRequest
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices
@@ -612,14 +613,23 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         return query.get(fetch: fetchAll) as TUser
     }
 
+    TUser getUserByExternalId(String externalId) {
+        def query = TUser.where { externalId == externalId }
+        return query.get(fetch: fetchAll) as TUser
+    }
+
     TUser getUserByApiKey(String apiKey) {
         def query = TUser.where { apiKey == apiKey }
         return query.get(fetch: fetchAll) as TUser
     }
 
-    TUser getUserByExternalId(String externalId) {
-        def query = TUser.where { externalId == externalId }
-        return query.get(fetch: fetchAll) as TUser
+    TUser getUserByXAuthToken(HttpServletRequest request) {
+        String apiKey = request.getHeader('X-Auth-Token')
+        if (!apiKey) {
+            return null
+        }
+
+        return getUserByApiKey(apiKey)
     }
 
     TUser getSuperAdminUser() {

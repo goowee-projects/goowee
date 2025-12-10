@@ -2,6 +2,7 @@
     --bs-tooltip-font-size: .9rem;
     --bs-tooltip-color: rgb(var(--elements-frame-text));
     --bs-tooltip-bg: rgb(var(--elements-frame-bg));
+    --bs-border-radius: var(--bs-border-radius-sm);
 }
 
 .tooltip.show {
@@ -14,7 +15,7 @@
 
 .component-label.tag {
     padding: var(--elements-spacing-y) var(--elements-spacing-x);
-    border-radius: var(--bs-border-radius);
+    border-radius: var(--bs-border-radius-sm);
     border: none !important;
     height: 100%;
 }

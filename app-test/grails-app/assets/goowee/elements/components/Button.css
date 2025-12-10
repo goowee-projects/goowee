@@ -3,7 +3,7 @@ button,
 .btn-group a.btn,
 .btn-group button,
 .dropdown-toggle {
-    border-radius: var(--bs-border-radius-lg);
+    border-radius: var(--bs-border-radius);
     padding: var(--elements-spacing-y) .5rem;
     border: none;
 }
@@ -67,7 +67,7 @@ button {
 
 .dropdown-item:focus,
 .dropdown-item:hover {
-    border-radius: var(--bs-border-radius);
+    border-radius: var(--bs-border-radius-sm);
     outline: none;
 }
 

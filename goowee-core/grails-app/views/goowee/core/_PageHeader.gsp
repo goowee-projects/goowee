@@ -34,8 +34,9 @@
 <style>
     :root {
         --elements-font-size: ${c.fontSize ?: '14'}px;
-        --bs-border-radius: ${c.guiStyle == 'ROUNDED' ? '.35rem' : '.15rem'};
-        --bs-border-radius-lg: ${c.guiStyle == 'ROUNDED' ? '.6rem' : '.35rem'};
-        --bs-border-radius-xl: ${c.guiStyle == 'ROUNDED' ? '1rem' : '.15rem'};
+        --bs-border-radius-sm: ${c.guiStyle == 'SQUARED' ? '0rem' : '.40rem'};
+        --bs-border-radius:    ${c.guiStyle == 'SQUARED' ? '0rem' : '.60rem'};
+        --bs-border-radius-lg: ${c.guiStyle == 'SQUARED' ? '0rem' : '.60rem'};
+        --bs-border-radius-xl: ${c.guiStyle == 'SQUARED' ? '0rem' : '1rem'};
     }
 </style>

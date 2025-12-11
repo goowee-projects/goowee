@@ -19,10 +19,7 @@ When modifying this template, please update also:
 <g:else>
     <% text = c.text %>
     <g:if test="${c.tooltip}"><span ${raw('data-bs-custom-class="tooltip" data-bs-toggle="tooltip" data-bs-title="' + c.message(c.tooltip) + '"')}></g:if>
-    <g:if test="${c.image}">
-        <g:if test="${c.imageFromAssets}"><i><asset:image src="${c.image}" class="${c.imageClass}"/></i></g:if>
-        <g:else><i><img src="${c.image}" class="${c.imageClass}"/></i></g:else>
-    </g:if>
+    <g:if test="${c.image}"><i><asset:image src="${c.image}" class="image-icon ${c.imageClass}"/></i></g:if>
     <g:elseif test="${c.icon}"><render:icon icon="${c.icon}"/></g:elseif>
     <g:if test="${c.url}"><a href="${c.url}" target="_blank"></g:if><span class="text ${c.verticalAlign}">${text}${c.tag && !text ? raw('&nbsp;') : ''}</span><g:if test="${c.url}"></a></g:if>
     <g:if test="${c.tooltip}"></span></g:if>

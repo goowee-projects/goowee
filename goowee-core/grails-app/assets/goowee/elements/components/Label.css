@@ -9,6 +9,13 @@
     opacity: 1;
 }
 
+.image-icon {
+    margin-top: -.2rem;
+    height: 1.3rem;
+    border: .15rem solid rgb(var(--elements-main-fg));
+    border-radius: 100%;
+}
+
 .component-label {
     border-radius: 0;
 }

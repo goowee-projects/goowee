@@ -11,10 +11,7 @@
 <g:elseif test="${c.components}"><render:componentList instance="${c}" /></g:elseif>
 <g:else>
     <% text = c.text %>
-    <g:if test="${c.image}">
-        <g:if test="${c.imageFromAssets}"><i><asset:image src="${c.image}" class="${c.imageClass}"/></i></g:if>
-        <g:else><i><img src="${c.image}" class="${c.imageClass}"/></i></g:else>
-    </g:if>
+    <g:if test="${c.image}"><i><asset:image src="${c.image}" class="image-icon ${c.imageClass}"/></i></g:if>
     <g:elseif test="${c.icon}"><render:icon icon="${c.icon}" /></g:elseif>
     <g:if test="${c.text}"><span class="${c.textStyle}">${text}</span></g:if>
 </g:else>

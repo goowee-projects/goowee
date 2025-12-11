@@ -93,7 +93,6 @@
 
 .select2-container--bootstrap-5 .select2-selection--single .select2-selection__rendered {
     padding: var(--elements-spacing-y) var(--elements-spacing-x);
-    padding-left: .5rem;
     font-weight: bold;
     color: rgb(var(--elements-main-text));
 }

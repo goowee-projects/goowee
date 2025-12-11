@@ -34,9 +34,9 @@
 <style>
     :root {
         --elements-font-size: ${c.fontSize ?: '14'}px;
-        --bs-border-radius-sm: ${c.guiStyle == 'SQUARED' ? '0rem' : '.40rem'};
-        --bs-border-radius:    ${c.guiStyle == 'SQUARED' ? '0rem' : '.60rem'};
-        --bs-border-radius-lg: ${c.guiStyle == 'SQUARED' ? '0rem' : '.60rem'};
-        --bs-border-radius-xl: ${c.guiStyle == 'SQUARED' ? '0rem' : '1rem'};
+        --bs-border-radius-sm: ${c.guiStyle == 'SQUARED' ? '0rem' : '.40rem'}; <%-- Controls --%>
+        --bs-border-radius:    ${c.guiStyle == 'SQUARED' ? '0rem' : '.60rem'}; <%-- Buttons --%>
+        --bs-border-radius-lg: ${c.guiStyle == 'SQUARED' ? '0rem' : '.60rem'}; <%-- Components --%>
+        --bs-border-radius-xl: ${c.guiStyle == 'SQUARED' ? '0rem' : '1rem'};   <%-- Modals --%>
     }
 </style>

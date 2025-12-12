@@ -20,10 +20,10 @@ import grails.gorm.multitenancy.CurrentTenant
 import grails.gorm.transactions.Transactional
 
 @CurrentTenant
-class CompanyService {
-    
-    private DetachedCriteria<TCompany> buildQuery(Map filterParams) {
-        def query = TCompany.where {}
+class DemoService {
+
+    private DetachedCriteria<TDemo> buildQuery(Map filterParams) {
+        def query = TDemo.where {}
 
         if (filterParams.containsKey('id')) query = query.where { id == filterParams.id }
         if (filterParams.containsKey('name')) query = query.where { name == filterParams.name }
@@ -40,7 +40,7 @@ class CompanyService {
         return query
     }
 
-    TCompany get(Serializable id) {
+    TDemo get(Serializable id) {
         // Add single-sided relationships here (Eg. references to other Domain Objects)
         Map fetch = [
                 employees: 'join',
@@ -49,7 +49,7 @@ class CompanyService {
         return buildQuery(id: id).get(fetch: fetch)
     }
 
-    List<TCompany> list(Map filterParams = [:], Map fetchParams = [:]) {
+    List<TDemo> list(Map filterParams = [:], Map fetchParams = [:]) {
         if (!fetchParams.sort) fetchParams.sort = [dateCreated: 'asc']
 
         // Add single-sided relationships here (Eg. references to other DomainObjects)
@@ -68,20 +68,20 @@ class CompanyService {
     }
 
     @Transactional
-    TCompany create(Map args = [:]) {
+    TDemo create(Map args = [:]) {
         if (args.failOnError == null) args.failOnError = false
 
-        TCompany obj = new TCompany(args)
+        TDemo obj = new TDemo(args)
         obj.save(flush: true, failOnError: args.failOnError)
         return obj
     }
 
     @Transactional
-    TCompany update(Map args = [:]) {
+    TDemo update(Map args = [:]) {
         Serializable id = ArgsException.requireArgument(args, 'id')
         if (args.failOnError == null) args.failOnError = false
 
-        TCompany obj = get(id)
+        TDemo obj = get(id)
         obj.properties = args
         obj.save(flush: true, failOnError: args.failOnError)
         return obj
@@ -89,7 +89,7 @@ class CompanyService {
 
     @Transactional
     void delete(Serializable id) {
-        TCompany obj = get(id)
+        TDemo obj = get(id)
         obj.delete(flush: true, failOnError: true)
     }
 }

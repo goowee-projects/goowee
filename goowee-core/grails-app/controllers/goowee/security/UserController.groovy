@@ -552,5 +552,3 @@ class UserController implements ElementsController {
         }
     }
 }
-
-

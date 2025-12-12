@@ -15,11 +15,12 @@
 package goowee.types
 
 import goowee.core.PrettyPrinterProperties
+import groovy.transform.CompileStatic
 
 /**
  * @author Gianluca Sartori
  */
-
+@CompileStatic
 interface CustomType {
 
     Map serialize()

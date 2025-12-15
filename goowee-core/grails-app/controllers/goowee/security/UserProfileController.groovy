@@ -262,4 +262,3 @@ class UserProfileController implements ElementsController {
         display controller: securityService.userLandingPage ?: 'shell', direct: true
     }
 }
-

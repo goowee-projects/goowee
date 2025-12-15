@@ -22,7 +22,6 @@ import groovy.util.logging.Slf4j
 
 @Slf4j
 @CurrentTenant
-@Transactional
 class TestService {
 
     ApplicationService applicationService
@@ -31,6 +30,7 @@ class TestService {
         log.info "*** TestService.printTestString() -> shell.name = '${applicationService.shell.id}' ***"
     }
 
+    @Transactional
     void installDemo() {
         TDemo demo = new TDemo(
                 textfield: 'Ventuno',

@@ -26,14 +26,13 @@ class DemoService {
         def query = TDemo.where {}
 
         if (filterParams.containsKey('id')) query = query.where { id == filterParams.id }
-        if (filterParams.containsKey('name')) query = query.where { name == filterParams.name }
 
-        if (filterParams.find) {
-            String search = filterParams.find.replaceAll('\\*', '%')
-            query = query.where {
-                name =~ "%${search}%"
-            }
-        }
+//        if (filterParams.find) {
+//            String search = filterParams.find.replaceAll('\\*', '%')
+//            query = query.where {
+//                name =~ "%${search}%"
+//            }
+//        }
 
         // Add additional filters here
 

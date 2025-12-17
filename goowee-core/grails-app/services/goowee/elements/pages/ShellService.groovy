@@ -16,11 +16,13 @@ package goowee.elements.pages
 
 import goowee.commons.utils.LogUtils
 import goowee.core.ApplicationService
+import goowee.core.LinkDefinition
 import goowee.core.LinkGeneratorAware
 import goowee.core.WebRequestAware
 import goowee.exceptions.GooweeException
 import goowee.properties.SystemPropertyService
 import goowee.properties.TenantPropertyService
+import goowee.security.SecurityService
 import goowee.tenants.TenantService
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
@@ -35,6 +37,7 @@ class ShellService implements WebRequestAware, LinkGeneratorAware {
 
     ApplicationService applicationService
     TenantService tenantService
+    SecurityService securityService
     SystemPropertyService systemPropertyService
     TenantPropertyService tenantPropertyService
     PageService pageService

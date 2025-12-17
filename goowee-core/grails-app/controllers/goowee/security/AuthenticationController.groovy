@@ -14,8 +14,11 @@
  */
 package goowee.security
 
+import goowee.core.LinkDefinition
 import goowee.elements.ElementsController
 import goowee.elements.pages.Login
+import goowee.elements.pages.PageService
+import goowee.elements.pages.Shell
 import goowee.properties.TenantPropertyService
 import goowee.tenants.TenantService
 import grails.converters.JSON
@@ -30,6 +33,7 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
 class AuthenticationController implements ElementsController {
 
+    PageService pageService
     SecurityService securityService
     TenantService tenantService
     TenantPropertyService tenantPropertyService
@@ -61,14 +65,18 @@ class AuthenticationController implements ElementsController {
 
     @Secured(['ROLE_USER'])
     def afterLogin() {
+        securityService.executeAfterLogin()
+        if (securityService.isLoginDenied()) {
+            forward action: 'logout'
+            return
+        }
+
         ///////////////////////////////////////
         // IF YOU'RE HERE THE USER LOGGED IN //
         ///////////////////////////////////////
 
-        // Loads the user and sets up the current tenant
+        // Getting the user preferences
         TUser user = securityService.currentUser
-
-        // Loading user setting
         decimalFormat = user.decimalFormat
         prefixedUnit = user.prefixedUnit
         symbolicCurrency = user.symbolicCurrency
@@ -78,13 +86,6 @@ class AuthenticationController implements ElementsController {
         firstDaySunday = user.firstDaySunday
         fontSize = user.fontSize
         animations = user.animations
-
-        // Executing custom after login code & check if we need to log the user out
-        securityService.executeAfterLogin()
-        if (securityService.isLoginDenied()) {
-            forward action: 'logout'
-            return
-        }
 
         // We redirect the user to the configured location
         if (params.ajax) { // Default login

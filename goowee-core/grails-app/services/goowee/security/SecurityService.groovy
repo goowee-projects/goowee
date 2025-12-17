@@ -288,6 +288,8 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
 
         Shell shell = shellService.shell
         shell.setUser(currentUsername, user.firstname, user.lastname)
+        shell.setLogoLink(new LinkDefinition(controller: loginLandingPage))
+
         setMenuVisibility(shell.menu)
         setMenuVisibility(shell.userMenu)
     }

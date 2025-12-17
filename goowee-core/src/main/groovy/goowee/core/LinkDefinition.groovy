@@ -70,9 +70,9 @@ class LinkDefinition implements Serializable {
     Map confirmMessageOnConfirm
 
     LinkDefinition(Map args = [:]) {
-        namespace = args.namespace ?: ''
-        controller = args.controller ?: ''
-        action = args.action ?: ''
+        namespace = args.namespace == null ? '' : args.namespace
+        controller = args.controller == null ? '' : args.controller
+        action = args.action == null ? 'index' : args.action
         fragment = args.fragment ?: ''
         path = args.path ?: ''
         url = args.url ?: ''

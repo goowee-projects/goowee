@@ -39,6 +39,7 @@ class ShellController implements ElementsController {
 
     def index() {
         Shell shell = shellService.shell
+        shell.navbar
         shell.content = shell.home
         display page: shell
     }

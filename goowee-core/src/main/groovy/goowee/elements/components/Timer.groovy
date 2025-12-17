@@ -21,7 +21,7 @@ class Timer extends Link {
         executeImmediately = args.executeImmediately == null ? true : args.executeImmediately
 
         eventName = 'interval'
-        setOnEvent(args.onInterval as String)
+        setOnClickEvent(args.onInterval as String)
     }
 
     @Override

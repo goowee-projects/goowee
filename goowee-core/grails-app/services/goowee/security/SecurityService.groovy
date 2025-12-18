@@ -508,7 +508,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
     }
 
     /**
-     * Returns the default landing page configured for the current user
+     * Returns the default landing page URL configured for the current user
      * @return
      */
     @CompileDynamic
@@ -521,13 +521,13 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
 
         // User configured DEFAULT GROUP
         if (currentUserGroup && currentUserGroup.landingPage) {
-            return currentUserGroup.landingPage
+            return '/' + currentUserGroup.landingPage
 
         } else { // USERS Group (applies to all users of a tenant)
             TTenant currentTenant = tenantService.currentTenant
             TRoleGroup usersGroup = TRoleGroup.findByTenantAndName(currentTenant, GROUP_USERS)
             if (usersGroup && usersGroup.landingPage) {
-                return usersGroup.landingPage
+                return '/' + usersGroup.landingPage
             }
         }
 

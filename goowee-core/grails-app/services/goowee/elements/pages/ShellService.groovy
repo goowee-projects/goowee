@@ -37,7 +37,6 @@ class ShellService implements WebRequestAware, LinkGeneratorAware {
 
     ApplicationService applicationService
     TenantService tenantService
-    SecurityService securityService
     SystemPropertyService systemPropertyService
     TenantPropertyService tenantPropertyService
     PageService pageService

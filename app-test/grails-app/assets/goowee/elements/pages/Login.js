@@ -117,10 +117,12 @@ class Login extends Page {
         .done(function (data, textStatus, request) {
             if (data.success) {
                 let params = $.getQueryParameters();
-                let url = _21_.app.url.substr(0, _21_.app.url.length - 1);
-                if (params.landingPage) url = url + params.landingPage;
-                else if (data.redirect) url = url + data.redirect;
-                else url = url + '/';
+                let url = _21_.app.url;
+                if (params.landingPage) {
+                    url = url + params.landingPage;
+                } else if (data.redirect) {
+                    url = url + data.redirect;
+                }
                 window.location.replace(url);
             }
 

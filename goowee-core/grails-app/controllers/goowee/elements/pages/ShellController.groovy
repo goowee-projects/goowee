@@ -39,7 +39,6 @@ class ShellController implements ElementsController {
 
     def index() {
         Shell shell = shellService.shell
-        shell.navbar
         shell.content = shell.home
         display page: shell
     }
@@ -85,7 +84,7 @@ class ShellController implements ElementsController {
     @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
     def toggleDevHints() {
         devDisplayHints = !devDisplayHints
-        display controller: securityService.userLandingPage ?: 'shell', direct: true
+        display url: securityService.userLandingPage
     }
 
     @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
@@ -93,13 +92,13 @@ class ShellController implements ElementsController {
         Boolean logs = tenantPropertyService.getBoolean('LOG_ERROR')
         tenantPropertyService.setBoolean('LOG_ERROR', !logs)
         tenantPropertyService.setBoolean('LOG_DEBUG', !logs)
-        display controller: securityService.userLandingPage ?: 'shell', direct: true
+        display url: securityService.userLandingPage
     }
 
     @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
     def switchLanguage() {
         currentLanguage = (String) params.id
         securityService.saveCurrentUserLanguage()
-        display controller: securityService.userLandingPage ?: 'shell', direct: true
+        display url: securityService.userLandingPage
     }
 }

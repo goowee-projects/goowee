@@ -50,6 +50,7 @@ class ShellNavbar extends Component {
         logo = (Link) createComponent(
                 class: Link,
                 id: 'logo',
+                controller: 'shell',
                 animate: 'fade',
         )
         logo.addComponent(

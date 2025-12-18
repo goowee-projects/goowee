@@ -74,7 +74,6 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
     TokenBasedRememberMeServices tokenBasedRememberMeServices
 
     SpringSecurityService springSecurityService
-    SystemPropertyService systemPropertyService
     TenantPropertyService tenantPropertyService
     ApplicationService applicationService
     ShellService shellService
@@ -236,12 +235,12 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         applicationService.registerDeveloperUserFeature(
                 controller: 'shell',
                 action: 'toggleDevHints',
-                icon: 'fa-key',
+                icon: 'fa-message',
                 order: 10000050,
         )
         applicationService.registerDeveloperUserFeature(
                 controller: 'gormExplorer',
-                icon: 'fa-table',
+                icon: 'fa-database',
                 targetNew: true,
                 order: 10000060,
         )
@@ -288,7 +287,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
 
         Shell shell = shellService.shell
         shell.setUser(currentUsername, user.firstname, user.lastname)
-        shell.setLogoLink(new LinkDefinition(controller: loginLandingPage))
+        shell.setLogoLink(new LinkDefinition(url: loginLandingPage))
 
         setMenuVisibility(shell.menu)
         setMenuVisibility(shell.userMenu)
@@ -514,41 +513,41 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
      */
     @CompileDynamic
     String getUserLandingPage() {
-        if (isSuperAdmin())
-            return ''
+        if (isSuperAdmin()) {
+            return '/shell'
+        }
 
         TRoleGroup currentUserGroup = currentUser.defaultGroup
 
         // User configured DEFAULT GROUP
         if (currentUserGroup && currentUserGroup.landingPage) {
-            return '/' + currentUserGroup.landingPage
+            return currentUserGroup.landingPage
 
         } else { // USERS Group (applies to all users of a tenant)
             TTenant currentTenant = tenantService.currentTenant
             TRoleGroup usersGroup = TRoleGroup.findByTenantAndName(currentTenant, GROUP_USERS)
             if (usersGroup && usersGroup.landingPage) {
-                return '/' + usersGroup.landingPage
+                return usersGroup.landingPage
             }
         }
 
         // Application defined landing page (applies to ALL users)
-        return tenantPropertyService.getString('LOGIN_LANDING_URL', true)
+        return tenantPropertyService.getString('LOGIN_LANDING_URL', true) ?: '/shell'
     }
 
     String getLoginLandingPage() {
+        String requestLandingPage = requestParams.landingPage
         String shellUrlMapping = tenantPropertyService.getString('SHELL_URL_MAPPING', true)
-        String loginLandingPage = userLandingPage
-        String urlLandingPage = requestParams.landingPage
 
-        return urlLandingPage ?: loginLandingPage ?: shellUrlMapping ?: '/'
+        return requestLandingPage ?: userLandingPage ?: shellUrlMapping ?: '/shell'
     }
 
     String getLogoutLandingPage() {
-        String shellUrlMapping = tenantPropertyService.getString('SHELL_URL_MAPPING', true)
+        String requestLandingPage = requestParams.landingPage
         String logoutLandingPage = tenantPropertyService.getString('LOGOUT_LANDING_URL', true)
-        String urlLandingPage = requestParams.landingPage
+        String shellUrlMapping = tenantPropertyService.getString('SHELL_URL_MAPPING', true)
 
-        return urlLandingPage ?: logoutLandingPage ?: shellUrlMapping ?: '/'
+        return requestLandingPage ?: logoutLandingPage ?: shellUrlMapping ?: '/login'
     }
 
     //

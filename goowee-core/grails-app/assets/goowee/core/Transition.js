@@ -226,11 +226,17 @@ class Transition {
     }
 
     static buildUrl(componentEvent, values = null) {
-        if (!componentEvent)
+        if (!componentEvent) {
             return null;
+        }
 
         if (componentEvent.url) {
-            return componentEvent.url;
+            let isAbsolute = componentEvent.url.startsWith('http');
+            if (isAbsolute) {
+                return componentEvent.url;
+            } else {
+                return _21_.app.url + componentEvent.url;
+            }
 
         } else {
             let uri = componentEvent.controller + '/' + componentEvent.action;

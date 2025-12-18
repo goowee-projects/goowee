@@ -70,9 +70,9 @@ class LinkDefinition implements Serializable {
     Map confirmMessageOnConfirm
 
     LinkDefinition(Map args = [:]) {
-        namespace = args.namespace == null ? '' : args.namespace
-        controller = args.controller == null ? '' : args.controller
-        action = args.action == null ? 'index' : args.action
+        namespace = args.namespace ?: ''
+        controller = args.controller ?: ''
+        action = args.action ?: 'index'
         fragment = args.fragment ?: ''
         path = args.path ?: ''
         url = args.url ?: ''
@@ -99,10 +99,11 @@ class LinkDefinition implements Serializable {
         confirmMessageArgs = args.confirmMessageArgs as List
         confirmMessageOnConfirm = args.confirmMessageOnClick as Map
 
-        if (args.renderProperties)
+        if (args.renderProperties) {
             renderProperties = (PageRenderProperties) args.renderProperties
-        else
+        } else {
             renderProperties = new PageRenderProperties(args)
+        }
     }
 
     Boolean getTargetNew() {

@@ -33,9 +33,8 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
 class AuthenticationController implements ElementsController {
 
-    PageService pageService
-    SecurityService securityService
     TenantService tenantService
+    SecurityService securityService
     TenantPropertyService tenantPropertyService
 
     def login() {

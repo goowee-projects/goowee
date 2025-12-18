@@ -241,7 +241,7 @@ trait ElementsController implements Controller, RestResponder, WebRequestAware, 
                 t.errorMessage("Cannot display errors, please refer to the Goowee user guide.")
             }
 
-        } else if (args.controller || args.action) {
+        } else if (args.controller || args.action || args.url) {
             t.redirect(args)
         }
 

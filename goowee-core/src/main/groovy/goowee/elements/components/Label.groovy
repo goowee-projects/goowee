@@ -42,7 +42,6 @@ class Label extends Component {
      */
     String image
     String imageClass
-    Boolean imageFromAssets
 
     /**
      * If specified a tooltip will be displayed on mouse hover
@@ -79,9 +78,10 @@ class Label extends Component {
         url = args.url
         icon = args.icon
         iconClass = args.iconClass
+
         image = args.image
         imageClass = args.imageClass
-        imageFromAssets = args.imageFromAssets == null ? true : args.imageFromAssets
+
         tooltip = args.tooltip
 
         verticalAlign = args.verticalAlign == null ? VerticalAlign.DEFAULT : args.verticalAlign as VerticalAlign

@@ -39,6 +39,7 @@
 }
 
 #shell-navbar-logo img {
+    border-radius: 0;
     height: 2rem;
 }
 

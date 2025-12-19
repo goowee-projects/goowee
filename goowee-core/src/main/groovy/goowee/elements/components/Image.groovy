@@ -14,6 +14,8 @@
  */
 package goowee.elements.components
 
+import goowee.core.LinkDefinition
+import goowee.elements.Component
 import groovy.transform.CompileStatic
 
 /**
@@ -21,9 +23,8 @@ import groovy.transform.CompileStatic
  */
 
 @CompileStatic
-class Image extends Label {
+class Image extends Component {
 
-    /** An image */
     String image
 
     Image(Map args) {

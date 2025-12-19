@@ -334,7 +334,7 @@ class SandboxController implements ElementsController {
 
             def linkField = addField(
                     class: Link,
-                    id: 'imageWithLink',
+                    id: 'linkWithImage',
                     controller: 'form',
                     modal: true,
                     cols: 12,

@@ -20,7 +20,6 @@ import grails.gorm.multitenancy.CurrentTenant
 import grails.gorm.transactions.Transactional
 
 @CurrentTenant
-@Transactional
 class PersonService {
 
     private DetachedCriteria<TPerson> buildQuery(Map filterParams) {
@@ -67,6 +66,7 @@ class PersonService {
         return query.count()
     }
 
+    @Transactional
     TPerson create(Map args = [:]) {
         if (args.failOnError == null) args.failOnError = false
 
@@ -75,6 +75,7 @@ class PersonService {
         return obj
     }
 
+    @Transactional
     TPerson update(Map args = [:]) {
         Serializable id = ArgsException.requireArgument(args, 'id')
         if (args.failOnError == null) args.failOnError = false
@@ -85,6 +86,7 @@ class PersonService {
         return obj
     }
 
+    @Transactional
     void delete(Serializable id) {
         TPerson obj = get(id)
         obj.delete(flush: true, failOnError: true)

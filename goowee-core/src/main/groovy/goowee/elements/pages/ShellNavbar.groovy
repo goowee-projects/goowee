@@ -16,6 +16,7 @@ package goowee.elements.pages
 
 import goowee.elements.Component
 import goowee.elements.components.Button
+import goowee.elements.components.Image
 import goowee.elements.components.Link
 import goowee.exceptions.ArgsException
 import groovy.transform.CompileStatic
@@ -50,10 +51,12 @@ class ShellNavbar extends Component {
                 class: Link,
                 id: 'logo',
                 controller: 'shell',
-                image: shell.config.display.logo,
-                imageFromAssets: false,
-                text: '',
                 animate: 'fade',
+        )
+        logo.addComponent(
+                class: Image,
+                id: 'logoImg',
+                image: shell.config.display.logo,
         )
     }
 }

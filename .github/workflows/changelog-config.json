@@ -1,11 +1,27 @@
 {
-  "changeGroups": [
+  "categories": [
     {
-      "title": "What's Changed",
-      "include": ["*"]
+      "title": "🐛 Bug Fixes",
+      "commits": {
+        "matchers": [
+          {
+            "message": "^fix:.*"
+          }
+        ]
+      }
+    },
+    {
+      "title": "📄 Other Changes",
+      "commits": {
+        "matchers": [
+          {
+            "message": "^(?!fix:).*"
+          }
+        ]
+      }
     }
   ],
-  "categories": ["Commits"],
-  "commitGroupingStrategy": "type",
-  "includeMergeCommits": false
+  "includeMergeCommits": false,
+  "prBody": false,
+  "emptyTemplate": "No changes"
 }

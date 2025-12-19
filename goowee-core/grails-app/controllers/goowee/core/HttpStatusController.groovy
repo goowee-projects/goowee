@@ -22,7 +22,7 @@ import org.grails.exceptions.ExceptionUtils
  *
  * @author Gianluca Sartori
  */
-@Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
+@Secured(['permitAll'])
 class HttpStatusController {
 
     def err500() {

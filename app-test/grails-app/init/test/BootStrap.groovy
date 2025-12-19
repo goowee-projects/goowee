@@ -108,11 +108,12 @@ class BootStrap {
             tenantPropertyService.setString('TEST_ON_CHANGE', 'Change me and check the console!', '')
             tenantPropertyService.setPassword('TEST_PASSWORD', "${tenantId}Password")
 
-            String appLink = servletContext.contextPath
             tenantPropertyService.setString('SHELL_URL_MAPPING', '/admin')
             tenantPropertyService.setString('LOGIN_LANDING_URL', '/')
-            tenantPropertyService.setString('LOGIN_REGISTRATION_URL', appLink + '/crud/register')
-            tenantPropertyService.setString('LOGIN_PASSWORD_RECOVERY_URL', appLink + '/crud/passwordRecovery')
+            tenantPropertyService.setString('LOGIN_REGISTRATION_URL', 'crud/register')
+            tenantPropertyService.setString('LOGIN_PASSWORD_RECOVERY_URL', 'crud/passwordRecovery')
+
+            String appLink = servletContext.contextPath
             tenantPropertyService.setString(
                     'LOGIN_COPY',
                     'Copyright &copy; Dueuno.<br/>All rights reserved.<br/><br/><a href="' + appLink + '">&lt;&lt; Back to website</a>'

@@ -42,6 +42,6 @@ class TTenant implements GormEntity, Serializable {
     static constraints = {
         tenantId blank: false, unique: true
         description nullable: true
-        host nullable: true
+        host nullable: true, unique: true
     }
 }

@@ -126,15 +126,18 @@ class TenantService {
         return getByTenantId(currentTenantId)
     }
 
-    @Transactional
     TTenant get(Serializable id) {
         return TTenant.get(id) as TTenant
     }
 
-    @Transactional
     @CompileDynamic
     TTenant getByTenantId(String tenantId) {
         return TTenant.findByTenantId(tenantId)
+    }
+
+    @CompileDynamic
+    TTenant getByHost(String host) {
+        return TTenant.findByHost(host)
     }
 
     @CompileDynamic
@@ -147,14 +150,12 @@ class TenantService {
         return query
     }
 
-    @Transactional
     List<TTenant> list(Map filterParams = [:], Map fetchParams = [:]) {
         if (!fetchParams.sort) fetchParams.sort = [dateCreated: 'asc']
         def query = buildQuery(filterParams)
         return query.list(fetchParams)
     }
 
-    @Transactional
     Number count(Map filters = [:]) {
         def query = buildQuery(filters)
         return query.count()

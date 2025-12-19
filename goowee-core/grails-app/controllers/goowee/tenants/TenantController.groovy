@@ -78,10 +78,6 @@ class TenantController implements ElementsController {
                 : createContent(ContentCreate)
 
         def isReadonly = obj?.tenantId == tenantService.defaultTenantId
-        if (isReadonly) {
-            c.header.removeNextButton()
-        }
-
         c.form.with {
             validate = TTenant
             if (!obj && EnvUtils.isDevelopment()) {
@@ -149,6 +145,7 @@ class TenantController implements ElementsController {
             c.form.values = obj
             if (isReadonly) {
                 c.form.readonly = true
+                c.form['host'].readonly = false
             }
         }
 

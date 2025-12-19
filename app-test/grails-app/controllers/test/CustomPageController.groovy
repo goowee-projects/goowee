@@ -23,7 +23,7 @@ import goowee.elements.components.TableRow
 import goowee.security.SecurityService
 import grails.plugin.springsecurity.annotation.Secured
 
-@Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
+@Secured(['permitAll'])
 class CustomPageController implements ElementsController {
 
     SecurityService securityService

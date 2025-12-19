@@ -36,6 +36,7 @@ import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpSession
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices
@@ -495,7 +496,8 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         tokenBasedRememberMeServices.logout(request, response, null)
 
         // Session must be explicitly invalidated, default behaviour has been disabled, see 'plugin.groovy'
-        session.invalidate()
+        HttpSession session = request.getSession(false)
+        session?.invalidate()
     }
 
     /**
@@ -514,32 +516,32 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
     @CompileDynamic
     String getUserLandingPage() {
         if (isSuperAdmin()) {
-            return '/shell'
+            return 'shell'
         }
 
         TRoleGroup currentUserGroup = currentUser.defaultGroup
 
         // User configured DEFAULT GROUP
         if (currentUserGroup && currentUserGroup.landingPage) {
-            return '/' + currentUserGroup.landingPage
+            return currentUserGroup.landingPage
 
         } else { // USERS Group (applies to all users of a tenant)
             TTenant currentTenant = tenantService.currentTenant
             TRoleGroup usersGroup = TRoleGroup.findByTenantAndName(currentTenant, GROUP_USERS)
             if (usersGroup && usersGroup.landingPage) {
-                return '/' + usersGroup.landingPage
+                return usersGroup.landingPage
             }
         }
 
         // Application defined landing page (applies to ALL users)
-        return tenantPropertyService.getString('LOGIN_LANDING_URL', true) ?: '/shell'
+        return tenantPropertyService.getString('LOGIN_LANDING_URL', true) ?: 'shell'
     }
 
     String getLoginLandingPage() {
         String requestLandingPage = requestParams.landingPage
         String shellUrlMapping = tenantPropertyService.getString('SHELL_URL_MAPPING', true)
 
-        return requestLandingPage ?: userLandingPage ?: shellUrlMapping ?: '/shell'
+        return requestLandingPage ?: userLandingPage ?: shellUrlMapping ?: 'shell'
     }
 
     String getLogoutLandingPage() {
@@ -547,7 +549,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         String logoutLandingPage = tenantPropertyService.getString('LOGOUT_LANDING_URL', true)
         String shellUrlMapping = tenantPropertyService.getString('SHELL_URL_MAPPING', true)
 
-        return requestLandingPage ?: logoutLandingPage ?: shellUrlMapping ?: '/login'
+        return requestLandingPage ?: logoutLandingPage ?: shellUrlMapping ?: 'login'
     }
 
     //

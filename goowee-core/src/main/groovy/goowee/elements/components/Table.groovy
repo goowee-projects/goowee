@@ -14,6 +14,7 @@
  */
 package goowee.elements.components
 
+import goowee.commons.utils.ObjectUtils
 import goowee.elements.Component
 import goowee.elements.Elements
 import goowee.elements.style.TextDefault
@@ -322,7 +323,7 @@ class Table extends Component {
 
     private void initializeKeyColumns(Collection recordset) {
         // Add 'id' key if the first record contains an id
-        if (recordset.size() > 0 && Elements.hasId(recordset[0])) {
+        if (recordset.size() > 0 && ObjectUtils.hasId(recordset[0])) {
             if ('id' !in keys) keys.add('id')
 
             // First column is the default key

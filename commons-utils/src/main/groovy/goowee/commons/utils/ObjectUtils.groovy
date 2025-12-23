@@ -44,6 +44,22 @@ import groovy.util.logging.Slf4j
 @CompileStatic
 class ObjectUtils {
 
+    static Boolean hasId(Object obj) {
+        if (!obj) {
+            return false
+        }
+
+        if (obj in Map) {
+            return (obj as Map).containsKey('id')
+        }
+
+        if (obj.hasProperty('id')) {
+            return true
+        }
+
+        return false
+    }
+
     /**
      * Retrieves the value of a property from an object using a dotted path notation.
      * <p>

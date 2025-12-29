@@ -516,7 +516,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
     @CompileDynamic
     String getUserLandingPage() {
         if (isSuperAdmin()) {
-            return 'shell'
+            return 'shell/index'
         }
 
         TRoleGroup currentUserGroup = currentUser.defaultGroup
@@ -534,7 +534,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         }
 
         // Application defined landing page (applies to ALL users)
-        return tenantPropertyService.getString('LOGIN_LANDING_URL', true) ?: 'shell'
+        return tenantPropertyService.getString('LOGIN_LANDING_URL', true) ?: 'shell/index'
     }
 
     String getLoginLandingPage() {

@@ -17,7 +17,7 @@ package goowee.elements
 import goowee.core.LinkDefinition
 import goowee.core.WebRequestAware
 import goowee.exceptions.ArgsException
-import goowee.exceptions.GooweeException
+import goowee.exceptions.ElementsException
 import goowee.types.Types
 import groovy.transform.CompileStatic
 
@@ -34,7 +34,7 @@ class Transition implements WebRequestAware {
     private List<Component> components
 
     Transition() {
-        view = '/goowee/core/Transition'
+        view = '/goowee/elements/Transition'
         commands = []
         components = []
     }
@@ -92,7 +92,7 @@ class Transition implements WebRequestAware {
         }
 
         if (!hasRequest() && !componentEventData.controller) {
-            throw new GooweeException("The transition is outside a web request, a controller name must be specified (Eg. 't.redirect(controller: 'myController')')")
+            throw new ElementsException("The transition is outside a web request, a controller name must be specified (Eg. 't.redirect(controller: 'myController')')")
         }
 
         if (!hasRequest()) {

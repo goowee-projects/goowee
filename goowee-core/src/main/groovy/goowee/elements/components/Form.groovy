@@ -20,7 +20,7 @@ import goowee.elements.Control
 import goowee.elements.Elements
 import goowee.elements.controls.HiddenField
 import goowee.exceptions.ArgsException
-import goowee.exceptions.GooweeException
+import goowee.exceptions.ElementsException
 import goowee.types.Type
 import goowee.types.Types
 import grails.gorm.validation.ConstrainedProperty
@@ -124,7 +124,7 @@ class Form extends Component {
         Boolean isDomainClass = Elements.isDomainClass(domainOrCommandClass)
         Boolean isCommandClass = Validateable.isAssignableFrom(domainOrCommandClass)
         if (!isDomainClass && !isCommandClass) {
-            throw new GooweeException(
+            throw new ElementsException(
                     "Cannot retrieve constraints from class '${domainOrCommandClass}', " +
                             "please specify a GORM Domain class or a class that implements '${Validateable.name}'")
         }
@@ -162,7 +162,7 @@ class Form extends Component {
     // We are using a Sting instead of a Type to accomodate custom types (Eg. Money, Quantity, etc)
     void addKeyField(String id, String valueType, Object value) {
         if (!Types.isType(valueType)) {
-            throw new GooweeException("Type '${valueType}' does not exist. Please choose one from: ${Types.availableTypeNames}")
+            throw new ElementsException("Type '${valueType}' does not exist. Please choose one from: ${Types.availableTypeNames}")
         }
 
         if (value in Enum) {

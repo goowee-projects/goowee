@@ -22,8 +22,7 @@ import goowee.elements.Menu
 import goowee.elements.pages.Shell
 import goowee.elements.pages.ShellService
 import goowee.exceptions.ArgsException
-import goowee.exceptions.GooweeException
-import goowee.properties.SystemPropertyService
+import goowee.exceptions.ElementsException
 import goowee.properties.TenantPropertyService
 import goowee.tenants.TTenant
 import goowee.tenants.TenantService
@@ -174,13 +173,13 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
                 icon: 'fa-plug',
         )
         applicationService.registerSuperadminFeature(
-                controller: 'systemProperty',
-                icon: 'fa-tools',
-        )
-        applicationService.registerSuperadminFeature(
                 controller: 'monitoring',
                 icon: 'fa-chart-simple',
                 targetNew: true,
+        )
+        applicationService.registerSuperadminFeature(
+                controller: 'systemProperty',
+                icon: 'fa-tools',
         )
         applicationService.registerSuperadminFeature(
                 controller: 'sysinfo',
@@ -470,7 +469,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
 
     void denyLogin(String message) {
         if (!message) {
-            throw new GooweeException("A deny message must be provided.")
+            throw new ElementsException("A deny message must be provided.")
         }
 
         if (isLoginDenied()) {
@@ -1057,7 +1056,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
 
         Map group = ArgsException.requireArgument(args, ['id', 'tenantId'], true)
         if (args.tenantId && !args.name) {
-            throw new GooweeException("Please specify the 'name' of the group to update.")
+            throw new ElementsException("Please specify the 'name' of the group to update.")
         }
 
         List authorities = (List) args.authorities ?: []
@@ -1069,7 +1068,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
                 ? TRoleGroup.findByTenantAndName(tenant, groupName)
                 : TRoleGroup.get(group.id)
         if (!roleGroup) {
-            throw new GooweeException("Group '${group.id}' not found!")
+            throw new ElementsException("Group '${group.id}' not found!")
         }
 
         if (args.authorities != null) {

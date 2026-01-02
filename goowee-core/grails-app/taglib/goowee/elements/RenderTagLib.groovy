@@ -12,14 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.core
+package goowee.elements
 
-import goowee.elements.Component
-import goowee.elements.Control
+import goowee.core.PrettyPrinter
+import goowee.core.WebRequestAware
 import goowee.elements.components.Form
 import goowee.elements.components.FormField
 import goowee.elements.controls.HiddenField
-import goowee.elements.pages.PageService
 
 /**
  * Render tags

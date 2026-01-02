@@ -25,21 +25,21 @@ import org.springframework.validation.ObjectError
  * @author Gianluca Sartori
  */
 @CompileStatic
-class GooweeException extends Exception implements WebRequestAware {
+class ElementsException extends Exception implements WebRequestAware {
 
     private List args
 
-    GooweeException(ObjectError error) {
+    ElementsException(ObjectError error) {
         super(error.code)
         this.args = error.arguments as List
     }
 
-    GooweeException(String message, List args = []) {
+    ElementsException(String message, List args = []) {
         super(message)
         this.args = args as List
     }
 
-    GooweeException(String message, Throwable cause) {
+    ElementsException(String message, Throwable cause) {
         super(message, cause)
         this.args = []
     }

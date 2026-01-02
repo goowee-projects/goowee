@@ -16,7 +16,7 @@ package goowee.elements.controls
 
 import goowee.core.PrettyPrinterProperties
 import goowee.elements.Elements
-import goowee.exceptions.GooweeException
+import goowee.exceptions.ElementsException
 import goowee.types.Quantity
 import goowee.types.QuantityUnit
 import groovy.transform.CompileStatic
@@ -85,7 +85,7 @@ class QuantityField extends NumberField {
         super.setValue(value)
 
         if (this.value != null && (this.value !instanceof Quantity)) {
-            throw new GooweeException("${this.getClass().simpleName} can only accept values of type '${Quantity.name}'")
+            throw new ElementsException("${this.getClass().simpleName} can only accept values of type '${Quantity.name}'")
         }
 
         if (this.value) {

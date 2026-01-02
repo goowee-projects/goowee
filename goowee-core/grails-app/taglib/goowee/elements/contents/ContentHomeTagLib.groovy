@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.contents
+package goowee.elements.contents
 
 import goowee.core.WebRequestAware
 import goowee.elements.Menu

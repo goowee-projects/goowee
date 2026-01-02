@@ -18,9 +18,8 @@ import goowee.commons.utils.LogUtils
 import goowee.core.LinkGeneratorAware
 import goowee.core.WebRequestAware
 import goowee.elements.contents.ContentHeader
-import goowee.elements.pages.PageService
 import goowee.elements.pages.PageWebsocket
-import goowee.exceptions.GooweeException
+import goowee.exceptions.ElementsException
 import grails.artefact.Controller
 import grails.artefact.Enhances
 import grails.artefact.controller.RestResponder
@@ -47,7 +46,7 @@ trait ElementsController implements Controller, RestResponder, WebRequestAware, 
     @CompileDynamic
     Boolean getDisplay() {
         if (requestParams._21TransitionRendered) {
-            throw new GooweeException(DISPLAY_EXCEPTION_MESSAGE)
+            throw new ElementsException(DISPLAY_EXCEPTION_MESSAGE)
         }
 
         try {
@@ -63,7 +62,7 @@ trait ElementsController implements Controller, RestResponder, WebRequestAware, 
     @CompileDynamic
     void display(Map args = [:]) {
         if (requestParams._21TransitionRendered) {
-            throw new GooweeException(DISPLAY_EXCEPTION_MESSAGE)
+            throw new ElementsException(DISPLAY_EXCEPTION_MESSAGE)
         }
 
         StopWatch sw = new StopWatch()

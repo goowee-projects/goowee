@@ -14,11 +14,9 @@
  */
 package goowee.security
 
-import goowee.core.LinkDefinition
+
 import goowee.elements.ElementsController
 import goowee.elements.pages.Login
-import goowee.elements.pages.PageService
-import goowee.elements.pages.Shell
 import goowee.properties.TenantPropertyService
 import goowee.tenants.TenantService
 import grails.converters.JSON

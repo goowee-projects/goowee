@@ -12,20 +12,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.core
+package goowee.elements
 
-import goowee.tenants.TenantService
+import goowee.security.SecurityService
 
 /**
  * @author Gianluca Sartori
  */
-class TenantTagLib {
+class SecurityTagLib {
 
-    static namespace = "tenant"
+    static namespace = "security"
 
-    TenantService tenantService
+    SecurityService securityService
 
-    def current = { Map attrs ->
-        out << tenantService.currentTenantId
+    def username = { Map attrs ->
+        out << securityService.currentUsername
     }
 }

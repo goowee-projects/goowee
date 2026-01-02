@@ -14,7 +14,7 @@
  */
 package goowee.core
 
-import goowee.elements.pages.PageService
+import goowee.elements.PageService
 import goowee.elements.pages.ShellService
 import goowee.properties.TenantPropertyService
 import goowee.security.CryptoService

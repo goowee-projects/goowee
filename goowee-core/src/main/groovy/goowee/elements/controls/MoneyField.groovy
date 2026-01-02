@@ -15,7 +15,7 @@
 package goowee.elements.controls
 
 import goowee.elements.Elements
-import goowee.exceptions.GooweeException
+import goowee.exceptions.ElementsException
 import goowee.types.Money
 import groovy.transform.CompileStatic
 
@@ -45,7 +45,7 @@ class MoneyField extends NumberField {
         super.setValue(value)
 
         if (this.value && (this.value !instanceof Money)) {
-            throw new GooweeException("${this.getClass().simpleName} can only accept values of type '${Money.name}'")
+            throw new ElementsException("${this.getClass().simpleName} can only accept values of type '${Money.name}'")
         }
 
         if (this.value) {

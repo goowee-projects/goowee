@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.core
+package goowee.elements
 
-import goowee.elements.Transition
+
 import grails.plugin.springwebsocket.WebSocket
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j

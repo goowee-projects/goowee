@@ -14,7 +14,7 @@
  */
 package goowee.core
 
-import goowee.exceptions.GooweeException
+import goowee.exceptions.ElementsException
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
@@ -44,7 +44,7 @@ class Transformer {
         Closure transformer = transformersRegistry[transformerName]
         if (!transformer) {
             String transformers = "'${transformersRegistry.collect { it.key }.join("', '")}'"
-            throw new GooweeException("Cannot find a transformer called '${transformerName}' in registered transformers: ${transformers}")
+            throw new ElementsException("Cannot find a transformer called '${transformerName}' in registered transformers: ${transformers}")
         }
 
         Object result
@@ -53,7 +53,7 @@ class Transformer {
 
         } catch (Exception e) {
             result = "Error transforming value '${value}' with transformer '${transformerName}': ${e.message}"
-            //throw new GooweeException("Error transforming value '${value}' with transformer '${transformerName}': ${e.message}", e)
+            //throw new ElementsException("Error transforming value '${value}' with transformer '${transformerName}': ${e.message}", e)
 
         } finally {
             return result

@@ -12,15 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.elements.pages
+package goowee.elements
 
 import goowee.commons.utils.FileUtils
 import goowee.core.LinkGeneratorAware
-import goowee.core.TransitionService
 import goowee.core.WebRequestAware
-import goowee.elements.Component
-import goowee.elements.Page
-import goowee.elements.Transition
 import goowee.elements.contents.ContentHeader
 import goowee.properties.SystemPropertyService
 import goowee.properties.TenantPropertyService

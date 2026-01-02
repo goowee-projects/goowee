@@ -17,7 +17,7 @@ package test
 import goowee.commons.utils.FileUtils
 import goowee.core.ApplicationService
 import goowee.core.ConnectionSourceService
-import goowee.core.TransitionService
+import goowee.elements.TransitionService
 import goowee.elements.pages.ShellService
 import goowee.properties.SystemPropertyService
 import goowee.properties.TenantPropertyService

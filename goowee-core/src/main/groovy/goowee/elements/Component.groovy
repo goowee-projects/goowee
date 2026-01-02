@@ -19,7 +19,7 @@ import goowee.core.PrettyPrinterProperties
 import goowee.core.WebRequestAware
 import goowee.elements.style.Color
 import goowee.exceptions.ArgsException
-import goowee.exceptions.GooweeException
+import goowee.exceptions.ElementsException
 import goowee.utils.EnvUtils
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
@@ -124,7 +124,7 @@ abstract class Component implements WebRequestAware, Serializable {
         try {
             getRequest()
         } catch (Exception e) {
-            throw new GooweeException("A 'Component' can only be instantiated when a 'GrailsWebRequest' is available (eg. in a controller).", e)
+            throw new ElementsException("A 'Component' can only be instantiated when a 'GrailsWebRequest' is available (eg. in a controller).", e)
         }
 
         viewTemplate = args.viewTemplate ?: getClassName()
@@ -267,7 +267,7 @@ abstract class Component implements WebRequestAware, Serializable {
 
         } catch (Exception e) {
             log.error LogUtils.logStackTrace(e)
-            throw new GooweeException("Cannot instantiate class '${clazz.name}': ${e.message}")
+            throw new ElementsException("Cannot instantiate class '${clazz.name}': ${e.message}")
         }
     }
 

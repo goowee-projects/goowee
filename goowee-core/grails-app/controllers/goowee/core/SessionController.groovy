@@ -14,6 +14,7 @@
  */
 package goowee.core
 
+import goowee.elements.TransitionService
 import grails.artefact.Controller
 import grails.plugin.springsecurity.annotation.Secured
 

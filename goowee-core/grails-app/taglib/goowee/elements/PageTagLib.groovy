@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.core
+package goowee.elements
 
-import goowee.elements.Component
+
 import jakarta.servlet.ServletContext
 
 /**
@@ -33,7 +33,7 @@ class PageTagLib {
      */
     def header = { Map attrs ->
         Component component = attrs.component
-        out << render(template: '/goowee/core/PageHeader', model: component.getModel())
+        out << render(template: '/goowee/elements/PageHeader', model: component.getModel())
     }
 
     /**
@@ -41,7 +41,7 @@ class PageTagLib {
      */
     def colors = { Map attrs ->
         Component component = attrs.component
-        out << render(template: '/goowee/core/PageColors', model: component.getModel())
+        out << render(template: '/goowee/elements/PageColors', model: component.getModel())
     }
 
     /**
@@ -49,21 +49,21 @@ class PageTagLib {
      */
     def footer = { Map attrs ->
         Component component = attrs.component
-        out << render(template: '/goowee/core/PageFooter', model: component.getModel())
+        out << render(template: '/goowee/elements/PageFooter', model: component.getModel())
     }
 
     /**
      * Initializes JS. Use: <page:initialize />
      */
     def initialize = { Map attrs ->
-        out << render(template: '/goowee/core/PageInitialize', model: null)
+        out << render(template: '/goowee/elements/PageInitialize', model: null)
     }
 
     /**
      * Loading screen. Use: <page:loading />
      */
     def loading = { Map attrs ->
-        out << render(template: '/goowee/core/PageLoading', model: null)
+        out << render(template: '/goowee/elements/PageLoading', model: null)
     }
 
     def contextPath = { Map attrs ->

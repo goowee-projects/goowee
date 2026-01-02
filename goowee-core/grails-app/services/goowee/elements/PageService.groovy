@@ -18,7 +18,6 @@ import goowee.commons.utils.FileUtils
 import goowee.core.LinkGeneratorAware
 import goowee.core.WebRequestAware
 import goowee.elements.contents.ContentHeader
-import goowee.properties.SystemPropertyService
 import goowee.properties.TenantPropertyService
 import goowee.security.SecurityService
 import goowee.tenants.TenantService
@@ -35,7 +34,6 @@ class PageService implements WebRequestAware, LinkGeneratorAware {
 
     SecurityService securityService
     TenantService tenantService
-    SystemPropertyService systemPropertyService
     TenantPropertyService tenantPropertyService
     TransitionService transitionService
 

@@ -1,16 +1,11 @@
-import goowee.database.TNamingStrategy
-
 // H2 Console enabled by default (protected by Spring Security, only "superadmin" can access it)
 spring.h2.console.enabled = true
 
 // Uses custom table naming
-hibernate.naming_strategy = TNamingStrategy
+hibernate.naming_strategy = goowee.database.TNamingStrategy
 
 // Tenants are stored in separate database schemas
 grails.gorm.multiTenancy.mode = 'DATABASE'
-
-// Tenants
-grails.gorm.multiTenancy.tenantResolverClass = 'goowee.tenants.TenantForCurrentUserResolver'
 
 // Spring Security Core plugin setup example
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'goowee.security.TUser'

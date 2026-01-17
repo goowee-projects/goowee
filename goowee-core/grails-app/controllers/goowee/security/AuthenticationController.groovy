@@ -41,7 +41,7 @@ class AuthenticationController implements ElementsController {
             return
         }
 
-        def hostTenant = tenantService.getByHost(requestHeader.host)
+        def hostTenant = tenantService.getByHost(request.getHeader('host'))
         def tenantId =  hostTenant?.tenantId ?: tenantService.defaultTenantId
 
         tenantService.withTenant(tenantId) {

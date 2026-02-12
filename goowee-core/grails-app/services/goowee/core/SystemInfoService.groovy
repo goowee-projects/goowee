@@ -14,7 +14,8 @@
  */
 package goowee.core
 
-import com.sun.management.OperatingSystemMXBean
+import goowee.commons.utils.hardware.HardwareInfo
+import goowee.commons.utils.hardware.HardwareUtils
 import goowee.utils.EnvUtils
 import grails.core.GrailsApplication
 import grails.plugins.GrailsPluginManager
@@ -42,13 +43,18 @@ class SystemInfoService implements WebRequestAware {
      * INTERNAL USE ONLY. Returns a map with the system info.
      */
     Map getInfo() {
-        OperatingSystemMXBean hw = ManagementFactory.operatingSystemMXBean as OperatingSystemMXBean
+        HardwareInfo hw = HardwareUtils.getInfo()
         File hwHD = File.listRoots()[0]
         String jvmGC = ManagementFactory.getGarbageCollectorMXBeans().collect { it.name }.join(", ")
         Double jvmHeapFree = Runtime.getRuntime().freeMemory() / Math.pow(1024, 2)
         Double jvmHeapMax = Runtime.getRuntime().maxMemory() / Math.pow(1024, 2)
         Double jvmHeapUsed = (Runtime.getRuntime().maxMemory() - Runtime.getRuntime().freeMemory()) / Math.pow(1024, 2)
         Duration uptime = Duration.ofMillis(ManagementFactory.runtimeMXBean.uptime)
+
+        List gpuList = []
+        for (gpu in hw.gpus) {
+            gpuList << "[${gpu.index}] ${gpu.model} (" + (gpu.cores ? "${gpu.cores} cores" : "${gpu.vram / (1024**3)} GB") + ")"
+        }
 
         return [
                 environment       : message('default.env.' + EnvUtils.currentEnvironment),
@@ -58,7 +64,7 @@ class SystemInfoService implements WebRequestAware {
                 applicationPath   : servletContext.getRealPath('/'),
                 applicationVersion: grailsApplication.config.getProperty('info.app.version', String) as String,
 
-                gooweeVersion     : gooweeVersion,
+                gooweeVersion     : elementsVersion,
                 grailsVersion     : grailsApplication.config.getProperty('info.app.grailsVersion', String) as String,
                 groovyVersion     : GroovySystem.getVersion(),
                 serverVersion     : servletContext.getServerInfo(),
@@ -72,14 +78,16 @@ class SystemInfoService implements WebRequestAware {
                 jvmVersion        : System.getProperty('java.version') + ' ' + System.getProperty('java.vendor'),
 
                 osVersion         : System.getProperty('os.name') + ' ' + System.getProperty('os.version'),
+
                 hardwareHD        : "${(hwHD.totalSpace / 1_000_000_000).round(0)} GB (${(hwHD.totalSpace / (1024**3)).round(0)} GiB)",
-                hardwareRAM       : "${(hw.totalMemorySize / (1024**3))} GB",
-                hardwareCPU       : "${hw.availableProcessors} Cores (${hw.arch})",
+                hardwareRAM       : "${Math.ceil(hw.ram / Math.pow(1024, 3) as Double) as Long} GB",
+                hardwareGPU       : gpuList.join(', '),
+                hardwareCPU       : "${hw.cpu.model} (${hw.cpu.physicalCores} cores, ${hw.cpu.architecture})",
         ]
     }
 
-    String getGooweeVersion() {
-        return (grailsPluginManager.allPlugins.find { it.name == 'goowee' })?.version
+    String getElementsVersion() {
+        return (grailsPluginManager.allPlugins.find { it.name == 'elements' })?.version
     }
 
 }

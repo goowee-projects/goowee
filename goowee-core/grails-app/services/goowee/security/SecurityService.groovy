@@ -151,7 +151,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         tenantPropertyService.setString('LOGOUT_LANDING_URL', '')
         tenantPropertyService.setString('LOGIN_REGISTRATION_URL', '')
         tenantPropertyService.setString('LOGIN_PASSWORD_RECOVERY_URL', '')
-        tenantPropertyService.setString('LOGIN_COPY', 'Copyright &copy; <a href="https://dueuno.com">Dueuno</a><br/>All rights reserved')
+        tenantPropertyService.setString('LOGIN_COPY', 'Copyright &copy; <a href="https://goowee.org">Goowee</a><br/>All rights reserved')
 
         tenantPropertyService.setString('LOGIN_BACKGROUND_IMAGE', linkPublicResource(tenantId, '/brand/login-background.jpg', false))
         tenantPropertyService.setString('LOGIN_LOGO', linkPublicResource(tenantId, '/brand/login-logo.png', false))

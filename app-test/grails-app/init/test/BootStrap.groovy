@@ -101,7 +101,7 @@ class BootStrap {
             tenantPropertyService.setBoolean('TEST_BOOLEAN', true)
             tenantPropertyService.setDirectory('TEST_DIRECTORY', '', '/pippo/pluto')
             tenantPropertyService.setFilename('TEST_FILENAME', '', '\\pippo\\pluto\\config.txt')
-            tenantPropertyService.setUrl('TEST_URL', 'http://www.dueuno.com', 'http://www.google.com/search')
+            tenantPropertyService.setUrl('TEST_URL', 'http://www.goowee.org', 'http://www.google.com/search')
             tenantPropertyService.setDirectory('TEST_WRONG_DIRECTORY', '\\this\\directory\\doesnt\\exist', '')
             tenantPropertyService.setFilename('TEST_WRONG_FILENAME', '\\this\\file\\doesnt\\exist.txt', '')
             tenantPropertyService.setUrl('TEST_WRONG_URL', 'htp://www.wrong.url', '')
@@ -116,7 +116,7 @@ class BootStrap {
             String appLink = servletContext.contextPath
             tenantPropertyService.setString(
                     'LOGIN_COPY',
-                    'Copyright &copy; Dueuno.<br/>All rights reserved.<br/><br/><a href="' + appLink + '">&lt;&lt; Back to website</a>'
+                    'Copyright &copy; Goowee. <br/>All rights reserved.<br/><br/><a href="' + appLink + '">&lt;&lt; Back to website</a>'
             )
 
             securityService.updateGroup(
@@ -163,7 +163,7 @@ class BootStrap {
             systemPropertyService.setBoolean('TEST_BOOLEAN', true)
             systemPropertyService.setDirectory('TEST_DIRECTORY', '', '/pippo/pluto')
             systemPropertyService.setFilename('TEST_FILENAME', '', '\\pippo\\pluto\\config.txt')
-            systemPropertyService.setUrl('TEST_URL', 'http://www.dueuno.com', 'http://www.google.com/search')
+            systemPropertyService.setUrl('TEST_URL', 'http://www.goowee.org', 'http://www.google.com/search')
             systemPropertyService.setDirectory('TEST_WRONG_DIRECTORY', '\\this\\directory\\doesnt\\exist', '')
             systemPropertyService.setFilename('TEST_WRONG_FILENAME', '\\this\\file\\doesnt\\exist.txt', '')
             systemPropertyService.setUrl('TEST_WRONG_URL', 'htp://www.wrong.url', '')

@@ -28,6 +28,7 @@ import goowee.tenants.TTenant
 import goowee.tenants.TenantService
 import goowee.utils.EnvUtils
 import grails.gorm.DetachedCriteria
+import grails.gorm.multitenancy.CurrentTenant
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.SpringSecurityUtils
@@ -120,6 +121,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         )
     }
 
+    @CurrentTenant
     void tenantInstall() {
         String tenantId = tenantService.currentTenantId
 

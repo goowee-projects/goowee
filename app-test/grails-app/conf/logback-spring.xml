@@ -33,6 +33,7 @@
 
     <logger name="org.springframework.boot.SpringApplication" level="INFO" />
     <logger name="goowee" level="DEBUG" />
+    <logger name="test" level="DEBUG" />
 
     <!-- GOOWEE -->
 <!--    <logger name="goowee.commons.utils.SqlUtils" level="TRACE" />-->

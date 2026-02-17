@@ -66,9 +66,9 @@ configurations.all {
     }
 }
 
-//tasks.withType(GroovyCompile) {
-//    groovyOptions.optimizationOptions.indy = false
-//}
+tasks.withType(GroovyCompile).configureEach {
+    groovyOptions.optimizationOptions.indy = false
+}
 
 tasks.withType(Test) {
     useJUnitPlatform()

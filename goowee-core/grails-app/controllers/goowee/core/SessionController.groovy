@@ -14,7 +14,6 @@
  */
 package goowee.core
 
-import goowee.elements.TransitionService
 import grails.artefact.Controller
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -23,8 +22,6 @@ import grails.plugin.springsecurity.annotation.Secured
  */
 @Secured(['isAuthenticated()'])
 class SessionController implements Controller, WebRequestAware {
-
-    TransitionService transitionService
 
     def set() {
         String scope = params.scope

@@ -29,7 +29,7 @@ import grails.plugin.springsecurity.annotation.Secured
  * @author Gianluca Sartori
  * @author Francesco Piceghello
  */
-@Secured(['IS_AUTHENTICATED_REMEMBERED'])
+@Secured(['isAuthenticated()'])
 class ShellController implements ElementsController {
 
     ApplicationService applicationService

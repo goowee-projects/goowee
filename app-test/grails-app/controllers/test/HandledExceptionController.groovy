@@ -19,7 +19,7 @@ import goowee.elements.components.Button
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.TextField
 import goowee.elements.style.TextDefault
-import goowee.exceptions.GooweeException
+import goowee.exceptions.ElementsException
 import groovy.util.logging.Slf4j
 
 @Slf4j
@@ -29,7 +29,7 @@ class HandledExceptionController implements ElementsController {
         display exception: e
     }
 
-    def handleGooweeException(GooweeException e) {
+    def handleGooweeException(ElementsException e) {
         display exception: e
     }
 
@@ -72,17 +72,17 @@ class HandledExceptionController implements ElementsController {
     }
 
     def onExceptionMessage() {
-        throw new GooweeException("handle.exception.message", ["World"])
+        throw new ElementsException("handle.exception.message", ["World"])
     }
 
     def onExceptionError(HandleExceptionValidator val) {
         if (val.hasErrors()) {
             for (error in val.errors.getAllErrors()) {
-                throw new GooweeException(error)
+                throw new ElementsException(error)
             }
 
         } else {
-            throw new GooweeException("I told you not to write :)")
+            throw new ElementsException("I told you not to write :)")
         }
     }
 

@@ -14,7 +14,7 @@
  */
 package test
 
-import goowee.core.TransitionService
+import goowee.elements.TransitionService
 import goowee.elements.ElementsController
 import goowee.elements.components.Button
 import goowee.elements.components.Form

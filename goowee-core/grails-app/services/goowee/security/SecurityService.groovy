@@ -22,21 +22,22 @@ import goowee.elements.Menu
 import goowee.elements.pages.Shell
 import goowee.elements.pages.ShellService
 import goowee.exceptions.ArgsException
-import goowee.exceptions.GooweeException
-import goowee.properties.SystemPropertyService
+import goowee.exceptions.ElementsException
 import goowee.properties.TenantPropertyService
 import goowee.tenants.TTenant
 import goowee.tenants.TenantService
 import goowee.utils.EnvUtils
 import grails.gorm.DetachedCriteria
+import grails.gorm.multitenancy.CurrentTenant
 import grails.gorm.transactions.Transactional
 import grails.plugin.springsecurity.SpringSecurityService
 import grails.plugin.springsecurity.SpringSecurityUtils
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+import jakarta.inject.Inject
 import jakarta.servlet.http.HttpServletRequest
-import org.springframework.beans.factory.annotation.Autowired
+import jakarta.servlet.http.HttpSession
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler
 import org.springframework.security.web.authentication.rememberme.TokenBasedRememberMeServices
 
@@ -67,14 +68,13 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
 
     public static final String DENY_AUTHORIZATION_MESSAGE = 'DENY_AUTHORIZATION_MESSAGE'
 
-    @Autowired
+    @Inject
     SecurityContextLogoutHandler securityContextLogoutHandler
 
-    @Autowired
+    @Inject
     TokenBasedRememberMeServices tokenBasedRememberMeServices
 
     SpringSecurityService springSecurityService
-    SystemPropertyService systemPropertyService
     TenantPropertyService tenantPropertyService
     ApplicationService applicationService
     ShellService shellService
@@ -121,6 +121,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         )
     }
 
+    @CurrentTenant
     void tenantInstall() {
         String tenantId = tenantService.currentTenantId
 
@@ -152,7 +153,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         tenantPropertyService.setString('LOGOUT_LANDING_URL', '')
         tenantPropertyService.setString('LOGIN_REGISTRATION_URL', '')
         tenantPropertyService.setString('LOGIN_PASSWORD_RECOVERY_URL', '')
-        tenantPropertyService.setString('LOGIN_COPY', 'Copyright &copy; <a href="https://dueuno.com">Dueuno</a><br/>All rights reserved')
+        tenantPropertyService.setString('LOGIN_COPY', 'Copyright &copy; <a href="https://goowee.org">Goowee</a><br/>All rights reserved')
 
         tenantPropertyService.setString('LOGIN_BACKGROUND_IMAGE', linkPublicResource(tenantId, '/brand/login-background.jpg', false))
         tenantPropertyService.setString('LOGIN_LOGO', linkPublicResource(tenantId, '/brand/login-logo.png', false))
@@ -174,13 +175,13 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
                 icon: 'fa-plug',
         )
         applicationService.registerSuperadminFeature(
-                controller: 'systemProperty',
-                icon: 'fa-tools',
-        )
-        applicationService.registerSuperadminFeature(
                 controller: 'monitoring',
                 icon: 'fa-chart-simple',
                 targetNew: true,
+        )
+        applicationService.registerSuperadminFeature(
+                controller: 'systemProperty',
+                icon: 'fa-tools',
         )
         applicationService.registerSuperadminFeature(
                 controller: 'sysinfo',
@@ -236,12 +237,12 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         applicationService.registerDeveloperUserFeature(
                 controller: 'shell',
                 action: 'toggleDevHints',
-                icon: 'fa-key',
+                icon: 'fa-message',
                 order: 10000050,
         )
         applicationService.registerDeveloperUserFeature(
                 controller: 'gormExplorer',
-                icon: 'fa-table',
+                icon: 'fa-database',
                 targetNew: true,
                 order: 10000060,
         )
@@ -288,6 +289,8 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
 
         Shell shell = shellService.shell
         shell.setUser(currentUsername, user.firstname, user.lastname)
+        shell.setLogoLink(new LinkDefinition(url: loginLandingPage))
+
         setMenuVisibility(shell.menu)
         setMenuVisibility(shell.userMenu)
     }
@@ -468,7 +471,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
 
     void denyLogin(String message) {
         if (!message) {
-            throw new GooweeException("A deny message must be provided.")
+            throw new ElementsException("A deny message must be provided.")
         }
 
         if (isLoginDenied()) {
@@ -494,7 +497,8 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         tokenBasedRememberMeServices.logout(request, response, null)
 
         // Session must be explicitly invalidated, default behaviour has been disabled, see 'plugin.groovy'
-        session.invalidate()
+        HttpSession session = request.getSession(false)
+        session?.invalidate()
     }
 
     /**
@@ -507,46 +511,46 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
     }
 
     /**
-     * Returns the default landing page configured for the current user
+     * Returns the default landing page URL configured for the current user
      * @return
      */
     @CompileDynamic
     String getUserLandingPage() {
-        if (isSuperAdmin())
-            return ''
+        if (isSuperAdmin()) {
+            return 'shell/index'
+        }
 
         TRoleGroup currentUserGroup = currentUser.defaultGroup
 
         // User configured DEFAULT GROUP
         if (currentUserGroup && currentUserGroup.landingPage) {
-            return '/' + currentUserGroup.landingPage
+            return currentUserGroup.landingPage
 
         } else { // USERS Group (applies to all users of a tenant)
             TTenant currentTenant = tenantService.currentTenant
             TRoleGroup usersGroup = TRoleGroup.findByTenantAndName(currentTenant, GROUP_USERS)
             if (usersGroup && usersGroup.landingPage) {
-                return '/' + usersGroup.landingPage
+                return usersGroup.landingPage
             }
         }
 
         // Application defined landing page (applies to ALL users)
-        return tenantPropertyService.getString('LOGIN_LANDING_URL', true)
+        return tenantPropertyService.getString('LOGIN_LANDING_URL', true) ?: 'shell/index'
     }
 
     String getLoginLandingPage() {
+        String requestLandingPage = requestParams.landingPage
         String shellUrlMapping = tenantPropertyService.getString('SHELL_URL_MAPPING', true)
-        String loginLandingPage = userLandingPage
-        String urlLandingPage = requestParams.landingPage
 
-        return urlLandingPage ?: loginLandingPage ?: shellUrlMapping ?: '/'
+        return requestLandingPage ?: userLandingPage ?: shellUrlMapping ?: 'shell'
     }
 
     String getLogoutLandingPage() {
-        String shellUrlMapping = tenantPropertyService.getString('SHELL_URL_MAPPING', true)
+        String requestLandingPage = requestParams.landingPage
         String logoutLandingPage = tenantPropertyService.getString('LOGOUT_LANDING_URL', true)
-        String urlLandingPage = requestParams.landingPage
+        String shellUrlMapping = tenantPropertyService.getString('SHELL_URL_MAPPING', true)
 
-        return urlLandingPage ?: logoutLandingPage ?: shellUrlMapping ?: '/'
+        return requestLandingPage ?: logoutLandingPage ?: shellUrlMapping ?: 'login'
     }
 
     //
@@ -956,17 +960,27 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         return query.get()
     }
 
+    List<TRoleGroup> listGroup(Map filterParams = [:], Map fetchParams = [:]) {
+        filterParams.deletable = true
+        return listAllGroup(filterParams, fetchParams)
+    }
+
     /**
      * Returns the groups configured for the application
      * @return the groups configured for the application
      */
-    List<TRoleGroup> listGroup(Map filterParams = [:], Map fetchParams = [:]) {
+    List<TRoleGroup> listAllGroup(Map filterParams = [:], Map fetchParams = [:]) {
         if (!fetchParams.sort) fetchParams.sort = 'name'
         def query = buildQueryGroup(filterParams)
         return query.list(fetchParams)
     }
 
     Number countGroup(Map filterParams = [:]) {
+        filterParams.deletable = true
+        return countAllGroup(filterParams)
+    }
+
+    Number countAllGroup(Map filterParams = [:]) {
         def query = buildQueryGroup(filterParams)
         return query.count()
     }
@@ -1054,7 +1068,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
 
         Map group = ArgsException.requireArgument(args, ['id', 'tenantId'], true)
         if (args.tenantId && !args.name) {
-            throw new GooweeException("Please specify the 'name' of the group to update.")
+            throw new ElementsException("Please specify the 'name' of the group to update.")
         }
 
         List authorities = (List) args.authorities ?: []
@@ -1066,7 +1080,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
                 ? TRoleGroup.findByTenantAndName(tenant, groupName)
                 : TRoleGroup.get(group.id)
         if (!roleGroup) {
-            throw new GooweeException("Group '${group.id}' not found!")
+            throw new ElementsException("Group '${group.id}' not found!")
         }
 
         if (args.authorities != null) {

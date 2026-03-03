@@ -37,7 +37,7 @@ class KeyPress extends Component {
     KeyPress(Map args) {
         super(args)
 
-        viewPath = '/goowee/core/'
+        viewPath = '/goowee/elements/'
 
         enabled = args.enabled == null ? true : args.enabled
         triggerKey = args.triggerKey ?: 'Enter'

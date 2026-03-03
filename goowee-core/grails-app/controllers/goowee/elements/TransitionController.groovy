@@ -14,7 +14,7 @@
  */
 package goowee.elements
 
-import goowee.core.TransitionService
+
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -24,7 +24,7 @@ import grails.plugin.springsecurity.annotation.Secured
  * @author Gianluca Sartori
  * @author Francesco Piceghello
  */
-@Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
+@Secured(['permitAll'])
 class TransitionController implements ElementsController {
 
     TransitionService transitionService

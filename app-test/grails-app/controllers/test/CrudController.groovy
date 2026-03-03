@@ -148,6 +148,7 @@ class CrudController implements ElementsController {
                         name: 'desc',
                 ]
                 columns = [
+                        'tagIcon',
                         'company',
                         'employeeCount',
                         'name',
@@ -188,6 +189,10 @@ class CrudController implements ElementsController {
                     row.cells.prettyHtml.html = 'table.cell.label.html'
 //                    row.verticalAlign = VerticalAlign.TOP
                     row.cells.postcode.tag = true
+
+                    row.cells.tagIcon.icon = 'fa-user'
+                    row.cells.tagIcon.tag = true
+                    row.cells.tagIcon.tooltip = 'User'
 
                     row.cells['name'].textWrap = TextWrap.SOFT_WRAP
                     row.cells['company'].textWrap = TextWrap.LINE_WRAP
@@ -238,12 +243,12 @@ class CrudController implements ElementsController {
     }
 
     def onCreateRecords() {
-        TCompany dueuno = companyService.get(1)
+        TCompany company = companyService.get(1)
 
         (1..100).each {
             personService.create(
                     active: true,
-                    company: dueuno,
+                    company: company,
                     name: 'user' + it,
                     address: 'Via del\'automazione, ' + it,
                     postcode: 12345
@@ -395,7 +400,7 @@ class CrudController implements ElementsController {
         }
     }
 
-    @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
+    @Secured(['permitAll'])
     def register() {
         def c = createContent(ContentForm)
         c.header.removeNextButton()
@@ -403,7 +408,7 @@ class CrudController implements ElementsController {
         display content: c, modal: true
     }
 
-    @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
+    @Secured(['permitAll'])
     def passwordRecovery() {
         def c = createContent(ContentForm)
         c.header.removeNextButton()

@@ -16,9 +16,9 @@ package goowee.core
 
 import goowee.properties.TenantPropertyService
 import groovy.transform.CompileStatic
+import jakarta.inject.Inject
 import jakarta.servlet.ServletContext
 import jakarta.servlet.ServletException
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.web.servlet.ServletContextInitializer
 
 /**
@@ -28,7 +28,7 @@ import org.springframework.boot.web.servlet.ServletContextInitializer
 @CompileStatic
 class SessionInitializer implements ServletContextInitializer {
 
-    @Autowired
+    @Inject
     TenantPropertyService tenantPropertyService
 
     @Override

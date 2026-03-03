@@ -17,7 +17,7 @@ package test
 import goowee.commons.utils.FileUtils
 import goowee.core.ApplicationService
 import goowee.core.ConnectionSourceService
-import goowee.core.TransitionService
+import goowee.elements.TransitionService
 import goowee.elements.pages.ShellService
 import goowee.properties.SystemPropertyService
 import goowee.properties.TenantPropertyService
@@ -101,21 +101,22 @@ class BootStrap {
             tenantPropertyService.setBoolean('TEST_BOOLEAN', true)
             tenantPropertyService.setDirectory('TEST_DIRECTORY', '', '/pippo/pluto')
             tenantPropertyService.setFilename('TEST_FILENAME', '', '\\pippo\\pluto\\config.txt')
-            tenantPropertyService.setUrl('TEST_URL', 'http://www.dueuno.com', 'http://www.google.com/search')
+            tenantPropertyService.setUrl('TEST_URL', 'http://www.goowee.org', 'http://www.google.com/search')
             tenantPropertyService.setDirectory('TEST_WRONG_DIRECTORY', '\\this\\directory\\doesnt\\exist', '')
             tenantPropertyService.setFilename('TEST_WRONG_FILENAME', '\\this\\file\\doesnt\\exist.txt', '')
             tenantPropertyService.setUrl('TEST_WRONG_URL', 'htp://www.wrong.url', '')
             tenantPropertyService.setString('TEST_ON_CHANGE', 'Change me and check the console!', '')
             tenantPropertyService.setPassword('TEST_PASSWORD', "${tenantId}Password")
 
-            String appLink = servletContext.contextPath
             tenantPropertyService.setString('SHELL_URL_MAPPING', '/admin')
             tenantPropertyService.setString('LOGIN_LANDING_URL', '/')
-            tenantPropertyService.setString('LOGIN_REGISTRATION_URL', appLink + '/crud/register')
-            tenantPropertyService.setString('LOGIN_PASSWORD_RECOVERY_URL', appLink + '/crud/passwordRecovery')
+            tenantPropertyService.setString('LOGIN_REGISTRATION_URL', 'crud/register')
+            tenantPropertyService.setString('LOGIN_PASSWORD_RECOVERY_URL', 'crud/passwordRecovery')
+
+            String appLink = servletContext.contextPath
             tenantPropertyService.setString(
                     'LOGIN_COPY',
-                    'Copyright &copy; Dueuno.<br/>All rights reserved.<br/><br/><a href="' + appLink + '">&lt;&lt; Back to website</a>'
+                    'Copyright &copy; Goowee. <br/>All rights reserved.<br/><br/><a href="' + appLink + '">&lt;&lt; Back to website</a>'
             )
 
             securityService.updateGroup(
@@ -162,7 +163,7 @@ class BootStrap {
             systemPropertyService.setBoolean('TEST_BOOLEAN', true)
             systemPropertyService.setDirectory('TEST_DIRECTORY', '', '/pippo/pluto')
             systemPropertyService.setFilename('TEST_FILENAME', '', '\\pippo\\pluto\\config.txt')
-            systemPropertyService.setUrl('TEST_URL', 'http://www.dueuno.com', 'http://www.google.com/search')
+            systemPropertyService.setUrl('TEST_URL', 'http://www.goowee.org', 'http://www.google.com/search')
             systemPropertyService.setDirectory('TEST_WRONG_DIRECTORY', '\\this\\directory\\doesnt\\exist', '')
             systemPropertyService.setFilename('TEST_WRONG_FILENAME', '\\this\\file\\doesnt\\exist.txt', '')
             systemPropertyService.setUrl('TEST_WRONG_URL', 'htp://www.wrong.url', '')

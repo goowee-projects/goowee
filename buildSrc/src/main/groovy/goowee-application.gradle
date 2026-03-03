@@ -60,15 +60,9 @@ java {
     }
 }
 
-configurations.all {
-    resolutionStrategy {
-        cacheChangingModulesFor 0, "seconds"
-    }
+tasks.withType(GroovyCompile).configureEach {
+    groovyOptions.optimizationOptions.indy = false
 }
-
-//tasks.withType(GroovyCompile) {
-//    groovyOptions.optimizationOptions.indy = false
-//}
 
 tasks.withType(Test) {
     useJUnitPlatform()

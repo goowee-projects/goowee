@@ -14,6 +14,7 @@
  */
 package goowee.elements.components
 
+import goowee.commons.utils.ObjectUtils
 import goowee.elements.Component
 import goowee.elements.Elements
 import goowee.elements.style.TextDefault
@@ -117,7 +118,7 @@ class Table extends Component {
         rowHighlightLastChanged = (args.rowHighlightLastChanged == null) ? false : args.rowHighlightLastChanged
 
         noResults = (args.noResults == null) ? true : args.noResults
-        noResultsIcon = (args.noResultsIcon == null) ? 'fa-regular fa-folder-open ps-4 mb-n2' : args.noResultsIcon
+        noResultsIcon = (args.noResultsIcon == null) ? 'fa-regular fa-folder-open mb-n2' : args.noResultsIcon
         noResultsMessage = (args.noResultsMessage) ?: 'component.table.no.results'
 
         readonly = (args.readonly == null) ? false : args.readonly
@@ -322,7 +323,7 @@ class Table extends Component {
 
     private void initializeKeyColumns(Collection recordset) {
         // Add 'id' key if the first record contains an id
-        if (recordset.size() > 0 && Elements.hasId(recordset[0])) {
+        if (recordset.size() > 0 && ObjectUtils.hasId(recordset[0])) {
             if ('id' !in keys) keys.add('id')
 
             // First column is the default key

@@ -23,7 +23,7 @@ import goowee.elements.controls.TextField
 import goowee.elements.style.TextDefault
 import grails.plugin.springsecurity.annotation.Secured
 
-@Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
+@Secured(['permitAll'])
 class PublicPageController implements ElementsController {
 
 

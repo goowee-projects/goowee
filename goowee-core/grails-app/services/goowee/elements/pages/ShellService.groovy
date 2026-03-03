@@ -18,7 +18,8 @@ import goowee.commons.utils.LogUtils
 import goowee.core.ApplicationService
 import goowee.core.LinkGeneratorAware
 import goowee.core.WebRequestAware
-import goowee.exceptions.GooweeException
+import goowee.elements.PageService
+import goowee.exceptions.ElementsException
 import goowee.properties.SystemPropertyService
 import goowee.properties.TenantPropertyService
 import goowee.tenants.TenantService
@@ -59,7 +60,7 @@ class ShellService implements WebRequestAware, LinkGeneratorAware {
 
         } catch (Exception e) {
             log.error LogUtils.logStackTrace(e)
-            throw new GooweeException("Cannot create the shell: ${e.message}", e)
+            throw new ElementsException("Cannot create the shell: ${e.message}", e)
         }
     }
 

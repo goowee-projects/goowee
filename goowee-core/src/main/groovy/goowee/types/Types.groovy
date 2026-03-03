@@ -14,7 +14,8 @@
  */
 package goowee.types
 
-import goowee.exceptions.GooweeException
+
+import goowee.exceptions.ElementsException
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
@@ -36,7 +37,7 @@ class Types {
 
     static register(Class type) {
         if (type !in CustomType) {
-            throw new GooweeException("Cannot register class '${type}'. Ony classes implementing '${CustomType.getName()}' can be registered as custom types.")
+            throw new ElementsException("Cannot register class '${type}'. Ony classes implementing '${CustomType.getName()}' can be registered as custom types.")
         }
 
         String typeName = type['TYPE_NAME']
@@ -64,7 +65,7 @@ class Types {
             return registry[typeName].getDeclaredConstructor().newInstance() as CustomType
 
         } else {
-            throw new GooweeException("Cannot instantiate custom type '${typeName}', please register the new type (eg. Types.register('CUSTOM_TYPE', CustomType)")
+            throw new ElementsException("Cannot instantiate custom type '${typeName}', please register the new type (eg. Types.register('CUSTOM_TYPE', CustomType)")
         }
     }
 
@@ -137,7 +138,7 @@ class Types {
                 return Type.TEXT
 
             default:
-                throw new GooweeException("Object of class '${value.getClass()}' cannot be identified as one of the available types: ${availableTypeNames}.")
+                throw new ElementsException("Object of class '${value.getClass()}' cannot be identified as one of the available types: ${availableTypeNames}.")
         }
     }
 

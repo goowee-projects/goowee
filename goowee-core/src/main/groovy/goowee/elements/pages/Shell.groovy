@@ -14,6 +14,7 @@
  */
 package goowee.elements.pages
 
+import goowee.core.LinkDefinition
 import goowee.elements.Page
 import goowee.elements.contents.ContentHome
 import goowee.exceptions.ArgsException
@@ -57,6 +58,10 @@ class Shell extends Page {
 
         navbar = addComponent(ShellNavbar, 'navbar', [shell: this, textPrefix: 'shell'])
         home = createComponent(ContentHome, 'home', [shell: this, textPrefix: 'shell'])
+    }
+
+    void setLogoLink(LinkDefinition linkDefinition) {
+        navbar.logo.linkDefinition = linkDefinition
     }
 
     void setUser(String username, String firstname, String lastname) {

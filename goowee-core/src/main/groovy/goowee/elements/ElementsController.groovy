@@ -18,9 +18,8 @@ import goowee.commons.utils.LogUtils
 import goowee.core.LinkGeneratorAware
 import goowee.core.WebRequestAware
 import goowee.elements.contents.ContentHeader
-import goowee.elements.pages.PageService
 import goowee.elements.pages.PageWebsocket
-import goowee.exceptions.GooweeException
+import goowee.exceptions.ElementsException
 import grails.artefact.Controller
 import grails.artefact.Enhances
 import grails.artefact.controller.RestResponder
@@ -47,7 +46,7 @@ trait ElementsController implements Controller, RestResponder, WebRequestAware, 
     @CompileDynamic
     Boolean getDisplay() {
         if (requestParams._21TransitionRendered) {
-            throw new GooweeException(DISPLAY_EXCEPTION_MESSAGE)
+            throw new ElementsException(DISPLAY_EXCEPTION_MESSAGE)
         }
 
         try {
@@ -63,7 +62,7 @@ trait ElementsController implements Controller, RestResponder, WebRequestAware, 
     @CompileDynamic
     void display(Map args = [:]) {
         if (requestParams._21TransitionRendered) {
-            throw new GooweeException(DISPLAY_EXCEPTION_MESSAGE)
+            throw new ElementsException(DISPLAY_EXCEPTION_MESSAGE)
         }
 
         StopWatch sw = new StopWatch()
@@ -98,18 +97,6 @@ trait ElementsController implements Controller, RestResponder, WebRequestAware, 
                 log.error LogUtils.logStackTrace(ignore)
             }
         }
-    }
-
-    @CompileDynamic
-    Map getRequestHeader() {
-        def headerMap = [:]
-        def headerNames = request.getHeaderNames()
-        while (headerNames.hasMoreElements()) {
-            String key = (String) headerNames.nextElement()
-            String value = request.getHeader(key)
-            headerMap.put(key, value)
-        }
-        return headerMap
     }
 
     String getKeyPressed() {
@@ -198,7 +185,8 @@ trait ElementsController implements Controller, RestResponder, WebRequestAware, 
         } else if (args.exception) {
             Exception e = args.exception as Exception
             log.error LogUtils.logStackTrace(e)
-            t.errorMessage(e.message, new ComponentEvent(args))
+            String message = e.message ?: e.cause.message ?: "${e.toString()} caused by ${e.cause.toString()}"
+            t.errorMessage(message , new ComponentEvent(args))
 
         } else if (args.errors) {
             Integer submittedComponentCount = requestParams._21SubmittedCount as Integer
@@ -241,7 +229,7 @@ trait ElementsController implements Controller, RestResponder, WebRequestAware, 
                 t.errorMessage("Cannot display errors, please refer to the Goowee user guide.")
             }
 
-        } else if (args.controller || args.action) {
+        } else if (args.controller || args.action || args.url) {
             t.redirect(args)
         }
 

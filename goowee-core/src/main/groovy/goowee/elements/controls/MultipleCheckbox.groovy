@@ -15,7 +15,7 @@
 package goowee.elements.controls
 
 import goowee.elements.Control
-import goowee.exceptions.GooweeException
+import goowee.exceptions.ElementsException
 import goowee.types.Type
 import groovy.transform.CompileStatic
 
@@ -115,7 +115,7 @@ class MultipleCheckbox extends Control {
                 break
 
             default:
-                throw new GooweeException("${this.getClass().simpleName} only accepts String, Set o List as value.")
+                throw new ElementsException("${this.getClass().simpleName} only accepts String, Set o List as value.")
         }
 
         renderValue()

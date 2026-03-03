@@ -1,16 +1,11 @@
-import goowee.database.TNamingStrategy
-
 // H2 Console enabled by default (protected by Spring Security, only "superadmin" can access it)
 spring.h2.console.enabled = true
 
 // Uses custom table naming
-hibernate.naming_strategy = TNamingStrategy
+hibernate.naming_strategy = goowee.database.TNamingStrategy
 
 // Tenants are stored in separate database schemas
 grails.gorm.multiTenancy.mode = 'DATABASE'
-
-// Tenants
-grails.gorm.multiTenancy.tenantResolverClass = 'goowee.tenants.TenantForCurrentUserResolver'
 
 // Spring Security Core plugin setup example
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'goowee.security.TUser'
@@ -56,7 +51,6 @@ grails.plugin.springsecurity.controllerAnnotations.staticRules = [
         [pattern: '/**/images/**', access: ['permitAll']],
         [pattern: '/**/favicon.png', access: ['permitAll']],
         [pattern: '/**/appicon.png', access: ['permitAll']],
-        [pattern: '/**/pwa/manifest.json', access: ['permitAll']],
         [pattern: '/**/pwa/register.js', access: ['permitAll']],
         [pattern: '/**/pwa/service-worker.js', access: ['permitAll']],
 ]
@@ -68,9 +62,6 @@ grails.plugin.springsecurity.filterChain.chainMap = [
         [pattern: '/**/images/**', filters: 'none'],
         [pattern: '/**/favicon.png', filters: 'none'],
         [pattern: '/**/appicon.png', filters: 'none'],
-        [pattern: '/**/pwa/manifest.json', filters: 'none'],
-        [pattern: '/**/pwa/register.js', filters: 'none'],
-        [pattern: '/**/pwa/service-worker.js', filters: 'none'],
         [pattern: grails.plugin.springsecurity.externalId.filterProcessesUrl, filters: 'externalIdAuthenticationFilter'],
         [pattern: '/**', filters: 'JOINED_FILTERS,-externalIdAuthenticationFilter']
 ]
@@ -82,9 +73,14 @@ grails.plugin.springsecurity.filterChain.chainMap = [
 ///////////////////////////////////////////////////////////////////////////////
 
 grails.plugin.springsecurity.providerNames = [
-        'externalIdAuthenticationProvider',
-        'rememberMeAuthenticationProvider',
+        // Must be the first one
         'daoAuthenticationProvider',
+
+        // All other providers
+        'externalIdAuthenticationProvider',
+
+        // Must be the last one
+        'rememberMeAuthenticationProvider',
 ]
 
 // Configure the server connection using the variables you find below

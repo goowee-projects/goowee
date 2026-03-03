@@ -30,7 +30,7 @@ class PageModal extends Component {
     PageModal(Map args) {
         super(args)
 
-        viewPath = '/goowee/core/'
+        viewPath = '/goowee/elements/'
 
         closeButton = createComponent(
                 class: Button,

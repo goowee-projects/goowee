@@ -29,7 +29,7 @@ import grails.plugin.springsecurity.annotation.Secured
  * @author Gianluca Sartori
  * @author Francesco Piceghello
  */
-@Secured(['IS_AUTHENTICATED_REMEMBERED'])
+@Secured(['isAuthenticated()'])
 class ShellController implements ElementsController {
 
     ApplicationService applicationService
@@ -81,24 +81,24 @@ class ShellController implements ElementsController {
         display content: c, modal: true
     }
 
-    @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
+    @Secured(['permitAll'])
     def toggleDevHints() {
         devDisplayHints = !devDisplayHints
-        display controller: securityService.userLandingPage ?: 'shell', direct: true
+        display url: securityService.userLandingPage
     }
 
-    @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
+    @Secured(['permitAll'])
     def toggleClientLogs() {
         Boolean logs = tenantPropertyService.getBoolean('LOG_ERROR')
         tenantPropertyService.setBoolean('LOG_ERROR', !logs)
         tenantPropertyService.setBoolean('LOG_DEBUG', !logs)
-        display controller: securityService.userLandingPage ?: 'shell', direct: true
+        display url: securityService.userLandingPage
     }
 
-    @Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
+    @Secured(['permitAll'])
     def switchLanguage() {
         currentLanguage = (String) params.id
         securityService.saveCurrentUserLanguage()
-        display controller: securityService.userLandingPage ?: 'shell', direct: true
+        display url: securityService.userLandingPage
     }
 }

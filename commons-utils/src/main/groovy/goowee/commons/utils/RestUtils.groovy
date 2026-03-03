@@ -27,6 +27,7 @@ import jakarta.servlet.http.Part
  */
 
 @Slf4j
+@Deprecated
 @CompileStatic
 class RestUtils {
 

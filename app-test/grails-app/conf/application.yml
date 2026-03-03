@@ -56,13 +56,16 @@ grails:
   plugin:
     springsecurity:
       providerNames:
-        - rememberMeAuthenticationProvider
         - daoAuthenticationProvider
         - externalIdAuthenticationProvider
 #        - ldapAuthProvider
+        - rememberMeAuthenticationProvider
 
 ---
 spring:
+  threads:
+    virtual:
+      enabled: true
   h2:
     console:
       enabled: true

@@ -34,7 +34,7 @@ class PageMessageBox extends Component {
     PageMessageBox(Map args) {
         super(args)
 
-        viewPath = '/goowee/core/'
+        viewPath = '/goowee/elements/'
 
         cancel = addComponent(Button, 'cancel')
         cancel.icon = 'fa-circle-xmark'

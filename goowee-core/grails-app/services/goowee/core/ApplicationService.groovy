@@ -17,10 +17,11 @@ package goowee.core
 import goowee.commons.utils.FileUtils
 import goowee.elements.Elements
 import goowee.exceptions.ArgsException
-import goowee.exceptions.GooweeException
+import goowee.exceptions.ElementsException
 import goowee.properties.SystemPropertyService
 import goowee.tenants.TenantService
 import goowee.utils.EnvUtils
+import goowee.utils.LocaleUtils
 import grails.core.GrailsApplication
 import grails.gorm.transactions.Transactional
 import grails.util.Holders
@@ -481,7 +482,7 @@ class ApplicationService implements LinkGeneratorAware {
         for (language in languages) {
             registerUserFeature(
                     text: 'default.language.' + language,
-                    image: 'libs/flags/' + getFlagCode(language) + '.svg',
+                    image: 'libs/flags/' + LocaleUtils.getFlagCode(language) + '.svg',
                     controller: 'shell',
                     action: 'switchLanguage',
                     params: [id: language],
@@ -579,7 +580,7 @@ class ApplicationService implements LinkGeneratorAware {
     void registerSuperadminFeature(Map args = [:]) {
         Feature parent = getSuperadminFeature()
         if (!parent) {
-            throw new GooweeException("Cannot register Superadmin Feature '${args.controller}': applications must register features in the 'onInit' event. Plugins in the 'afterInit' event.")
+            throw new ElementsException("Cannot register Superadmin Feature '${args.controller}': applications must register features in the 'onInit' event. Plugins in the 'afterInit' event.")
         }
 
         Feature newFeature = getFeature(args.controller as String)
@@ -597,7 +598,7 @@ class ApplicationService implements LinkGeneratorAware {
     void registerAdminFeature(Map args = [:]) {
         Feature parent = getAdminFeature()
         if (!parent) {
-            throw new GooweeException("Cannot register Admin Feature '${args.controller}': applications must register features in the 'onInit' event. Plugins in the 'afterInit' event.")
+            throw new ElementsException("Cannot register Admin Feature '${args.controller}': applications must register features in the 'onInit' event. Plugins in the 'afterInit' event.")
         }
 
         Feature newFeature = getFeature(args.controller as String)
@@ -677,29 +678,5 @@ class ApplicationService implements LinkGeneratorAware {
         } else {
             return filename.startsWith('messages')
         }
-    }
-
-    private String getFlagCode(String lang) {
-        // Per riferimento:
-        // - Java Locale docs:                     https://docs.oracle.com/javase/7/docs/api/java/util/Locale.html
-        // - Icon library:                         https://www.flaticon.com/packs/countrys-flags
-        // - Locale uses ISO 639 Alpha 2 codes:    https://www.loc.gov/standards/iso639-2/php/English_list.php
-        // - Flags uses ISO 3166-1 Alpha 2 codes:  https://www.iso.org/obp/ui/
-        Map localeToFlag = [
-                en   : 'gb',    // defaults to UK (cause we're european ;-)
-                en_gb: 'gb',
-                en_us: 'us',
-                pt_pt: 'pt',
-                pt_br: 'br',
-                zh_cn: 'cn',
-                cs   : 'cs_cz',
-                da   : 'dk',
-                ja   : 'jp',
-                nb   : 'no',
-        ]
-        String langLowerCase = lang.toLowerCase()
-        String flagLang = localeToFlag[langLowerCase] ?: langLowerCase
-        // println "Locale: '${lang}' -> Flag: '${flagLang}'"
-        return flagLang
     }
 }

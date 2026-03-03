@@ -15,21 +15,24 @@
 package goowee.core
 
 import grails.plugin.springsecurity.annotation.Secured
-import org.grails.exceptions.ExceptionUtils
 
 /**
  * INTERNAL USE ONLY
  *
  * @author Gianluca Sartori
  */
-@Secured(['IS_AUTHENTICATED_ANONYMOUSLY'])
+@Secured(['permitAll'])
 class HttpStatusController {
 
     def err500() {
         withFormat {
             json {
+                Exception e = request.exception
+                String message = e
+                        ? e.message ?: e.cause.message ?: e.toString()
+                        : "Internal server error."
                 Map obj = [
-                        error: ExceptionUtils.getRootCause(request.exception)
+                        error: message
                 ]
                 respond obj
             }

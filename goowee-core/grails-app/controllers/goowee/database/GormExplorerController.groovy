@@ -27,6 +27,7 @@ import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.*
 import goowee.elements.style.TextDefault
+import goowee.security.SecurityService
 import goowee.tenants.TenantService
 import goowee.types.CustomType
 import goowee.types.Types
@@ -42,6 +43,7 @@ import java.time.LocalTime
 @Secured(['ROLE_DEVELOPER'])
 class GormExplorerController implements ElementsController {
 
+    SecurityService securityService
     TenantService tenantService
     ConnectionSourceService connectionSourceService
 
@@ -88,7 +90,7 @@ class GormExplorerController implements ElementsController {
         c.header.nextButton.action = 'sqlConsole'
 
         def resetPagination = false
-        String tenantId = params.tenantId ?: controllerSession['tenantId'] ?: tenantService.defaultTenantId
+        String tenantId = params.tenantId ?: controllerSession['tenantId'] ?: securityService.currentUser.tenant.tenantId
         if (params.tenantId && params.tenantId != controllerSession['tenantId']) resetPagination = true
         controllerSession['tenantId'] = tenantId
 
@@ -104,17 +106,28 @@ class GormExplorerController implements ElementsController {
         def form = c.addComponent(Form)
         form.with {
             sticky = true
-            addField(
-                    class: Select,
-                    id: 'tenantId',
-                    optionsFromRecordset: tenantService.list(),
-                    keys: ['tenantId'],
-                    allowClear: false,
-                    defaultValue: tenantId,
-                    onChange: 'index',
-                    submit: 'form',
-                    cols: 3,
-            )
+            if (securityService.isSuperAdmin()) {
+                addField(
+                        class: Select,
+                        id: 'tenantId',
+                        optionsFromRecordset: tenantService.list(),
+                        keys: ['tenantId'],
+                        allowClear: false,
+                        defaultValue: tenantService.defaultTenantId,
+                        onChange: 'index',
+                        submit: 'form',
+                        cols: 3,
+                )
+            } else {
+                addField(
+                        class: TextField,
+                        id: 'tenantId',
+                        defaultValue: tenantId,
+                        readonly: true,
+                        cols: 3,
+                )
+            }
+
             addField(
                     class: Select,
                     id: 'domainClassName',
@@ -176,6 +189,17 @@ class GormExplorerController implements ElementsController {
                 }
 
                 def query = new DetachedCriteria(domainClass).build {
+
+                    // Dynamic associations fetch
+                    for (property in getDomainProperties(domainClass)) {
+                        Class propertyClass = property.value.property.propertyType
+                        String propertyName = property.key
+
+                        if (Elements.isDomainClass(propertyClass)) {
+                            join propertyName
+                        }
+                    }
+
                     if (searchId) {
                         eq 'id', searchId
                     }

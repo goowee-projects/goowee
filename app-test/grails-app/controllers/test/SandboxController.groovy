@@ -33,7 +33,6 @@ class MyType {
     Integer i
 }
 
-
 class SandboxController implements ElementsController {
 
     ServletContext servletContext
@@ -165,7 +164,7 @@ class SandboxController implements ElementsController {
                     timeStep: 15,
                     onChange: 'onTimeChange',
                     textStyle: TextStyle.NORMAL,
-                    highlight: true,
+                    help: 'This is a help message',
                     cols: 2,
             )
             addField(
@@ -173,6 +172,7 @@ class SandboxController implements ElementsController {
                     id: 't2',
                     value: LocalTime.now(),
                     readonly: true,
+                    help: 'This is a help message',
                     cols: 2,
             )
             addField(
@@ -181,6 +181,7 @@ class SandboxController implements ElementsController {
                     value: LocalDate.now(),
                     textStyle: [TextStyle.LINE_THROUGH, TextStyle.NORMAL],
                     highlight: true,
+                    help: 'This is a help message',
                     cols: 6,
             )
             addField(
@@ -213,11 +214,11 @@ class SandboxController implements ElementsController {
                     onSearch: 'onSelect3Search',
                     onChange: 'onSelect3Change',
                     submit: ['formFail'],
-                    help: 'Non sai cosa fare vero? Non ti preoccupare, continuerai a non saperlo... 8-)',
+                    help: 'This is a long help message, long, long, long, long, long, long, long',
                     value: 3,
                     allowClear: true,
                     cols: 12,
-                    highlight: true,
+//                    highlight: true,
             )
             addField(
                     class: MoneyField,
@@ -329,6 +330,7 @@ class SandboxController implements ElementsController {
                     class: Checkbox,
                     id: 'checkThisOut',
                     onChange: 'onChangeCheckThisOut',
+                    help: 'This is a help message',
                     cols: 6,
             )
 
@@ -460,7 +462,7 @@ Grails application running at http://localhost:9992/test in environment: develop
 
                 row.cells.input.component = [
                         class   : NumberField,
-                        id      : 'number',
+                        id      : "number${values.id}",
                         min     : -2,
                         max     : 10,
                         textAlign: TextAlign.END,

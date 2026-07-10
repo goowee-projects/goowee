@@ -18,8 +18,6 @@ import goowee.core.PrettyPrinter
 import goowee.core.PrettyPrinterProperties
 import goowee.elements.controls.QuantityField
 import goowee.exceptions.ElementsException
-import grails.gorm.MultiTenant
-import grails.gorm.annotation.Entity
 import groovy.transform.CompileDynamic
 import org.grails.datastore.gorm.GormEntity
 
@@ -43,10 +41,8 @@ import org.grails.datastore.gorm.GormEntity
  * @author Francesco Piceghello
  * @author Alessandro Stecca
  */
-
-@Entity
 @CompileDynamic
-class Quantity extends Number implements CustomType, GormEntity, MultiTenant<Quantity> {
+class Quantity extends Number implements CustomType, GormEntity {
 
     /** The Elements type name used to identify this custom type in the serialisation protocol. */
     static final TYPE_NAME = 'QUANTITY'

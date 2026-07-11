@@ -27,6 +27,8 @@ import java.time.LocalDateTime
 @GrailsCompileStatic
 class TAuditLog implements GormEntity, MultiTenant<TAuditLog> {
 
+    static final Integer LOG_MESSAGE_MAX_SIZE = 4000
+
     Long id
 
     LocalDateTime dateCreated
@@ -50,10 +52,10 @@ class TAuditLog implements GormEntity, MultiTenant<TAuditLog> {
         port nullable: true
         requestInfo nullable: true
         userAgent nullable: true
-        message nullable: true, maxSize: 4000
+        message nullable: true, maxSize: LOG_MESSAGE_MAX_SIZE
         objectName nullable: true
-        stateBefore nullable: true, maxSize: 4000
-        stateAfter nullable: true, maxSize: 4000
+        stateBefore nullable: true, maxSize: LOG_MESSAGE_MAX_SIZE
+        stateAfter nullable: true, maxSize: LOG_MESSAGE_MAX_SIZE
         digest nullable: true
     }
 }

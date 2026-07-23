@@ -15,15 +15,17 @@
 package test
 
 import goowee.audit.AuditService
-import goowee.core.ApplicationService
-import goowee.elements.ElementsController
 import goowee.elements.components.Form
+import goowee.elements.components.Label
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentForm
 import goowee.elements.contents.ContentTable
 import goowee.elements.controls.*
+import goowee.core.ApplicationService
+import goowee.elements.ElementsController
+import goowee.elements.style.Color
 import goowee.elements.style.TextDefault
 import goowee.elements.style.TextWrap
 import goowee.types.QuantityService
@@ -55,6 +57,17 @@ class CrudController implements ElementsController {
         def c = createContent(ContentTable)
 
         c.title = 'Runtime "content" title'
+
+        if (isMobileDevice()) {
+            c.addComponent(
+                    class: Label,
+                    id: 'isMobileDevice',
+                    text: "Running on a mobile device.",
+                    backgroundColor: Color.WARNING_BACKGROUND,
+                    textColor: Color.WARNING_TEXT,
+            )
+        }
+
         c.with {
             header.sticky = false
             header.text = 'Runtime "content.header" title'

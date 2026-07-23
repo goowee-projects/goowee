@@ -184,19 +184,30 @@ abstract class Component implements WebRequestAware, Serializable {
 
         for (arg in args) {
             String eventName = arg.key
-            String action = arg.value
+            String eventValue = arg.value
 
             if (eventName.startsWith('on')) {
+                Map actionMap = parseControllerAction(eventValue)
                 String event = (eventName - 'on').toLowerCase()
                 Map eventArgs = [
-                        event  : event,
-                        action : action,
-                        submit : submit ?: [getId()],
-                        loading: event == 'load' ? false : args.loading,
+                        event     : event,
+                        controller: actionMap.controller,
+                        action    : actionMap.action,
+                        submit    : submit ?: [getId()],
+                        loading   : event == 'load' ? false : args.loading,
                 ]
                 on(args + eventArgs)
             }
         }
+    }
+
+    private Map parseControllerAction(String value) {
+        def parts = value.tokenize('.')
+
+        return [
+                controller: parts.size() > 1 ? parts[0] : null,
+                action    : parts.size() > 1 ? parts[1] : parts[0]
+        ]
     }
 
     String toString() {

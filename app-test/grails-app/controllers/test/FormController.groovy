@@ -19,10 +19,7 @@ import goowee.elements.ElementsController
 import goowee.elements.components.*
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.*
-import goowee.elements.style.Color
-import goowee.elements.style.TextAlign
-import goowee.elements.style.TextTransform
-import goowee.elements.style.TextWrap
+import goowee.elements.style.*
 import goowee.types.QuantityService
 import goowee.types.QuantityUnit
 
@@ -61,11 +58,17 @@ class FormController implements ElementsController {
                     id: 'modal',
                     displayLabel: false,
                     help: 'Questo è un messaggio di aiuto in una bottiglia',
-                    cols: 6,
+                    cols: 3,
             )
             addField(
                     class: Checkbox,
-                    id: 'wide',
+                    id: 'small',
+                    displayLabel: false,
+                    cols: 3,
+            )
+            addField(
+                    class: Checkbox,
+                    id: 'large',
                     displayLabel: false,
                     cols: 3,
             )
@@ -91,7 +94,8 @@ class FormController implements ElementsController {
                     class: Select,
                     id: 'animate',
                     optionsFromList: ['fade', 'next', 'back'],
-                    defaultValue: ['fade'],
+                    textStyle: [TextStyle.BOLD, TextStyle.MONOSPACE],
+                    defaultValue: 'fade',
                     displayLabel: false,
                     cols: 6,
             )
@@ -102,7 +106,8 @@ class FormController implements ElementsController {
 
     def edit() {
         def modal = requireParam('modal')
-        def wide = requireParam('wide')
+        def small = requireParam('small')
+        def large = requireParam('large')
         def fullscreen = requireParam('fullscreen')
         def closeButton = requireParam('closeButton')
         def isReadonly = requireParam('isReadonly')
@@ -148,7 +153,7 @@ class FormController implements ElementsController {
                     action: 'create',
                     modal: modal,
                     animate: (animate ? 'next' : null),
-                    wide: wide,
+                    large: large,
                     params: [
                             embedded: true,
                     ],
@@ -168,7 +173,7 @@ class FormController implements ElementsController {
                     icon: 'fa-plus',
                     modal: modal,
                     animate: animate,
-                    wide: wide,
+                    large: large,
                     fullscreen: fullscreen,
                     params: [
                             embedded: true,
@@ -180,6 +185,7 @@ class FormController implements ElementsController {
                     id: 'userTrans',
                     optionsFromRecordset: personService.list(),
                     transformer: 'T_PERSON',
+                    textStyle: [TextStyle.LINE_THROUGH, TextStyle.MONOSPACE],
             )
             addField(
                     class: Select,
@@ -211,6 +217,7 @@ class FormController implements ElementsController {
                     class: TextField,
                     id: 'textfieldActions',
                     prefix: 'PIPPO',
+                    textStyle: [TextStyle.LINE_THROUGH, TextStyle.MONOSPACE],
             )
             textfieldActions.component.addAction(
                     action: 'index',
@@ -328,13 +335,16 @@ class FormController implements ElementsController {
                     class: Select,
                     id: 'user2',
                     optionsFromRecordset: personService.list(),
+                    multiple: true,
                     keys: ['id'],
                     search: false,
             )
             addField(
                     class: Checkbox,
                     id: 'checkbox',
+                    textArgs: ['ARG_1'],
                     help: 'Questo è un messaggio di aiuto per te che non sai cosa diavolo fare',
+                    onChange: 'onChangeCheckbox',
                     cols: 6,
             )
             addField(
@@ -496,7 +506,17 @@ class FormController implements ElementsController {
             paginate = personService.count()
         }
 
-        display content: c, modal: modal, wide: wide, fullscreen: fullscreen, animate: animate, closeButton: closeButton
+        display content: c, modal: modal, small: small, large: large, fullscreen: fullscreen, animate: animate, closeButton: closeButton
+    }
+
+    def onChangeCheckbox() {
+        def t = createTransition()
+        if (params.checkbox) {
+            t.set('checkbox', 'text', message('form.checkbox.text', ['SELECTED']))
+        } else {
+            t.set('checkbox', 'text', message('form.checkbox.text', ['NOT SELECTED']))
+        }
+        display transition: t
     }
 
     def onConfirm() {

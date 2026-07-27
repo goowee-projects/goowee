@@ -2,7 +2,7 @@
 spring.h2.console.enabled = true
 
 // Uses custom table naming
-hibernate.naming_strategy = goowee.database.TNamingStrategy
+hibernate.physicalNamingStrategy = goowee.database.TNamingStrategy
 
 // Tenants are stored in separate database schemas
 grails.gorm.multiTenancy.mode = 'DATABASE'

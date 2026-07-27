@@ -36,6 +36,9 @@ import org.springframework.scheduling.annotation.EnableScheduling
 class GooweeGrailsPlugin extends Plugin {
 
     static final String NAME = 'goowee-core'
+    def loadAfter = [
+            'springSecurityCore',
+    ]
 
     def version = '1.x-SNAPSHOT'
     // the version or versions of Grails the plugin is designed for

@@ -44,14 +44,12 @@ class TPerson implements GormEntity, MultiTenant<TPerson> {
 
     static embedded = [
             'salary',
-            'distanceKm'
+            'distanceKm',
     ]
 
     static constraints = {
-        picture nullable: true
-        salary nullable: true
-        distanceKm nullable: true
-        dateStart nullable: true
-        dateEnd nullable: true
+        name nullable: false
+        address nullable: false
+        postcode nullable: false
     }
 }

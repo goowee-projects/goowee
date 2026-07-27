@@ -63,12 +63,14 @@ class Link extends Label {
      *               {@link #linkDefinition} is used
      */
     void onTrigger(String action = null) {
-        on(linkDefinition.properties + [
+        Map event = linkDefinition.properties
+        Map eventOverride = [
                 event         : triggerEvent,
                 action        : action ?: linkDefinition.action,
                 infoMessage   : message(linkDefinition.infoMessage, linkDefinition.infoMessageArgs),
                 confirmMessage: message(linkDefinition.confirmMessage, linkDefinition.confirmMessageArgs),
-        ])
+        ] as Map
+        on(event + eventOverride)
     }
 
     /**

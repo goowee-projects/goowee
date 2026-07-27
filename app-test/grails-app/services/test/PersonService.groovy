@@ -76,7 +76,7 @@ class PersonService {
         if (args.failOnError == null) args.failOnError = false
 
         TPerson obj = new TPerson(args)
-        obj.save(flush: true, failOnError: args.failOnError)
+        obj.save(flush: true, failOnError: false)
         return obj
     }
 

@@ -26,7 +26,7 @@ import org.grails.datastore.gorm.GormEntity
 @GrailsCompileStatic
 @EqualsAndHashCode(includes='authority')
 @ToString(includes='authority', includeNames=true, includePackage=false)
-class TRole implements GormEntity, Serializable {
+class TUserRole implements GormEntity, Serializable {
 
     private static final long serialVersionUID = 1
 

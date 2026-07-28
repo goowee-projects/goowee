@@ -70,7 +70,7 @@ class AuthenticationController implements ElementsController {
         ///////////////////////////////////////
 
         // Getting the user preferences
-        TUser user = securityService.currentUser
+        TUserAccount user = securityService.currentUser
         decimalFormat = user.decimalFormat
         prefixedUnit = user.prefixedUnit
         symbolicCurrency = user.symbolicCurrency

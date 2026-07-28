@@ -8,9 +8,9 @@ hibernate.naming_strategy = goowee.database.TNamingStrategy
 grails.gorm.multiTenancy.mode = 'DATABASE'
 
 // Spring Security Core plugin setup example
-grails.plugin.springsecurity.userLookup.userDomainClassName = 'goowee.security.TUser'
-grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'goowee.security.TUserRole'
-grails.plugin.springsecurity.authority.className = 'goowee.security.TRole'
+grails.plugin.springsecurity.userLookup.userDomainClassName = 'goowee.security.TUserAccount'
+grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'goowee.security.TUserRoleGroup'
+grails.plugin.springsecurity.authority.className = 'goowee.security.TUserRole'
 grails.plugin.springsecurity.authority.groupAuthorityNameField = 'authorities'
 grails.plugin.springsecurity.useRoleGroups = true
 grails.plugin.springsecurity.roleHierarchyEntryClassName = 'goowee.security.TRoleHierarchyEntry'

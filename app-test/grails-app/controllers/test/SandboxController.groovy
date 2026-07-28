@@ -21,7 +21,7 @@ import goowee.elements.components.*
 import goowee.elements.controls.*
 import goowee.elements.style.*
 import goowee.security.SecurityService
-import goowee.security.TUser
+import goowee.security.TUserAccount
 import goowee.types.*
 import jakarta.servlet.ServletContext
 
@@ -700,7 +700,7 @@ Grails application running at http://localhost:9992/test in environment: develop
     }
 
     def onReject() {
-        def user = new TUser(username: 'G', password: 'G')
+        def user = new TUserAccount(username: 'G', password: 'G')
         user.errors.reject('obj.reject.error.test')
         display errors: user
     }

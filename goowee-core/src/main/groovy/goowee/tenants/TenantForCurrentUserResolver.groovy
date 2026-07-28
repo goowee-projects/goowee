@@ -15,7 +15,7 @@
 package goowee.tenants
 
 import goowee.core.WebRequestAware
-import goowee.security.TUser
+import goowee.security.TUserAccount
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.grails.datastore.mapping.multitenancy.TenantResolver
@@ -38,7 +38,7 @@ class TenantForCurrentUserResolver implements TenantResolver, WebRequestAware {
         }
 
         try {
-            TUser user = session['_21CurrentUser'] as TUser
+            TUserAccount user = session['_21CurrentUser'] as TUserAccount
             if (user) {
                 return user.tenant.tenantId
             } else {

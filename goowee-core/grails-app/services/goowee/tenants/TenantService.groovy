@@ -23,7 +23,7 @@ import goowee.core.TSystemInstall
 import goowee.properties.SystemPropertyService
 import goowee.security.TRoleGroup
 import goowee.security.TRoleGroupRole
-import goowee.security.TUser
+import goowee.security.TUserAccount
 import goowee.security.TUserRoleGroup
 import goowee.utils.ResourceUtils
 import grails.gorm.DetachedCriteria
@@ -263,7 +263,7 @@ class TenantService {
             userRoleGroup.delete(flush: true, failOnError: true)
         }
 
-        List<TUser> users = TUser.where { tenant == tenant }.list()
+        List<TUserAccount> users = TUserAccount.where { tenant == tenant }.list()
         for (user in users) {
             user.delete(flush: true, failOnError: true)
         }

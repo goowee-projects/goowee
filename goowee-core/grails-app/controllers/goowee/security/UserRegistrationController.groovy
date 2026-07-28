@@ -108,7 +108,7 @@ class UserRegistrationController implements ElementsController {
             return
         }
 
-        TUser user = securityService.updateUser(
+        TUserAccount user = securityService.updateUser(
                 username: params.username,
                 password: params.password,
         )

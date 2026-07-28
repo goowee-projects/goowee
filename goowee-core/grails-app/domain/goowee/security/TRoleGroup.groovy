@@ -48,13 +48,13 @@ class TRoleGroup implements GormEntity, Serializable {
         cache true
     }
 
-    List<TRole> getAuthorities() {
+    List<TUserRole> getAuthorities() {
         TRoleGroupRole.findAllByRoleGroup(this)*.role
     }
 
     static List<TRoleGroup> listByUser(long userId) {
         List<TUserRoleGroup> userRoleGroupList = TUserRoleGroup.where {
-            user == TUser.load(userId)
+            user == TUserAccount.load(userId)
         }.list(fetch: [roleGroup: 'join']) as List<TUserRoleGroup>
         userRoleGroupList.collect { it.roleGroup }
     }

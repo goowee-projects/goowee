@@ -14,7 +14,7 @@
  */
 package test
 
-import goowee.elements.Elements
+import goowee.elements.core.Elements
 import goowee.elements.ElementsController
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.Select

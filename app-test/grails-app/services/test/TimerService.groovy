@@ -1,6 +1,6 @@
 package test
 
-import goowee.elements.Component
+import goowee.elements.core.Component
 import goowee.elements.components.*
 import goowee.elements.style.TextAlign
 import goowee.elements.style.TextStyle

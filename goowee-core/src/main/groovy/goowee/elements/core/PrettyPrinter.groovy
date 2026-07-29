@@ -12,10 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.application
+package goowee.elements.core
 
 import goowee.commons.utils.DateUtils
-import goowee.elements.Elements
 import goowee.types.CustomType
 import goowee.types.Money
 import goowee.types.Quantity

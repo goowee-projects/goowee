@@ -14,10 +14,13 @@
  */
 package goowee.elements
 
-import goowee.application.LinkGeneratorAware
-import goowee.application.WebRequestAware
+import goowee.elements.core.LinkGeneratorAware
+import goowee.elements.core.WebRequestAware
 import goowee.commons.utils.FileUtils
 import goowee.elements.contents.ContentHeader
+import goowee.elements.core.Component
+import goowee.elements.core.Page
+import goowee.elements.core.Transition
 import goowee.security.SecurityService
 import goowee.tenant.TenantPropertyService
 import goowee.tenant.TenantService

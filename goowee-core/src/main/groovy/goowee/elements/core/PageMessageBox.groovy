@@ -12,9 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.elements
+package goowee.elements.core
 
 import goowee.elements.components.Button
+import goowee.elements.controls.TextField
+import goowee.elements.style.TextDefault
 import groovy.transform.CompileStatic
 
 /**
@@ -23,21 +25,30 @@ import groovy.transform.CompileStatic
  */
 
 @CompileStatic
-class PageModal extends Component {
+class PageMessageBox extends Component {
 
-    Button closeButton
+    Button confirm
+    Button cancel
+    TextField verify
 
-    PageModal(Map args) {
+    PageMessageBox(Map args) {
         super(args)
 
         viewPath = '/goowee/elements/'
 
-        closeButton = createComponent(
-                class: Button,
-                id: 'closeButton',
-                icon: 'fa-times',
-                text: '',
-                display: false,
-        )
+        cancel = addComponent(Button, 'cancel')
+        cancel.icon = 'fa-circle-xmark'
+        cancel.text = TextDefault.CANCEL
+        cancel.stretch = false
+
+        verify = addComponent(TextField, 'verify')
+        verify.placeholder = 'messagebox.confirm.verify'
+
+        confirm = addComponent(Button, 'confirm')
+        confirm.text = TextDefault.OK
+        confirm.icon = 'fa-circle-check'
+        confirm.primary = true
+        confirm.stretch = false
     }
+
 }

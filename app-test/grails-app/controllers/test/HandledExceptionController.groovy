@@ -19,7 +19,7 @@ import goowee.elements.components.Button
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.TextField
 import goowee.elements.style.TextDefault
-import goowee.exceptions.ElementsException
+import goowee.elements.ElementsException
 import groovy.util.logging.Slf4j
 
 @Slf4j

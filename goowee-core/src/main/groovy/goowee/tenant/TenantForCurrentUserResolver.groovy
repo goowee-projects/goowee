@@ -14,7 +14,7 @@
  */
 package goowee.tenant
 
-import goowee.application.WebRequestAware
+import goowee.elements.core.WebRequestAware
 import goowee.security.TUser
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j

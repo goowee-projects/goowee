@@ -14,8 +14,8 @@
  */
 package goowee.elements.pages
 
-import goowee.elements.KeyPress
-import goowee.elements.Page
+import goowee.elements.core.KeyPress
+import goowee.elements.core.Page
 import goowee.elements.components.Button
 import goowee.elements.components.Form
 import goowee.elements.components.Label

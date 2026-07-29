@@ -14,9 +14,9 @@
  */
 package goowee.tenant
 
-import goowee.application.WebRequestAware
+import goowee.elements.core.WebRequestAware
 import goowee.commons.utils.DateUtils
-import goowee.elements.Elements
+import goowee.elements.core.Elements
 import goowee.security.CryptoService
 import goowee.security.SecurityService
 import grails.gorm.DetachedCriteria

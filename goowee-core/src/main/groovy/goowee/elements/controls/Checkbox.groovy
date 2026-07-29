@@ -14,9 +14,9 @@
  */
 package goowee.elements.controls
 
-import goowee.application.PrettyPrinterProperties
-import goowee.elements.Component
-import goowee.elements.Control
+import goowee.elements.core.PrettyPrinterProperties
+import goowee.elements.core.Component
+import goowee.elements.core.Control
 import goowee.types.Type
 import groovy.transform.CompileStatic
 
@@ -135,7 +135,7 @@ class Checkbox extends Control {
      * Registers a {@code change} event listener that submits the form when the checkbox
      * is toggled, if no {@code change} handler has already been registered.
      *
-     * @param args event configuration forwarded to {@link goowee.elements.Component#on(Map)}
+     * @param args event configuration forwarded to {@link Component#on(Map)}
      * @return this component for chaining
      */
     @Override

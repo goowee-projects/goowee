@@ -15,13 +15,13 @@
 package goowee.elements.controls
 
 import goowee.commons.utils.ObjectUtils
-import goowee.application.PrettyPrinter
-import goowee.application.PrettyPrinterProperties
-import goowee.elements.Component
-import goowee.elements.Control
-import goowee.elements.Elements
+import goowee.elements.core.PrettyPrinter
+import goowee.elements.core.PrettyPrinterProperties
+import goowee.elements.core.Component
+import goowee.elements.core.Control
+import goowee.elements.core.Elements
 import goowee.elements.components.Button
-import goowee.exceptions.ElementsException
+import goowee.elements.ElementsException
 import goowee.types.Type
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
@@ -290,7 +290,7 @@ class Select extends Control {
      *             {@code prettyPrinter}, {@code transformer}, {@code textPrefix},
      *             {@code renderTextPrefix}, {@code locale}
      * @return a list of {@code [id: key, text: label]} maps
-     * @throws goowee.exceptions.ElementsException if the record has no {@code id} and no {@code keys} are given
+     * @throws ElementsException if the record has no {@code id} and no {@code keys} are given
      */
     static List<Map<String, String>> optionsFromRecordset(Map args) {
         Collection recordset = args.recordset as Collection ?: []

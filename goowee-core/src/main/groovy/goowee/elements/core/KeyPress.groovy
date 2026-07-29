@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.elements
+package goowee.elements.core
 
-import goowee.application.LinkDefinition
+
 import goowee.elements.controls.HiddenField
 import groovy.transform.CompileStatic
 

@@ -16,11 +16,11 @@ package goowee.elements.pages
 
 import goowee.application.ApplicationPropertyService
 import goowee.application.ApplicationService
-import goowee.application.LinkGeneratorAware
-import goowee.application.WebRequestAware
+import goowee.elements.core.LinkGeneratorAware
+import goowee.elements.core.WebRequestAware
 import goowee.commons.utils.LogUtils
 import goowee.elements.PageService
-import goowee.exceptions.ElementsException
+import goowee.elements.ElementsException
 import goowee.tenant.TenantPropertyService
 import goowee.tenant.TenantService
 import groovy.transform.CompileStatic

@@ -16,11 +16,16 @@ package goowee.security
 
 import goowee.application.*
 import goowee.commons.utils.StringUtils
-import goowee.elements.GuiStyle
-import goowee.elements.Menu
+import goowee.elements.core.Feature
+import goowee.elements.style.GuiStyle
+import goowee.elements.core.LinkDefinition
+import goowee.elements.core.LinkGeneratorAware
+import goowee.elements.core.Menu
+import goowee.elements.core.PrettyPrinterDecimalFormat
+import goowee.elements.core.WebRequestAware
 import goowee.elements.pages.Shell
 import goowee.elements.pages.ShellService
-import goowee.exceptions.ElementsException
+import goowee.elements.ElementsException
 import goowee.tenant.*
 import goowee.utils.EnvUtils
 import grails.gorm.DetachedCriteria

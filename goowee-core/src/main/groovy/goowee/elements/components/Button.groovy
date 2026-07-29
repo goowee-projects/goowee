@@ -14,9 +14,9 @@
  */
 package goowee.elements.components
 
-import goowee.elements.Component
-import goowee.elements.ComponentEvent
-import goowee.elements.Menu
+import goowee.elements.core.Component
+import goowee.elements.core.ComponentEvent
+import goowee.elements.core.Menu
 import goowee.elements.style.TextWrap
 import groovy.transform.CompileStatic
 import groovy.transform.Synchronized

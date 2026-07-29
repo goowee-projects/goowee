@@ -14,8 +14,8 @@
  */
 package goowee.elements.components
 
-import goowee.application.PrettyPrinterProperties
-import goowee.elements.Component
+import goowee.elements.core.PrettyPrinterProperties
+import goowee.elements.core.Component
 import goowee.elements.style.TextAlign
 import goowee.elements.style.TextStyle
 import goowee.elements.style.TextWrap
@@ -27,7 +27,7 @@ import groovy.transform.CompileStatic
  * and supports rich text styling options.
  * <p>
  * The displayed value is passed as {@code text} and is pretty-printed on read via
- * {@link goowee.application.PrettyPrinter} using the configured {@link #prettyPrinterProperties}.
+ * {@link goowee.elements.core.PrettyPrinter} using the configured {@link #prettyPrinterProperties}.
  * Alternatively, raw HTML can be provided via {@link #html}. Boolean values are rendered as
  * a check-mark icon; negative numbers are highlighted in red by default.
  * </p>

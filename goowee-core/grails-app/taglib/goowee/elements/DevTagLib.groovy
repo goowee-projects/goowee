@@ -14,7 +14,7 @@
  */
 package goowee.elements
 
-import goowee.application.WebRequestAware
+import goowee.elements.core.WebRequestAware
 import goowee.tenant.TenantPropertyService
 import goowee.utils.EnvUtils
 

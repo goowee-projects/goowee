@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.application
+package goowee.elements.core
 
-import goowee.exceptions.ElementsException
+import goowee.elements.ElementsException
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 

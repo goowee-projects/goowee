@@ -15,8 +15,8 @@
 package goowee.elements.components
 
 import goowee.commons.utils.ObjectUtils
-import goowee.elements.Component
-import goowee.elements.Elements
+import goowee.elements.core.Component
+import goowee.elements.core.Elements
 import goowee.elements.style.TextDefault
 import groovy.transform.CompileStatic
 
@@ -79,7 +79,7 @@ class Table extends Component {
     /** Per-column custom pretty-printer instances. */
     Map<String, Object> prettyPrinters
 
-    /** Per-column {@link goowee.application.PrettyPrinterProperties} maps. */
+    /** Per-column {@link goowee.elements.core.PrettyPrinterProperties} maps. */
     Map<String, Map> prettyPrinterProperties
 
     /** Column names whose values are always included in the rendered output. */

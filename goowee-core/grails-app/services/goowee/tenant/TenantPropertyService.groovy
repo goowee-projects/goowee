@@ -17,7 +17,7 @@ package goowee.tenant
 import goowee.application.PropertyService
 import goowee.application.PropertyType
 import goowee.commons.utils.StringUtils
-import goowee.elements.GuiStyle
+import goowee.elements.style.GuiStyle
 import goowee.security.CryptoService
 import goowee.utils.EnvUtils
 import grails.gorm.DetachedCriteria

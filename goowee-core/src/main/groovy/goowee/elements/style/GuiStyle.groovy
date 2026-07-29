@@ -12,7 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.elements
+package goowee.elements.style
 
 import groovy.transform.CompileStatic
 

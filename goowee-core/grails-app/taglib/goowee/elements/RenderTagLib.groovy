@@ -14,11 +14,13 @@
  */
 package goowee.elements
 
-import goowee.application.PrettyPrinter
-import goowee.application.WebRequestAware
+import goowee.elements.core.PrettyPrinter
+import goowee.elements.core.WebRequestAware
 import goowee.elements.components.Form
 import goowee.elements.components.FormField
 import goowee.elements.controls.HiddenField
+import goowee.elements.core.Component
+import goowee.elements.core.Control
 
 /**
  * Render tags

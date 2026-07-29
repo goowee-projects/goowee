@@ -14,8 +14,8 @@
  */
 package goowee.elements.controls
 
-import goowee.elements.Elements
-import goowee.exceptions.ElementsException
+import goowee.elements.core.Elements
+import goowee.elements.ElementsException
 import goowee.types.Money
 import groovy.transform.CompileStatic
 
@@ -61,7 +61,7 @@ class MoneyField extends NumberField {
      * When a {@link Money} value is set, the {@code prefix} is updated to its currency code.
      *
      * @param value the {@link Money} value to set, or {@code null} to clear the field
-     * @throws goowee.exceptions.ElementsException if {@code value} is not a {@link Money} instance
+     * @throws ElementsException if {@code value} is not a {@link Money} instance
      */
     @Override
     void setValue(Object value) {

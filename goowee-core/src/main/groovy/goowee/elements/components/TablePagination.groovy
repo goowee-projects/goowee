@@ -14,7 +14,7 @@
  */
 package goowee.elements.components
 
-import goowee.elements.Component
+import goowee.elements.core.Component
 import goowee.elements.style.TextDefault
 import groovy.contracts.Requires
 import groovy.transform.CompileStatic

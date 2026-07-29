@@ -12,29 +12,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.elements
+package goowee.elements.core
 
 import groovy.transform.CompileStatic
 
 /**
  * @author Gianluca Sartori
- * @author Francesco Piceghello
  */
 
 @CompileStatic
-enum ComponentType {
-    COMPONENT('components'),
-    CONTROL('controls'),
-    CONTENT('contents'),
-    PAGE('pages')
+enum PrettyPrinterDecimalFormat {
+    ISO_COM(','),
+    ISO_DOT('.')
 
-    final String directory
+    final String separator
 
-    ComponentType(String directory) {
-        this.directory = directory
-    }
-
-    String toString() {
-        return name()
+    PrettyPrinterDecimalFormat(String separator) {
+        this.separator = separator
     }
 }

@@ -14,7 +14,7 @@
  */
 package test
 
-import goowee.elements.ComponentEvent
+import goowee.elements.core.ComponentEvent
 import goowee.elements.ElementsController
 import goowee.elements.components.*
 import goowee.elements.contents.ContentCreate

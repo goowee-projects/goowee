@@ -14,7 +14,7 @@
  */
 package goowee.elements.components
 
-import goowee.elements.Component
+import goowee.elements.core.Component
 import goowee.elements.style.TextDefault
 import groovy.transform.CompileStatic
 
@@ -203,7 +203,7 @@ class Header extends Component {
 
     /**
      * Sets the header title by pretty-printing the given value through the
-     * {@link goowee.application.PrettyPrinter}.
+     * {@link goowee.elements.core.PrettyPrinter}.
      *
      * @param value the value to format and use as the header title
      */

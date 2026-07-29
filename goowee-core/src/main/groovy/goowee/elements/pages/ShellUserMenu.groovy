@@ -14,7 +14,7 @@
  */
 package goowee.elements.pages
 
-import goowee.elements.Menu
+import goowee.elements.core.Menu
 import groovy.contracts.Requires
 import groovy.transform.CompileStatic
 

@@ -15,7 +15,7 @@
 package goowee.security
 
 import goowee.application.ApplicationService
-import goowee.application.Feature
+import goowee.elements.core.Feature
 import goowee.elements.ElementsController
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate

@@ -14,7 +14,7 @@
  */
 package goowee.elements.components
 
-import goowee.elements.Control
+import goowee.elements.core.Control
 import groovy.transform.CompileStatic
 
 /**

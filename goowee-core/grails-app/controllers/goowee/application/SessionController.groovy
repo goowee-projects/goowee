@@ -14,6 +14,7 @@
  */
 package goowee.application
 
+import goowee.elements.core.WebRequestAware
 import grails.artefact.Controller
 import grails.plugin.springsecurity.annotation.Secured
 

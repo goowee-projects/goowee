@@ -14,7 +14,7 @@
  */
 package goowee.elements.pages
 
-import goowee.elements.Component
+import goowee.elements.core.Component
 import goowee.elements.components.Button
 import goowee.elements.components.Image
 import goowee.elements.components.Link

@@ -14,7 +14,7 @@
  */
 package goowee.servlet
 
-import goowee.elements.Elements
+import goowee.elements.core.Elements
 import groovy.util.logging.Slf4j
 import jakarta.servlet.Servlet
 

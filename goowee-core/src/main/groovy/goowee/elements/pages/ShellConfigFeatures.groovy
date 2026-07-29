@@ -14,7 +14,7 @@
  */
 package goowee.elements.pages
 
-import goowee.application.Feature
+import goowee.elements.core.Feature
 import groovy.transform.CompileStatic
 
 /**

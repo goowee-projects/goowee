@@ -14,8 +14,8 @@
  */
 package goowee.elements.controls
 
-import goowee.elements.Control
-import goowee.exceptions.ElementsException
+import goowee.elements.core.Control
+import goowee.elements.ElementsException
 import goowee.types.Type
 import groovy.transform.CompileStatic
 
@@ -143,7 +143,7 @@ class MultipleCheckbox extends Control {
      *
      * @param value the selected option key(s); accepts {@code null}, {@link String},
      *              {@link Set}, or {@link List}
-     * @throws goowee.exceptions.ElementsException if {@code value} is of an unsupported type
+     * @throws ElementsException if {@code value} is of an unsupported type
      */
     @Override
     void setValue(Object value) {

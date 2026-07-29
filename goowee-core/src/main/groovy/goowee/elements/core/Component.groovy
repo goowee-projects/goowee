@@ -12,14 +12,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.elements
+package goowee.elements.core
 
 import goowee.commons.utils.LogUtils
-import goowee.application.PrettyPrinterProperties
-import goowee.application.WebRequestAware
+import goowee.elements.ElementsException
 import goowee.elements.style.Color
-
-import goowee.exceptions.ElementsException
 import goowee.utils.EnvUtils
 import groovy.contracts.Requires
 import groovy.transform.CompileStatic

@@ -15,8 +15,12 @@
 package goowee.application
 
 import goowee.commons.utils.FileUtils
-import goowee.elements.Elements
-import goowee.exceptions.ElementsException
+import goowee.elements.core.Elements
+import goowee.elements.core.Feature
+import goowee.elements.core.LinkGeneratorAware
+import goowee.elements.core.PrettyPrinter
+import goowee.elements.core.Transformer
+import goowee.elements.ElementsException
 import goowee.tenant.TenantService
 import goowee.utils.EnvUtils
 import goowee.utils.LocaleUtils

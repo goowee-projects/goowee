@@ -14,8 +14,8 @@
  */
 package goowee.elements.controls
 
-import goowee.elements.Component
-import goowee.elements.Control
+import goowee.elements.core.Component
+import goowee.elements.core.Control
 import goowee.types.Type
 import groovy.transform.CompileStatic
 
@@ -100,7 +100,7 @@ class DateTimeField extends Control {
      * Registers {@code enter} and {@code change} event listeners that submit the form
      * when the user confirms a date/time value, if those handlers have not already been set.
      *
-     * @param args event configuration forwarded to {@link goowee.elements.Component#on(Map)}
+     * @param args event configuration forwarded to {@link Component#on(Map)}
      * @return this component for chaining
      */
     @Override

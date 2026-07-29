@@ -14,10 +14,10 @@
  */
 package goowee.types
 
-import goowee.application.PrettyPrinter
-import goowee.application.PrettyPrinterProperties
+import goowee.elements.core.PrettyPrinter
+import goowee.elements.core.PrettyPrinterProperties
 import goowee.elements.controls.QuantityField
-import goowee.exceptions.ElementsException
+import goowee.elements.ElementsException
 import groovy.transform.CompileDynamic
 import org.grails.datastore.gorm.GormEntity
 
@@ -31,7 +31,7 @@ import org.grails.datastore.gorm.GormEntity
  * {@code *}, {@code /}) are provided for {@code Quantity × Number} operations, and
  * {@code +}/{@code -} for {@code Quantity × Quantity} (with automatic unit conversion).
  * Cross-dimension operations are checked and throw
- * {@link goowee.exceptions.ElementsException} on incompatibility.
+ * {@link ElementsException} on incompatibility.
  * </p>
  * <p>
  * The associated UI control is {@link goowee.elements.controls.QuantityField}.
@@ -218,7 +218,7 @@ class Quantity extends Number implements CustomType, GormEntity {
      *
      * @param q the addend; must share the same dimension as this instance
      * @return the sum as a new {@code Quantity} in this instance's unit
-     * @throws goowee.exceptions.ElementsException if the dimensions are incompatible
+     * @throws ElementsException if the dimensions are incompatible
      */
     Quantity plus(Quantity q) {
         return new Quantity((this.amount + q.convert(this.unit).amount), this.unit)
@@ -230,7 +230,7 @@ class Quantity extends Number implements CustomType, GormEntity {
      *
      * @param q the subtrahend; must share the same dimension as this instance
      * @return the difference as a new {@code Quantity} in this instance's unit
-     * @throws goowee.exceptions.ElementsException if the dimensions are incompatible
+     * @throws ElementsException if the dimensions are incompatible
      */
     Quantity minus(Quantity q) {
         return new Quantity((this.amount - q.convert(this.unit).amount), this.unit)
@@ -297,7 +297,7 @@ class Quantity extends Number implements CustomType, GormEntity {
      *
      * @param toUnit the target unit; must belong to the same dimension group as this instance's unit
      * @return a new {@code Quantity} expressed in {@code toUnit}
-     * @throws goowee.exceptions.ElementsException if the units belong to different dimensions
+     * @throws ElementsException if the units belong to different dimensions
      */
     Quantity convert(QuantityUnit toUnit) {
         if (unit.parent != toUnit.parent) {
@@ -324,7 +324,7 @@ class Quantity extends Number implements CustomType, GormEntity {
      * @param seconds the number of seconds to convert
      * @param unit    the target time unit; must belong to the {@code TIME} dimension
      * @return a new {@code Quantity} in the requested time unit
-     * @throws goowee.exceptions.ElementsException if {@code unit} is not a {@code TIME} unit
+     * @throws ElementsException if {@code unit} is not a {@code TIME} unit
      *         or if the unit is not one of the supported time units
      */
     private Quantity fromSeconds(Double seconds, QuantityUnit unit) {
@@ -347,7 +347,7 @@ class Quantity extends Number implements CustomType, GormEntity {
      *
      * @param quantity the time quantity to convert; must belong to the {@code TIME} dimension
      * @return the equivalent number of seconds as a {@code Double}
-     * @throws goowee.exceptions.ElementsException if {@code quantity} is not a {@code TIME} quantity
+     * @throws ElementsException if {@code quantity} is not a {@code TIME} quantity
      *         or if the unit is not one of the supported time units
      */
     private Double toSeconds(Quantity quantity) {
@@ -371,7 +371,7 @@ class Quantity extends Number implements CustomType, GormEntity {
      *
      * @param quantity the right-hand operand of the multiplication
      * @return the {@link QuantityUnit} of the result
-     * @throws goowee.exceptions.ElementsException if the dimension combination is not supported
+     * @throws ElementsException if the dimension combination is not supported
      */
     private QuantityUnit getResultUnit(Quantity quantity) {
         if (unit.parent == quantity.unit.parent) {
@@ -396,7 +396,7 @@ class Quantity extends Number implements CustomType, GormEntity {
      *
      * @param toUnit the unit of the result dimension
      * @return this quantity converted to the appropriate intermediate unit
-     * @throws goowee.exceptions.ElementsException if the dimension combination is not supported
+     * @throws ElementsException if the dimension combination is not supported
      */
     private Quantity convertForMultiply(QuantityUnit toUnit) {
         if (unit.parent == toUnit.parent) {
@@ -420,7 +420,7 @@ class Quantity extends Number implements CustomType, GormEntity {
      *
      * @param quantity the quantity whose unit to promote
      * @return the next-higher {@link QuantityUnit} in the dimension hierarchy
-     * @throws goowee.exceptions.ElementsException if no upper unit is defined
+     * @throws ElementsException if no upper unit is defined
      */
     private QuantityUnit getUpperUnit(Quantity quantity) {
         return quantity.getUpperUnit(quantity.unit)
@@ -432,7 +432,7 @@ class Quantity extends Number implements CustomType, GormEntity {
      *
      * @param unit the unit to promote
      * @return the next-higher {@link QuantityUnit} in the dimension hierarchy
-     * @throws goowee.exceptions.ElementsException if {@code unit} has no defined upper unit
+     * @throws ElementsException if {@code unit} has no defined upper unit
      */
     private QuantityUnit getUpperUnit(QuantityUnit unit) {
         QuantityUnit result
@@ -476,7 +476,7 @@ class Quantity extends Number implements CustomType, GormEntity {
      *
      * @param unit the unit to demote
      * @return the next-lower {@link QuantityUnit} in the dimension hierarchy
-     * @throws goowee.exceptions.ElementsException if {@code unit} has no defined lower unit
+     * @throws ElementsException if {@code unit} has no defined lower unit
      */
     private QuantityUnit getLowerUnit(QuantityUnit unit) {
         QuantityUnit result

@@ -14,8 +14,8 @@
  */
 package goowee.elements.controls
 
-import goowee.elements.Control
-import goowee.elements.Elements
+import goowee.elements.core.Control
+import goowee.elements.core.Elements
 import goowee.elements.components.Button
 import goowee.elements.style.TextTransform
 import goowee.types.Type

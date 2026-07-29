@@ -14,7 +14,7 @@
  */
 package goowee.elements.contents
 
-import goowee.elements.Menu
+import goowee.elements.core.Menu
 import groovy.transform.CompileStatic
 
 /**

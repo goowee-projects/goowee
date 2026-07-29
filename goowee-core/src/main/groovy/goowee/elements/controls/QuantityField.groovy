@@ -14,9 +14,9 @@
  */
 package goowee.elements.controls
 
-import goowee.application.PrettyPrinterProperties
-import goowee.elements.Elements
-import goowee.exceptions.ElementsException
+import goowee.elements.core.PrettyPrinterProperties
+import goowee.elements.core.Elements
+import goowee.elements.ElementsException
 import goowee.types.Quantity
 import goowee.types.QuantityUnit
 import groovy.transform.CompileStatic
@@ -129,7 +129,7 @@ class QuantityField extends NumberField {
      * When a {@link Quantity} value is set, the {@link #defaultUnit} is updated to its unit.
      *
      * @param value the {@link Quantity} value to set, or {@code null} to clear the field
-     * @throws goowee.exceptions.ElementsException if {@code value} is not a {@link Quantity} instance
+     * @throws ElementsException if {@code value} is not a {@link Quantity} instance
      */
     @Override
     void setValue(Object value) {

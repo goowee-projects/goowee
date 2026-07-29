@@ -1,6 +1,6 @@
 package custom
 
-import goowee.elements.Page
+import goowee.elements.core.Page
 import goowee.elements.components.Header
 import goowee.elements.contents.ContentBlank
 

@@ -12,11 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.elements
+package goowee.elements.core
 
-import goowee.application.LinkDefinition
-import goowee.application.WebRequestAware
-import goowee.exceptions.ElementsException
+import goowee.elements.ElementsException
 import goowee.types.Types
 import groovy.contracts.Requires
 import groovy.transform.CompileStatic

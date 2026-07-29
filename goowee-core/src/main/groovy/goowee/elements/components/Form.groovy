@@ -15,11 +15,11 @@
 package goowee.elements.components
 
 import goowee.commons.utils.ObjectUtils
-import goowee.elements.Component
-import goowee.elements.Control
-import goowee.elements.Elements
+import goowee.elements.core.Component
+import goowee.elements.core.Control
+import goowee.elements.core.Elements
 import goowee.elements.controls.HiddenField
-import goowee.exceptions.ElementsException
+import goowee.elements.ElementsException
 import goowee.types.Type
 import goowee.types.Types
 import grails.gorm.validation.ConstrainedProperty
@@ -177,7 +177,7 @@ class Form extends Component {
      * @param domainOrCommandClass the domain or command class to inspect
      * @param fieldName            the field name or dot-separated path (e.g. {@code "address.city"})
      * @return a map with {@code nullable} and {@code maxSize} keys, or an empty map
-     * @throws goowee.exceptions.ElementsException if the class is neither a GORM domain nor a {@code Validateable}
+     * @throws ElementsException if the class is neither a GORM domain nor a {@code Validateable}
      */
     private Map getFieldConstraints(Class domainOrCommandClass, String fieldName) {
         if (!domainOrCommandClass || !fieldName)
@@ -249,7 +249,7 @@ class Form extends Component {
      * @param id        the field identifier
      * @param valueType the type name string (must be a registered type)
      * @param value     the key value
-     * @throws goowee.exceptions.ElementsException if {@code valueType} is not a registered type
+     * @throws ElementsException if {@code valueType} is not a registered type
      */
     // We are using a Sting instead of a Type to accomodate custom types (Eg. Money, Quantity, etc)
     void addKeyField(String id, String valueType, Object value) {

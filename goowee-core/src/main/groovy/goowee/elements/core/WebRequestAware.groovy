@@ -12,10 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.application
+package goowee.elements.core
 
-import goowee.elements.GuiStyle
-import goowee.exceptions.ElementsException
+import goowee.elements.ElementsException
+import goowee.elements.style.GuiStyle
 import goowee.utils.LocaleUtils
 import grails.web.servlet.mvc.GrailsHttpSession
 import grails.web.servlet.mvc.GrailsParameterMap

@@ -14,12 +14,12 @@
  */
 package goowee.elements
 
-import goowee.commons.utils.FileUtils
 import goowee.application.LinkGeneratorAware
 import goowee.application.WebRequestAware
+import goowee.commons.utils.FileUtils
 import goowee.elements.contents.ContentHeader
-import goowee.tenant.TenantPropertyService
 import goowee.security.SecurityService
+import goowee.tenant.TenantPropertyService
 import goowee.tenant.TenantService
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j

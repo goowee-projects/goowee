@@ -14,10 +14,11 @@
  */
 package goowee.security
 
+import goowee.application.ApplicationPropertyService
 import goowee.application.ApplicationService
-import goowee.elements.GuiStyle
 import goowee.application.PrettyPrinterDecimalFormat
 import goowee.elements.ElementsController
+import goowee.elements.GuiStyle
 import goowee.elements.components.Separator
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate
@@ -26,7 +27,6 @@ import goowee.elements.contents.ContentForm
 import goowee.elements.contents.ContentTable
 import goowee.elements.controls.*
 import goowee.elements.style.TextDefault
-import goowee.application.ApplicationPropertyService
 import goowee.tenant.TenantPropertyService
 import goowee.tenant.TenantService
 import grails.plugin.springsecurity.annotation.Secured

@@ -14,8 +14,8 @@
  */
 package goowee.security
 
-import goowee.commons.utils.CryptoUtils
 import goowee.application.ApplicationService
+import goowee.commons.utils.CryptoUtils
 import goowee.tenant.TenantService
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j

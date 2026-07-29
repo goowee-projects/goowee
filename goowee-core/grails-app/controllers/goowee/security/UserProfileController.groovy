@@ -15,9 +15,9 @@
 package goowee.security
 
 import goowee.application.ApplicationService
-import goowee.elements.GuiStyle
 import goowee.application.PrettyPrinterDecimalFormat
 import goowee.elements.ElementsController
+import goowee.elements.GuiStyle
 import goowee.elements.components.Separator
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.*

@@ -14,8 +14,8 @@
  */
 package goowee.database
 
-import goowee.commons.utils.SqlUtils
 import goowee.application.ConnectionSourceService
+import goowee.commons.utils.SqlUtils
 import goowee.elements.Elements
 import goowee.elements.ElementsController
 import goowee.elements.components.Button

@@ -19,8 +19,8 @@ import goowee.elements.ElementsController
 import goowee.elements.components.Label
 import goowee.elements.contents.ContentForm
 import goowee.elements.style.TextAlign
-import goowee.tenant.TenantPropertyService
 import goowee.security.SecurityService
+import goowee.tenant.TenantPropertyService
 import grails.plugin.springsecurity.annotation.Secured
 
 /**

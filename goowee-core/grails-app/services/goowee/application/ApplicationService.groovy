@@ -16,7 +16,6 @@ package goowee.application
 
 import goowee.commons.utils.FileUtils
 import goowee.elements.Elements
-
 import goowee.exceptions.ElementsException
 import goowee.tenant.TenantService
 import goowee.utils.EnvUtils

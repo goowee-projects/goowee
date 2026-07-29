@@ -15,12 +15,11 @@
 package goowee.tenant
 
 import goowee.GooweeGrailsPlugin
-import goowee.commons.utils.FileUtils
+import goowee.application.ApplicationPropertyService
 import goowee.application.ApplicationService
 import goowee.application.ConnectionSourceService
 import goowee.application.TApplicationInstall
-
-import goowee.application.ApplicationPropertyService
+import goowee.commons.utils.FileUtils
 import goowee.security.TRoleGroup
 import goowee.security.TRoleGroupRole
 import goowee.security.TUser

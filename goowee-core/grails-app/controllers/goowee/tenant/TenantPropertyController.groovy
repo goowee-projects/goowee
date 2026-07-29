@@ -14,6 +14,7 @@
  */
 package goowee.tenant
 
+import goowee.application.PropertyType
 import goowee.commons.utils.StringUtils
 import goowee.elements.ElementsController
 import goowee.elements.components.Label
@@ -25,7 +26,6 @@ import goowee.elements.style.TextAlign
 import goowee.elements.style.TextDefault
 import goowee.elements.style.TextStyle
 import goowee.elements.style.TextTransform
-import goowee.application.PropertyType
 import goowee.security.SecurityService
 import grails.plugin.springsecurity.annotation.Secured
 

@@ -15,14 +15,14 @@
 package goowee.elements.pages
 
 import goowee.commons.utils.LogUtils
-import goowee.core.ApplicationService
-import goowee.core.LinkGeneratorAware
-import goowee.core.WebRequestAware
+import goowee.application.ApplicationService
+import goowee.application.LinkGeneratorAware
+import goowee.application.WebRequestAware
 import goowee.elements.PageService
 import goowee.exceptions.ElementsException
-import goowee.properties.SystemPropertyService
-import goowee.properties.TenantPropertyService
-import goowee.tenants.TenantService
+import goowee.application.ApplicationPropertyService
+import goowee.tenant.TenantPropertyService
+import goowee.tenant.TenantService
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
@@ -36,7 +36,7 @@ class ShellService implements WebRequestAware, LinkGeneratorAware {
 
     ApplicationService applicationService
     TenantService tenantService
-    SystemPropertyService systemPropertyService
+    ApplicationPropertyService applicationPropertyService
     TenantPropertyService tenantPropertyService
     PageService pageService
 
@@ -72,10 +72,10 @@ class ShellService implements WebRequestAware, LinkGeneratorAware {
         shellConfig.features.main = applicationService.mainFeatures
 
         // System properties
-        shellConfig.display.menu = systemPropertyService.getBoolean('DISPLAY_MENU', true)
-        shellConfig.display.menuSearch = systemPropertyService.getBoolean('DISPLAY_MENU_SEARCH', true)
-        shellConfig.display.homeButton = systemPropertyService.getBoolean('DISPLAY_HOME_BUTTON', true)
-        shellConfig.display.userMenu = systemPropertyService.getBoolean('DISPLAY_USER_MENU', true)
+        shellConfig.display.menu = applicationPropertyService.getBoolean('DISPLAY_MENU', true)
+        shellConfig.display.menuSearch = applicationPropertyService.getBoolean('DISPLAY_MENU_SEARCH', true)
+        shellConfig.display.homeButton = applicationPropertyService.getBoolean('DISPLAY_HOME_BUTTON', true)
+        shellConfig.display.userMenu = applicationPropertyService.getBoolean('DISPLAY_USER_MENU', true)
 
         // Tenant properties
         shellConfig.display.logo = tenantPropertyService.getString('LOGO', true)

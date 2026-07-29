@@ -14,7 +14,7 @@
  */
 package test
 
-import goowee.core.ApplicationService
+import goowee.application.ApplicationService
 import goowee.elements.ElementsController
 import goowee.elements.components.*
 import goowee.elements.contents.ContentForm

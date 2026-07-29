@@ -14,7 +14,7 @@
  */
 package goowee.elements.components
 
-import goowee.core.WebRequestAware
+import goowee.application.WebRequestAware
 import groovy.json.JsonSlurper
 import groovy.transform.CompileStatic
 

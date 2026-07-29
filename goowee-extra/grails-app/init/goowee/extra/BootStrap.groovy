@@ -14,7 +14,7 @@
  */
 package goowee.extra
 
-import goowee.core.ApplicationService
+import goowee.application.ApplicationService
 import groovy.transform.CompileStatic
 
 @CompileStatic

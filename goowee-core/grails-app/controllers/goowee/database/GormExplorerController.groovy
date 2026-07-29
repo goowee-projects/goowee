@@ -15,7 +15,7 @@
 package goowee.database
 
 import goowee.commons.utils.SqlUtils
-import goowee.core.ConnectionSourceService
+import goowee.application.ConnectionSourceService
 import goowee.elements.Elements
 import goowee.elements.ElementsController
 import goowee.elements.components.Button
@@ -28,7 +28,7 @@ import goowee.elements.contents.ContentForm
 import goowee.elements.controls.*
 import goowee.elements.style.TextDefault
 import goowee.security.SecurityService
-import goowee.tenants.TenantService
+import goowee.tenant.TenantService
 import goowee.types.CustomType
 import goowee.types.Types
 import grails.gorm.DetachedCriteria

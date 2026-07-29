@@ -14,7 +14,7 @@
  */
 package goowee.elements.pages
 
-import goowee.core.LinkDefinition
+import goowee.application.LinkDefinition
 import goowee.elements.Page
 import goowee.elements.contents.ContentHome
 import groovy.contracts.Requires

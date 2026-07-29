@@ -15,8 +15,8 @@
 package goowee.elements
 
 import goowee.commons.utils.LogUtils
-import goowee.core.PrettyPrinterProperties
-import goowee.core.WebRequestAware
+import goowee.application.PrettyPrinterProperties
+import goowee.application.WebRequestAware
 import goowee.elements.style.Color
 
 import goowee.exceptions.ElementsException

@@ -14,8 +14,8 @@
  */
 package goowee.elements
 
-import goowee.core.LinkDefinition
-import goowee.core.WebRequestAware
+import goowee.application.LinkDefinition
+import goowee.application.WebRequestAware
 import goowee.exceptions.ElementsException
 import goowee.types.Types
 import groovy.contracts.Requires

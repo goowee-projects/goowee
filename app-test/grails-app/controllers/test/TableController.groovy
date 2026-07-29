@@ -14,7 +14,7 @@
  */
 package test
 
-import goowee.core.ApplicationService
+import goowee.application.ApplicationService
 import goowee.elements.ElementsController
 import goowee.elements.components.Button
 import goowee.elements.components.ProgressBar

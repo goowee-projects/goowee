@@ -14,7 +14,7 @@
  */
 package goowee.elements.components
 
-import goowee.core.LinkDefinition
+import goowee.application.LinkDefinition
 import goowee.elements.ComponentEvent
 import groovy.transform.CompileStatic
 

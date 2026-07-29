@@ -14,9 +14,9 @@
  */
 package goowee.security
 
-import goowee.core.ApplicationService
-import goowee.core.GuiStyle
-import goowee.core.PrettyPrinterDecimalFormat
+import goowee.application.ApplicationService
+import goowee.elements.GuiStyle
+import goowee.application.PrettyPrinterDecimalFormat
 import goowee.elements.ElementsController
 import goowee.elements.components.Separator
 import goowee.elements.components.TableRow
@@ -26,9 +26,9 @@ import goowee.elements.contents.ContentForm
 import goowee.elements.contents.ContentTable
 import goowee.elements.controls.*
 import goowee.elements.style.TextDefault
-import goowee.properties.SystemPropertyService
-import goowee.properties.TenantPropertyService
-import goowee.tenants.TenantService
+import goowee.application.ApplicationPropertyService
+import goowee.tenant.TenantPropertyService
+import goowee.tenant.TenantService
 import grails.plugin.springsecurity.annotation.Secured
 
 /**
@@ -42,7 +42,7 @@ class UserController implements ElementsController {
     ApplicationService applicationService
     SecurityService securityService
     TenantService tenantService
-    SystemPropertyService systemPropertyService
+    ApplicationPropertyService applicationPropertyService
     TenantPropertyService tenantPropertyService
 
     def index() {
@@ -134,7 +134,7 @@ class UserController implements ElementsController {
         display content: c
     }
 
-    private buildForm(TUserAccount obj = null) {
+    private buildForm(TUser obj = null) {
         def c = obj
                 ? createContent(ContentEdit)
                 : createContent(ContentCreate)
@@ -154,7 +154,7 @@ class UserController implements ElementsController {
         def isTenantAdmin = obj && securityService.isAdmin(obj) && !obj.deletable
 
         c.form.with {
-            validate = TUserAccount
+            validate = TUser
 
             if (isSuperAdmin && (isCreatingNewUser || isEditingUserButNotSuperAdmin)) {
                 addField(
@@ -259,7 +259,7 @@ class UserController implements ElementsController {
 
         buildPreferencesForm(c)
 
-        c.form['language'].defaultValue = systemPropertyService.getString('DEFAULT_LANGUAGE')
+        c.form['language'].defaultValue = applicationPropertyService.getString('DEFAULT_LANGUAGE')
 
         return c
     }

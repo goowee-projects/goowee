@@ -15,7 +15,7 @@
 package goowee.elements.components
 
 import goowee.commons.utils.ObjectUtils
-import goowee.core.PrettyPrinterProperties
+import goowee.application.PrettyPrinterProperties
 import goowee.elements.Component
 import goowee.elements.controls.HiddenField
 import goowee.elements.style.TextAlign
@@ -227,7 +227,7 @@ class TableCell extends Component {
      * Applies the given pretty-printer properties to the inner {@link Label}.
      * Has no effect if the cell contains a custom component.
      *
-     * @param value a map of {@link goowee.core.PrettyPrinterProperties} settings
+     * @param value a map of {@link goowee.application.PrettyPrinterProperties} settings
      */
     void setPrettyPrinterProperties(Map value) {
         Label label = getLabel()
@@ -237,7 +237,7 @@ class TableCell extends Component {
     }
 
     /**
-     * Returns the {@link goowee.core.PrettyPrinterProperties} of the inner {@link Label},
+     * Returns the {@link goowee.application.PrettyPrinterProperties} of the inner {@link Label},
      * or a default instance if the cell contains a custom component.
      *
      * @return the label's pretty-printer properties

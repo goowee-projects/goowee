@@ -14,18 +14,24 @@
  */
 package goowee.security
 
-import goowee.audit.AuditOperation
-import goowee.audit.AuditService
+import goowee.application.ApplicationService
+import goowee.application.Feature
+import goowee.elements.GuiStyle
+import goowee.application.LinkDefinition
+import goowee.application.LinkGeneratorAware
+import goowee.application.PrettyPrinterDecimalFormat
+import goowee.application.WebRequestAware
+import goowee.tenant.AuditOperation
+import goowee.tenant.AuditService
 import goowee.commons.utils.StringUtils
-import goowee.core.*
 import goowee.elements.Menu
 import goowee.elements.pages.Shell
 import goowee.elements.pages.ShellService
 
 import goowee.exceptions.ElementsException
-import goowee.properties.TenantPropertyService
-import goowee.tenants.TTenant
-import goowee.tenants.TenantService
+import goowee.tenant.TenantPropertyService
+import goowee.tenant.TTenant
+import goowee.tenant.TenantService
 import goowee.utils.EnvUtils
 import grails.gorm.DetachedCriteria
 import grails.gorm.multitenancy.CurrentTenant
@@ -84,7 +90,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
 
     void init() {
         applicationService.registerPrettyPrinter(TTenant, '${it.tenantId}')
-        applicationService.registerPrettyPrinter(TUserAccount, '${it.fullname}')
+        applicationService.registerPrettyPrinter(TUser, '${it.fullname}')
         applicationService.registerPrettyPrinter(TRoleGroup, '${it.name}')
         applicationService.registerPrettyPrinter('LANDING_PAGE', '${it.text}')
 
@@ -176,13 +182,13 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
                 icon: 'fa-plug',
         )
         applicationService.registerSuperadminFeature(
-                controller: 'monitoring',
-                icon: 'fa-chart-simple',
-                targetNew: true,
+                controller: 'applicationProperty',
+                icon: 'fa-tools',
         )
         applicationService.registerSuperadminFeature(
-                controller: 'systemProperty',
-                icon: 'fa-tools',
+            controller: 'monitoring',
+            icon: 'fa-chart-simple',
+            targetNew: true,
         )
         applicationService.registerSuperadminFeature(
                 controller: 'sysinfo',
@@ -274,7 +280,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
     }
 
     void initializeSessionDuration() {
-        TUserAccount user = getCurrentUser()
+        TUser user = getCurrentUser()
         session.maxInactiveInterval = user.sessionDuration * 60 // minutes to seconds
         tokenBasedRememberMeServices.cookieName = tenantPropertyService.getString('REMEMBER_ME_COOKIE_NAME', true)
         tokenBasedRememberMeServices.alwaysRemember = tenantPropertyService.getBoolean('REMEMBER_ME_ENABLED', true)
@@ -282,7 +288,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
     }
 
     void initializeShell() {
-        TUserAccount user = getCurrentUser()
+        TUser user = getCurrentUser()
         String lang = (user?.language in applicationService.languages) ? user.language : tenantPropertyService.getString('DEFAULT_LANGUAGE', true)
         currentLanguage = lang
         fontSize = user.fontSize
@@ -321,7 +327,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
      */
 
     Boolean isLocalUser(String username) {
-        TUserAccount user = getUserByUsername(username)
+        TUser user = getUserByUsername(username)
         return user ? true : false
     }
 
@@ -353,7 +359,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
      * Returns true if the user with the specified username has admin authorities
      * @return true if the user with the specified username has admin authorities
      */
-    Boolean isAdmin(TUserAccount user) {
+    Boolean isAdmin(TUser user) {
         return user.authorities.find { it.name == GROUP_ADMINS } != null
     }
 
@@ -362,7 +368,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
      * @return true if the user with the specified username has admin authorities
      */
     Boolean isAdmin(String username) {
-        TUserAccount user = getUserByUsername(username)
+        TUser user = getUserByUsername(username)
         return isAdmin(user)
     }
 
@@ -405,19 +411,19 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
      * Returns the currently logged in user
      * @return the currently logged in user
      */
-    TUserAccount getCurrentUser(Boolean reload = false) {
+    TUser getCurrentUser(Boolean reload = false) {
         if (!springSecurityService.isLoggedIn()) {
             return null
         }
 
-        TUserAccount currentUser = session['_21CurrentUser'] as TUserAccount
+        TUser currentUser = session['_21CurrentUser'] as TUser
         if (currentUser && !reload) {
             return currentUser
         }
 
         Object principal = springSecurityService.principal
         String username = (principal['username'] as String).toLowerCase()
-        TUserAccount user = getUserByUsername(username)
+        TUser user = getUserByUsername(username)
         if (!user) {
             user = createUser(
                     failOnError: true,
@@ -442,7 +448,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
      * INTERNAL USE ONLY. Persists the current language for the currently logged in user.
      */
     void saveCurrentUserLanguage() {
-        TUserAccount current = getUserByUsername(currentUsername)
+        TUser current = getUserByUsername(currentUsername)
         current.language = currentLanguage
         current.save(flush: true, failOnError: true)
     }
@@ -566,8 +572,8 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
     // Users
     //
     @CompileDynamic
-    private DetachedCriteria<TUserAccount> buildQueryUser(Map filterParams) {
-        def query = TUserAccount.where {}
+    private DetachedCriteria<TUser> buildQueryUser(Map filterParams) {
+        def query = TUser.where {}
 
         if (!isSuperAdmin()) {
             String currentTenantId = tenantService.currentTenantId
@@ -616,27 +622,27 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         ]
     }
 
-    TUserAccount getUser(Serializable id) {
-        def query = TUserAccount.where { id == id }
-        return query.get(fetch: fetchAll) as TUserAccount
+    TUser getUser(Serializable id) {
+        def query = TUser.where { id == id }
+        return query.get(fetch: fetchAll) as TUser
     }
 
-    TUserAccount getUserByUsername(String username) {
-        def query = TUserAccount.where { username == username }
-        return query.get(fetch: fetchAll) as TUserAccount
+    TUser getUserByUsername(String username) {
+        def query = TUser.where { username == username }
+        return query.get(fetch: fetchAll) as TUser
     }
 
-    TUserAccount getUserByExternalId(String externalId) {
-        def query = TUserAccount.where { externalId == externalId }
-        return query.get(fetch: fetchAll) as TUserAccount
+    TUser getUserByExternalId(String externalId) {
+        def query = TUser.where { externalId == externalId }
+        return query.get(fetch: fetchAll) as TUser
     }
 
-    TUserAccount getUserByApiKey(String apiKey) {
-        def query = TUserAccount.where { apiKey == apiKey }
-        return query.get(fetch: fetchAll) as TUserAccount
+    TUser getUserByApiKey(String apiKey) {
+        def query = TUser.where { apiKey == apiKey }
+        return query.get(fetch: fetchAll) as TUser
     }
 
-    TUserAccount getUserByXAuthToken(HttpServletRequest request) {
+    TUser getUserByXAuthToken(HttpServletRequest request) {
         String apiKey = request.getHeader('X-Auth-Token')
         if (!apiKey) {
             return null
@@ -645,15 +651,15 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         return getUserByApiKey(apiKey)
     }
 
-    TUserAccount getSuperAdminUser() {
+    TUser getSuperAdminUser() {
         return getUserByUsername(USERNAME_SUPERADMIN)
     }
 
-    TUserAccount getAdminUser() {
+    TUser getAdminUser() {
         return getUserByUsername(USERNAME_ADMIN)
     }
 
-    List<TUserAccount> listAllUser(Map filterParams = [:], Map fetchParams = [:]) {
+    List<TUser> listAllUser(Map filterParams = [:], Map fetchParams = [:]) {
         if (!fetchParams.sort) fetchParams.sort = 'lastname'
         fetchParams.fetch = fetch
         def query = buildQueryUser(filterParams)
@@ -665,7 +671,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         return query.count()
     }
 
-    List<TUserAccount> listUser(Map filterParams = [:], Map fetchParams = [:]) {
+    List<TUser> listUser(Map filterParams = [:], Map fetchParams = [:]) {
         filterParams.deletable = true
         return listAllUser(filterParams, fetchParams)
     }
@@ -736,7 +742,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
      * @return the newly created user
      */
     @CompileDynamic
-    TUserAccount createUser(Map args) {
+    TUser createUser(Map args) {
         if (args.failOnError == null) args.failOnError = false
 
         List<String> groups = [GROUP_USERS]
@@ -760,14 +766,14 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
 
         log.info "${tenant.tenantId} Tenant - Creating user '${args.username}' in groups ${groups} (default '${defaultGroup}')"
 
-        TUserAccount user = TUserAccount.findByUsername(args.username as String)
+        TUser user = TUser.findByUsername(args.username as String)
         if (user) {
             log.warn "${tenant.tenantId} Tenant - User '${args.username}' already exists, skipping user creation."
             user.errors.rejectValue('username', 'user.username.already.exists', [args.username] as Object[], 'user.username.already.exists')
             return user
         }
 
-        user = new TUserAccount(
+        user = new TUser(
                 tenant: tenant,
                 apiKey: args.apiKey,
                 externalId: args.externalId,
@@ -823,7 +829,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
      * @return the newly created user
      */
 
-    TUserAccount createSystemUser(Map args) {
+    TUser createSystemUser(Map args) {
         args.deletable = false
         if (!args.password) args.password = StringUtils.generateRandomToken(32)
         if (args.username != USERNAME_SUPERADMIN) args.apiKey = generateApiKey()
@@ -838,7 +844,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
      */
     @CompileDynamic
     @Requires({ args.username })
-    TUserAccount updateUserAndGroups(Map args) {
+    TUser updateUserAndGroups(Map args) {
         String username = args.username
         if (args.failOnError == null) args.failOnError = false
 
@@ -862,7 +868,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
             validateFontSize(args)
         }
 
-        TUserAccount user = getUserByUsername(username)
+        TUser user = getUserByUsername(username)
         user.properties = args
         user.save(flush: true, failOnError: args.failOnError)
 
@@ -896,7 +902,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
      */
     @CompileDynamic
     @Requires({ args.username })
-    TUserAccount updateUser(Map args) {
+    TUser updateUser(Map args) {
         String username = args.username
         if (args.failOnError == null) args.failOnError = false
 
@@ -910,7 +916,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
             validateFontSize(args)
         }
 
-        TUserAccount user = getUserByUsername(username)
+        TUser user = getUserByUsername(username)
         user.properties = args
         user.save(flush: true, failOnError: args.failOnError)
 
@@ -924,7 +930,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
     }
 
     void changeUsername(String oldUsername, String newUsername) {
-        TUserAccount user = getUserByUsername(oldUsername)
+        TUser user = getUserByUsername(oldUsername)
         user.username = newUsername
         user.save(flush: true, failOnError: true)
     }
@@ -935,7 +941,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
      * @param username the username of the user to delete
      */
     void deleteUser(String username) {
-        TUserAccount user = getUserByUsername(username)
+        TUser user = getUserByUsername(username)
         TUserRoleGroup.removeAll(user)
         user.delete(flush: true, failOnError: true)
     }
@@ -1049,7 +1055,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         }
 
         for (authority in authorities) {
-            TUserRole role = createAuthority((String) authority)
+            TRole role = createAuthority((String) authority)
             role.save(flush: true, failOnError: args.failOnError)
             TRoleGroupRole roleGroupRole = TRoleGroupRole.findByRoleGroupAndRole(roleGroup, role)
             if (!roleGroupRole) {
@@ -1098,8 +1104,8 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
             TRoleGroupRole.removeAll(roleGroup)
 
             for (authority in authorities) {
-                TUserRole role = TUserRole.findByAuthority(authority)
-                if (!role) role = new TUserRole(authority: authority).save(flush: true, failOnError: true)
+                TRole role = TRole.findByAuthority(authority)
+                if (!role) role = new TRole(authority: authority).save(flush: true, failOnError: true)
                 new TRoleGroupRole(roleGroup: roleGroup, role: role).save(flush: true, failOnError: true)
             }
         }
@@ -1133,8 +1139,8 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
      * @return the newly created authority
      */
     @CompileDynamic
-    TUserRole createAuthority(String authority) {
-        TUserRole role = TUserRole.findByAuthority(authority)
+    TRole createAuthority(String authority) {
+        TRole role = TRole.findByAuthority(authority)
         if (role) {
             return role
         }
@@ -1142,7 +1148,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         log.info "Creating authority '$authority'"
 
         // Role does not exist we create it
-        TUserRole newRole = new TUserRole(authority: authority).save(flush: true, failOnError: true)
+        TRole newRole = new TRole(authority: authority).save(flush: true, failOnError: true)
 
         // Set ROLE_SUPERADMIN > ROLE_ADMIN > AUTHORITY so to avoid giving
         // SUPERADMIN and ADMIN permissions to each controller
@@ -1170,7 +1176,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
     @CompileDynamic
     List<String> listAuthority() {
         List<String> results = []
-        for (role in TUserRole.findAll()) {
+        for (role in TRole.findAll()) {
             if (role.authority != ROLE_SUPERADMIN &&
                     role.authority != ROLE_ADMIN &&
                     role.authority != ROLE_USER)

@@ -14,15 +14,15 @@
  */
 package goowee.security
 
-import goowee.core.ApplicationService
-import goowee.core.GuiStyle
-import goowee.core.PrettyPrinterDecimalFormat
+import goowee.application.ApplicationService
+import goowee.elements.GuiStyle
+import goowee.application.PrettyPrinterDecimalFormat
 import goowee.elements.ElementsController
 import goowee.elements.components.Separator
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.*
 import goowee.elements.style.TextDefault
-import goowee.properties.TenantPropertyService
+import goowee.tenant.TenantPropertyService
 import grails.plugin.springsecurity.annotation.Secured
 
 /**

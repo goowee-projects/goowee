@@ -14,11 +14,11 @@
  */
 package goowee
 
-import goowee.core.SessionInitializer
+import goowee.application.SessionInitializer
 import goowee.security.CustomUserDetailsService
 import goowee.security.ExternalIdAuthenticationFilter
 import goowee.security.ExternalIdAuthenticationProvider
-import goowee.tenants.TenantForCurrentUserResolver
+import goowee.tenant.TenantForCurrentUserResolver
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugins.Plugin
 import groovy.transform.CompileDynamic

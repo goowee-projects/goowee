@@ -15,7 +15,7 @@
 package goowee.elements.components
 
 import goowee.commons.utils.ObjectUtils
-import goowee.core.Transformer
+import goowee.application.Transformer
 import goowee.elements.Component
 import goowee.elements.Elements
 import goowee.elements.controls.Checkbox
@@ -294,7 +294,7 @@ class TableRow extends Component {
     }
 
     /**
-     * Applies the table's per-column {@link goowee.core.PrettyPrinterProperties} and
+     * Applies the table's per-column {@link goowee.application.PrettyPrinterProperties} and
      * pretty-printer class overrides to each cell's inner {@link Label}. Skipped for header rows
      * and cells that contain a custom component instead of a label.
      */

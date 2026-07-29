@@ -14,7 +14,7 @@
  */
 package goowee
 
-import goowee.core.ElementsController
+import goowee.application.ElementsController
 import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentTable

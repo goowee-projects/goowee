@@ -14,7 +14,7 @@
  */
 package goowee.elements.controls
 
-import goowee.core.PrettyPrinterProperties
+import goowee.application.PrettyPrinterProperties
 import goowee.elements.Component
 import goowee.elements.Control
 import goowee.types.Type

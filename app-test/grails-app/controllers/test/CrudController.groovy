@@ -14,7 +14,7 @@
  */
 package test
 
-import goowee.audit.AuditService
+import goowee.tenant.AuditService
 import goowee.elements.components.Form
 import goowee.elements.components.Label
 import goowee.elements.components.TableRow
@@ -23,7 +23,7 @@ import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentForm
 import goowee.elements.contents.ContentTable
 import goowee.elements.controls.*
-import goowee.core.ApplicationService
+import goowee.application.ApplicationService
 import goowee.elements.ElementsController
 import goowee.elements.style.Color
 import goowee.elements.style.TextDefault

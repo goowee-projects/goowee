@@ -15,13 +15,13 @@
 package test
 
 import goowee.commons.utils.DateUtils
-import goowee.core.ApplicationService
+import goowee.application.ApplicationService
 import goowee.elements.ElementsController
 import goowee.elements.components.*
 import goowee.elements.controls.*
 import goowee.elements.style.*
 import goowee.security.SecurityService
-import goowee.security.TUserAccount
+import goowee.security.TUser
 import goowee.types.*
 import jakarta.servlet.ServletContext
 
@@ -700,7 +700,7 @@ Grails application running at http://localhost:9992/test in environment: develop
     }
 
     def onReject() {
-        def user = new TUserAccount(username: 'G', password: 'G')
+        def user = new TUser(username: 'G', password: 'G')
         user.errors.reject('obj.reject.error.test')
         display errors: user
     }

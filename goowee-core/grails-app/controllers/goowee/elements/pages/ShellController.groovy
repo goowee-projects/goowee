@@ -14,12 +14,12 @@
  */
 package goowee.elements.pages
 
-import goowee.core.ApplicationService
+import goowee.application.ApplicationService
 import goowee.elements.ElementsController
 import goowee.elements.components.Label
 import goowee.elements.contents.ContentForm
 import goowee.elements.style.TextAlign
-import goowee.properties.TenantPropertyService
+import goowee.tenant.TenantPropertyService
 import goowee.security.SecurityService
 import grails.plugin.springsecurity.annotation.Secured
 

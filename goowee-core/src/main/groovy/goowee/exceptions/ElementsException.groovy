@@ -14,8 +14,8 @@
  */
 package goowee.exceptions
 
-import goowee.core.PrettyPrinter
-import goowee.core.WebRequestAware
+import goowee.application.PrettyPrinter
+import goowee.application.WebRequestAware
 import groovy.transform.CompileStatic
 import org.springframework.validation.ObjectError
 

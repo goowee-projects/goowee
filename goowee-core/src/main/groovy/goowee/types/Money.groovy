@@ -14,8 +14,8 @@
  */
 package goowee.types
 
-import goowee.core.PrettyPrinter
-import goowee.core.PrettyPrinterProperties
+import goowee.application.PrettyPrinter
+import goowee.application.PrettyPrinterProperties
 import goowee.elements.controls.MoneyField
 import goowee.exceptions.ElementsException
 import groovy.transform.CompileDynamic

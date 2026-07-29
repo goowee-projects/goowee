@@ -39,6 +39,8 @@ class TRoleHierarchyEntry implements GormEntity, Serializable {
     }
 
     static mapping = {
+        table 'sys_role_hierarchy_entry'
         cache true
     }
+
 }

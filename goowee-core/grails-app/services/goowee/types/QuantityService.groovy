@@ -14,7 +14,7 @@
  */
 package goowee.types
 
-import goowee.properties.TenantPropertyService
+import goowee.tenant.TenantPropertyService
 import groovy.transform.CompileStatic
 
 /**

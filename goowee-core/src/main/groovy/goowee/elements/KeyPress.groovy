@@ -14,7 +14,7 @@
  */
 package goowee.elements
 
-import goowee.core.LinkDefinition
+import goowee.application.LinkDefinition
 import goowee.elements.controls.HiddenField
 import groovy.transform.CompileStatic
 

@@ -15,7 +15,7 @@
 package test
 
 import goowee.commons.utils.SqlUtils
-import goowee.core.ApplicationService
+import goowee.application.ApplicationService
 import goowee.elements.ElementsController
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate

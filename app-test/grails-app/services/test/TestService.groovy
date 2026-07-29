@@ -14,7 +14,7 @@
  */
 package test
 
-import goowee.core.ApplicationService
+import goowee.application.ApplicationService
 import goowee.types.Money
 import grails.gorm.multitenancy.CurrentTenant
 import grails.gorm.transactions.Transactional

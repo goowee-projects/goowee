@@ -14,7 +14,7 @@
  */
 package goowee.elements
 
-import goowee.tenants.TenantService
+import goowee.tenant.TenantService
 
 /**
  * @author Gianluca Sartori

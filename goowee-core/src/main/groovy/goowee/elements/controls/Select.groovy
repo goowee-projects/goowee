@@ -15,8 +15,8 @@
 package goowee.elements.controls
 
 import goowee.commons.utils.ObjectUtils
-import goowee.core.PrettyPrinter
-import goowee.core.PrettyPrinterProperties
+import goowee.application.PrettyPrinter
+import goowee.application.PrettyPrinterProperties
 import goowee.elements.Component
 import goowee.elements.Control
 import goowee.elements.Elements

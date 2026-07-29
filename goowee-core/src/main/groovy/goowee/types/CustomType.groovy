@@ -14,7 +14,7 @@
  */
 package goowee.types
 
-import goowee.core.PrettyPrinterProperties
+import goowee.application.PrettyPrinterProperties
 import groovy.transform.CompileStatic
 
 /**

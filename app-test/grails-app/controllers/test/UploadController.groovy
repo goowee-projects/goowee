@@ -19,7 +19,7 @@ import goowee.elements.components.Button
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.TextField
 import goowee.elements.controls.Upload
-import goowee.tenants.TenantService
+import goowee.tenant.TenantService
 
 class UploadController implements ElementsController {
 

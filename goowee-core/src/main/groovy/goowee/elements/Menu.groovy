@@ -14,7 +14,7 @@
  */
 package goowee.elements
 
-import goowee.core.Feature
+import goowee.application.Feature
 import goowee.elements.components.Link
 import groovy.transform.CompileStatic
 
@@ -378,49 +378,49 @@ class Menu extends Component {
     // LINK SHORTCUTS — convenience delegating accessors for the underlying {@link Link} component.
     //
 
-    /** @see goowee.core.LinkDefinition#target */
+    /** @see goowee.application.LinkDefinition#target */
     String getTarget() { return link.target }
-    /** @see goowee.core.LinkDefinition#target */
+    /** @see goowee.application.LinkDefinition#target */
     void setTarget(String value) { link.target = value }
 
-    /** @see goowee.core.LinkDefinition#getTargetNew() */
+    /** @see goowee.application.LinkDefinition#getTargetNew() */
     Boolean getTargetNew() { return link.targetNew }
-    /** @see goowee.core.LinkDefinition#setTargetNew(Boolean) */
+    /** @see goowee.application.LinkDefinition#setTargetNew(Boolean) */
     void setTargetNew(Boolean value) { link.targetNew = value }
 
-    /** @see goowee.core.LinkDefinition#namespace */
+    /** @see goowee.application.LinkDefinition#namespace */
     String getNamespace() { return link.namespace }
-    /** @see goowee.core.LinkDefinition#namespace */
+    /** @see goowee.application.LinkDefinition#namespace */
     void setNamespace(String value) { link.namespace = value }
 
-    /** @see goowee.core.LinkDefinition#controller */
+    /** @see goowee.application.LinkDefinition#controller */
     String getController() { return link.controller }
-    /** @see goowee.core.LinkDefinition#controller */
+    /** @see goowee.application.LinkDefinition#controller */
     void setController(String value) { link.controller = value }
 
-    /** @see goowee.core.LinkDefinition#action */
+    /** @see goowee.application.LinkDefinition#action */
     String getAction() { return link.action }
-    /** @see goowee.core.LinkDefinition#action */
+    /** @see goowee.application.LinkDefinition#action */
     void setAction(String value) { link.action = value }
 
-    /** @see goowee.core.LinkDefinition#params */
+    /** @see goowee.application.LinkDefinition#params */
     Map getParams() { return link.params }
-    /** @see goowee.core.LinkDefinition#params */
+    /** @see goowee.application.LinkDefinition#params */
     void setParams(Map value) { link.params = value }
 
-    /** @see goowee.core.LinkDefinition#fragment */
+    /** @see goowee.application.LinkDefinition#fragment */
     String getFragment() { return link.fragment }
-    /** @see goowee.core.LinkDefinition#fragment */
+    /** @see goowee.application.LinkDefinition#fragment */
     void setFragment(String value) { link.fragment = value }
 
-    /** @see goowee.core.LinkDefinition#path */
+    /** @see goowee.application.LinkDefinition#path */
     String getPath() { return link.path }
-    /** @see goowee.core.LinkDefinition#path */
+    /** @see goowee.application.LinkDefinition#path */
     void setPath(String value) { link.path = value }
 
-    /** @see goowee.core.LinkDefinition#url */
+    /** @see goowee.application.LinkDefinition#url */
     String getUrl() { return link.url }
-    /** @see goowee.core.LinkDefinition#url */
+    /** @see goowee.application.LinkDefinition#url */
     void setUrl(String value) { link.url = value }
 
     /** The icon identifier displayed on this menu item's link. */
@@ -438,9 +438,9 @@ class Menu extends Component {
     /** Sets the image for this menu item's link. */
     void setImage(String value) { link.image = value }
 
-    /** @see goowee.core.LinkDefinition#submit */
+    /** @see goowee.application.LinkDefinition#submit */
     List<String> getSubmit() { return link.submit }
-    /** @see goowee.core.LinkDefinition#submit */
+    /** @see goowee.application.LinkDefinition#submit */
     void setSubmit(List<String> value) { link.submit = value }
 
     /** Whether this menu item opens its target in a modal dialog. */
@@ -463,9 +463,9 @@ class Menu extends Component {
     /** Sets the CSS animation applied when navigating to this menu item's target. */
     void setAnimate(String value) { link.animate = value }
 
-    /** @see goowee.core.LinkDefinition#direct */
+    /** @see goowee.application.LinkDefinition#direct */
     Boolean getDirect() { return link.direct }
-    /** @see goowee.core.LinkDefinition#direct */
+    /** @see goowee.application.LinkDefinition#direct */
     void setDirect(Boolean value) { link.direct = value }
 
     /** Whether a close button is displayed when this menu item's target is shown in a modal. */
@@ -495,24 +495,24 @@ class Menu extends Component {
     /** Sets the interpolation arguments for the menu item's display text. */
     void setTextArgs(List values) { link.textArgs = values }
 
-    /** @see goowee.core.LinkDefinition#loading */
+    /** @see goowee.application.LinkDefinition#loading */
     Boolean getLoading() { return link.loading }
-    /** @see goowee.core.LinkDefinition#loading */
+    /** @see goowee.application.LinkDefinition#loading */
     void setLoading(Boolean value) { link.loading = value }
 
-    /** @see goowee.core.LinkDefinition#infoMessage */
+    /** @see goowee.application.LinkDefinition#infoMessage */
     String getInfoMessage() { return link.infoMessage }
-    /** @see goowee.core.LinkDefinition#infoMessage */
+    /** @see goowee.application.LinkDefinition#infoMessage */
     void setInfoMessage(String value) { link.infoMessage = value }
-    /** @see goowee.core.LinkDefinition#infoMessageArgs */
+    /** @see goowee.application.LinkDefinition#infoMessageArgs */
     void setInfoMessageArgs(List value) { link.infoMessageArgs = value }
 
-    /** @see goowee.core.LinkDefinition#confirmMessage */
+    /** @see goowee.application.LinkDefinition#confirmMessage */
     String getConfirmMessage() { return link.confirmMessage }
-    /** @see goowee.core.LinkDefinition#confirmMessage */
+    /** @see goowee.application.LinkDefinition#confirmMessage */
     void setConfirmMessage(String value) { link.confirmMessage = value }
-    /** @see goowee.core.LinkDefinition#confirmMessageArgs */
+    /** @see goowee.application.LinkDefinition#confirmMessageArgs */
     void setConfirmMessageArgs(List value) { link.confirmMessageArgs = value }
-    /** @see goowee.core.LinkDefinition#confirmMessageOnConfirm */
+    /** @see goowee.application.LinkDefinition#confirmMessageOnConfirm */
     void setConfirmMessageOnConfirm(ComponentEvent value) { link.confirmMessageOnConfirm = value }
 }

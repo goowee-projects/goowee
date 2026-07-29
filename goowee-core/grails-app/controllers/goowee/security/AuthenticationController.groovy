@@ -17,8 +17,8 @@ package goowee.security
 
 import goowee.elements.ElementsController
 import goowee.elements.pages.Login
-import goowee.properties.TenantPropertyService
-import goowee.tenants.TenantService
+import goowee.tenant.TenantPropertyService
+import goowee.tenant.TenantService
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -70,7 +70,7 @@ class AuthenticationController implements ElementsController {
         ///////////////////////////////////////
 
         // Getting the user preferences
-        TUserAccount user = securityService.currentUser
+        TUser user = securityService.currentUser
         decimalFormat = user.decimalFormat
         prefixedUnit = user.prefixedUnit
         symbolicCurrency = user.symbolicCurrency

@@ -14,8 +14,8 @@
  */
 package goowee.security
 
-import goowee.core.ApplicationService
-import goowee.core.Feature
+import goowee.application.ApplicationService
+import goowee.application.Feature
 import goowee.elements.ElementsController
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate
@@ -25,7 +25,7 @@ import goowee.elements.controls.MultipleCheckbox
 import goowee.elements.controls.Select
 import goowee.elements.controls.TextField
 import goowee.elements.style.TextTransform
-import goowee.tenants.TenantService
+import goowee.tenant.TenantService
 import grails.plugin.springsecurity.annotation.Secured
 
 /**
@@ -106,7 +106,7 @@ class GroupController implements ElementsController {
                     landingPage: group.landingPage,
                     deletable     : group.deletable,
             ]
-            for (role in TUserRole.findAll()) {
+            for (role in TRole.findAll()) {
                 cells[role.authority] = (group.authorities.any { it.authority == role.authority }) ?: null
             }
             rows.add(cells)

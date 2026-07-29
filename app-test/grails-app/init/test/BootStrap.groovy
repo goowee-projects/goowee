@@ -15,14 +15,14 @@
 package test
 
 import goowee.commons.utils.FileUtils
-import goowee.core.ApplicationService
-import goowee.core.ConnectionSourceService
+import goowee.application.ApplicationService
+import goowee.application.ConnectionSourceService
 import goowee.elements.TransitionService
 import goowee.elements.pages.ShellService
-import goowee.properties.SystemPropertyService
-import goowee.properties.TenantPropertyService
+import goowee.application.ApplicationPropertyService
+import goowee.tenant.TenantPropertyService
 import goowee.security.SecurityService
-import goowee.tenants.TenantService
+import goowee.tenant.TenantService
 import goowee.types.QuantityService
 import grails.web.servlet.mvc.GrailsHttpSession
 import jakarta.servlet.ServletContext
@@ -37,7 +37,7 @@ class BootStrap {
     ApplicationService applicationService
     TestService testService
     QuantityService quantityService
-    SystemPropertyService systemPropertyService
+    ApplicationPropertyService applicationPropertyService
     TenantPropertyService tenantPropertyService
     TenantService tenantService
     SecurityService securityService
@@ -64,10 +64,10 @@ class BootStrap {
         }
 
         applicationService.onInstall {
-            systemPropertyService.setBoolean('DISPLAY_MENU', true)
-            systemPropertyService.setString('DEFAULT_LANGUAGE', 'it')
-            systemPropertyService.setString('EXCLUDED_LANGUAGES', 'de,pi')
-            systemPropertyService.setString('TEST_JOB_PROPERTY', 'CHANGE ME')
+            applicationPropertyService.setBoolean('DISPLAY_MENU', true)
+            applicationPropertyService.setString('DEFAULT_LANGUAGE', 'it')
+            applicationPropertyService.setString('EXCLUDED_LANGUAGES', 'de,pi')
+            applicationPropertyService.setString('TEST_JOB_PROPERTY', 'CHANGE ME')
 
             connectionSourceService.create(
                     name: 'dynamicDatasource',
@@ -153,21 +153,21 @@ class BootStrap {
         applicationService.onDevInstall { String tenantId ->
             println "${tenantId} Tenant - INSTALLING STUFF ONLY WHEN IN DEVELOPMENT ENVIRONMENT"
 
-            systemPropertyService.setBoolean('TEST_DENY_LOGIN', false)
+            applicationPropertyService.setBoolean('TEST_DENY_LOGIN', false)
 
-            systemPropertyService.setNumber('TEST_NUMBER', 5 * 60)
-            systemPropertyService.setString('TEST_STRING', 'This is a string', 'This is its default value')
-            systemPropertyService.setDateTime('TEST_DATE_TIME', LocalDateTime.now())
-            systemPropertyService.setDate('TEST_DATE', LocalDate.now())
-            systemPropertyService.setTime('TEST_TIME', LocalTime.now())
-            systemPropertyService.setBoolean('TEST_BOOLEAN', true)
-            systemPropertyService.setDirectory('TEST_DIRECTORY', '', '/pippo/pluto')
-            systemPropertyService.setFilename('TEST_FILENAME', '', '\\pippo\\pluto\\config.txt')
-            systemPropertyService.setUrl('TEST_URL', 'http://www.goowee.org', 'http://www.google.com/search')
-            systemPropertyService.setDirectory('TEST_WRONG_DIRECTORY', '\\this\\directory\\doesnt\\exist', '')
-            systemPropertyService.setFilename('TEST_WRONG_FILENAME', '\\this\\file\\doesnt\\exist.txt', '')
-            systemPropertyService.setUrl('TEST_WRONG_URL', 'htp://www.wrong.url', '')
-            systemPropertyService.setString('TEST_ON_CHANGE', 'Change me and check the console!', '')
+            applicationPropertyService.setNumber('TEST_NUMBER', 5 * 60)
+            applicationPropertyService.setString('TEST_STRING', 'This is a string', 'This is its default value')
+            applicationPropertyService.setDateTime('TEST_DATE_TIME', LocalDateTime.now())
+            applicationPropertyService.setDate('TEST_DATE', LocalDate.now())
+            applicationPropertyService.setTime('TEST_TIME', LocalTime.now())
+            applicationPropertyService.setBoolean('TEST_BOOLEAN', true)
+            applicationPropertyService.setDirectory('TEST_DIRECTORY', '', '/pippo/pluto')
+            applicationPropertyService.setFilename('TEST_FILENAME', '', '\\pippo\\pluto\\config.txt')
+            applicationPropertyService.setUrl('TEST_URL', 'http://www.goowee.org', 'http://www.google.com/search')
+            applicationPropertyService.setDirectory('TEST_WRONG_DIRECTORY', '\\this\\directory\\doesnt\\exist', '')
+            applicationPropertyService.setFilename('TEST_WRONG_FILENAME', '\\this\\file\\doesnt\\exist.txt', '')
+            applicationPropertyService.setUrl('TEST_WRONG_URL', 'htp://www.wrong.url', '')
+            applicationPropertyService.setString('TEST_ON_CHANGE', 'Change me and check the console!', '')
 
             securityService.createAuthority('ROLE_1')
             securityService.createAuthority('ROLE_2')
@@ -227,7 +227,7 @@ class BootStrap {
 
         securityService.afterLogin { String tenantId, GrailsHttpSession session ->
             println "${tenantId}: Benvenuto in ${shellService.shell.id} caro ${securityService.currentUsername}"
-            if (systemPropertyService.getBoolean('TEST_DENY_LOGIN', true)) {
+            if (applicationPropertyService.getBoolean('TEST_DENY_LOGIN', true)) {
                 securityService.denyLogin('Cannot execute login because of X reason')
             }
         }
@@ -248,7 +248,7 @@ class BootStrap {
             transitionService.subscribe('macchina-1')
             transitionService.subscribe('macchina-2')
 
-            systemPropertyService.onChange('TEST_ON_CHANGE') { Object oldValue, Object value, Object defaultValue ->
+            applicationPropertyService.onChange('TEST_ON_CHANGE') { Object oldValue, Object value, Object defaultValue ->
                 println "*** TEST_ON_CHANGE *************************************************************"
                 println "OLD VALUE: $oldValue"
                 println "VALUE: $value"

@@ -14,9 +14,9 @@
  */
 package goowee.database
 
-import goowee.core.ApplicationService
-import goowee.core.ConnectionSourceService
-import goowee.core.TConnectionSource
+import goowee.application.ApplicationService
+import goowee.application.ConnectionSourceService
+import goowee.application.TConnectionSource
 import goowee.elements.ElementsController
 import goowee.elements.components.Label
 import goowee.elements.components.TableRow

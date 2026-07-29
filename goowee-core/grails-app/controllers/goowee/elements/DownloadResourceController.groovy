@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.application
+package goowee.elements
 
-import goowee.elements.ElementsController
+import goowee.application.ApplicationPropertyService
 import goowee.tenant.TenantService
 import grails.gorm.multitenancy.CurrentTenant
 import grails.plugin.springsecurity.annotation.Secured

@@ -15,7 +15,6 @@
 package goowee.elements
 
 import goowee.elements.core.PrettyPrinter
-import goowee.elements.core.WebRequestAware
 import groovy.transform.CompileStatic
 import org.springframework.validation.ObjectError
 

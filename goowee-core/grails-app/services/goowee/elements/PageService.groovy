@@ -14,8 +14,7 @@
  */
 package goowee.elements
 
-import goowee.elements.core.LinkGeneratorAware
-import goowee.elements.core.WebRequestAware
+
 import goowee.commons.utils.FileUtils
 import goowee.elements.contents.ContentHeader
 import goowee.elements.core.Component

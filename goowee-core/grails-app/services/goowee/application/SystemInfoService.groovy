@@ -16,7 +16,7 @@ package goowee.application
 
 import goowee.commons.utils.hardware.HardwareInfo
 import goowee.commons.utils.hardware.HardwareUtils
-import goowee.elements.core.WebRequestAware
+import goowee.elements.WebRequestAware
 import goowee.utils.EnvUtils
 import grails.core.GrailsApplication
 import grails.plugins.GrailsPluginManager

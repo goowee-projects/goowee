@@ -14,7 +14,7 @@
  */
 package goowee.elements.contents
 
-import goowee.elements.core.WebRequestAware
+import goowee.elements.WebRequestAware
 import goowee.elements.core.Menu
 import goowee.elements.pages.Shell
 import goowee.elements.pages.ShellService

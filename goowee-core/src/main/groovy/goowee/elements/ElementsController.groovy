@@ -18,11 +18,9 @@ import goowee.commons.utils.LogUtils
 import goowee.elements.contents.ContentHeader
 import goowee.elements.core.ComponentEvent
 import goowee.elements.core.Elements
-import goowee.elements.core.LinkGeneratorAware
 import goowee.elements.core.Page
 import goowee.elements.core.PageContent
 import goowee.elements.core.Transition
-import goowee.elements.core.WebRequestAware
 import goowee.elements.pages.PageWebsocket
 import grails.artefact.Controller
 import grails.artefact.Enhances

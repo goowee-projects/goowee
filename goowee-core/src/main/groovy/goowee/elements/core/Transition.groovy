@@ -15,6 +15,7 @@
 package goowee.elements.core
 
 import goowee.elements.ElementsException
+import goowee.elements.WebRequestAware
 import goowee.types.Types
 import groovy.contracts.Requires
 import groovy.transform.CompileStatic

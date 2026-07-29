@@ -15,7 +15,6 @@
 package goowee.elements
 
 import goowee.elements.core.PrettyPrinter
-import goowee.elements.core.WebRequestAware
 import goowee.elements.components.Form
 import goowee.elements.components.FormField
 import goowee.elements.controls.HiddenField

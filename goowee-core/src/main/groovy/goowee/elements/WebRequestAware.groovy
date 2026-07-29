@@ -12,9 +12,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.elements.core
+package goowee.elements
 
-import goowee.elements.ElementsException
+
+import goowee.elements.core.PrettyPrinter
+import goowee.elements.core.PrettyPrinterDecimalFormat
+import goowee.elements.core.PrettyPrinterProperties
+import goowee.elements.core.Transformer
 import goowee.elements.style.GuiStyle
 import goowee.utils.LocaleUtils
 import grails.web.servlet.mvc.GrailsHttpSession

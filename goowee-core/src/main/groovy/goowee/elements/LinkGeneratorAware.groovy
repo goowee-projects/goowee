@@ -12,9 +12,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package goowee.elements.core
+package goowee.elements
 
-
+import goowee.elements.core.Elements
 import grails.core.GrailsApplication
 import grails.util.Holders
 import grails.web.mapping.LinkGenerator

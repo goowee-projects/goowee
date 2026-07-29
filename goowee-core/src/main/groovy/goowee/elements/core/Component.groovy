@@ -16,6 +16,7 @@ package goowee.elements.core
 
 import goowee.commons.utils.LogUtils
 import goowee.elements.ElementsException
+import goowee.elements.WebRequestAware
 import goowee.elements.style.Color
 import goowee.utils.EnvUtils
 import groovy.contracts.Requires

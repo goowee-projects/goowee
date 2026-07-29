@@ -19,10 +19,10 @@ import goowee.commons.utils.StringUtils
 import goowee.elements.core.Feature
 import goowee.elements.style.GuiStyle
 import goowee.elements.core.LinkDefinition
-import goowee.elements.core.LinkGeneratorAware
+import goowee.elements.LinkGeneratorAware
 import goowee.elements.core.Menu
 import goowee.elements.core.PrettyPrinterDecimalFormat
-import goowee.elements.core.WebRequestAware
+import goowee.elements.WebRequestAware
 import goowee.elements.pages.Shell
 import goowee.elements.pages.ShellService
 import goowee.elements.ElementsException

@@ -14,7 +14,7 @@
  */
 package goowee.tenant
 
-import goowee.elements.core.WebRequestAware
+import goowee.elements.WebRequestAware
 import goowee.commons.utils.DateUtils
 import goowee.elements.core.Elements
 import goowee.security.CryptoService

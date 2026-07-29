@@ -16,8 +16,8 @@ package goowee.elements.pages
 
 import goowee.application.ApplicationPropertyService
 import goowee.application.ApplicationService
-import goowee.elements.core.LinkGeneratorAware
-import goowee.elements.core.WebRequestAware
+import goowee.elements.LinkGeneratorAware
+import goowee.elements.WebRequestAware
 import goowee.commons.utils.LogUtils
 import goowee.elements.PageService
 import goowee.elements.ElementsException

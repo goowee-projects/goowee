@@ -17,7 +17,6 @@ package goowee.elements
 import goowee.commons.utils.LogUtils
 import goowee.elements.contents.ContentHeader
 import goowee.elements.core.ComponentEvent
-import goowee.elements.core.Elements
 import goowee.elements.core.Page
 import goowee.elements.core.PageContent
 import goowee.elements.core.Transition
@@ -25,6 +24,7 @@ import goowee.elements.pages.PageWebsocket
 import grails.artefact.Controller
 import grails.artefact.Enhances
 import grails.artefact.controller.RestResponder
+import grails.util.Holders
 import grails.validation.Validateable
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
@@ -163,7 +163,8 @@ trait ElementsController implements Controller, RestResponder, WebRequestAware, 
 
     /** Returns the application-scoped {@link goowee.elements.PageService} bean. */
     private PageService getPageService() {
-        return Elements.getBean('pageService') as PageService
+        PageService pageService = Holders.applicationContext.getBean('pageService') as PageService
+        return pageService
     }
 
     /** Returns the main {@link goowee.elements.core.Page} for the current session, falling back to a blank page. */

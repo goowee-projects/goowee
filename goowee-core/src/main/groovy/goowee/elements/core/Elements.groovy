@@ -20,10 +20,10 @@ import grails.util.Holders
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 import org.grails.core.artefact.DomainClassArtefactHandler
-import org.springframework.context.support.GenericApplicationContext
+import org.grails.datastore.mapping.model.PersistentEntity
 
 /**
- * Goowee utils. Internal use only.
+ * Elements utils. Internal use only.
  *
  * @author Gianluca Sartori
  */
@@ -38,23 +38,11 @@ class Elements {
         return componentsRegistry
     }
 
-    static void registerComponents(String componentsImplementation) {
-        log.info "Registering components '${componentsImplementation}'"
-        if (!componentsRegistry.contains(componentsImplementation)) {
-            componentsRegistry.add(componentsImplementation)
+    static void registerComponents(String elementsImplementation) {
+        log.info "Registering components '${elementsImplementation}'"
+        if (!componentsRegistry.contains(elementsImplementation)) {
+            componentsRegistry.add(elementsImplementation)
         }
-    }
-
-    static Object getBean(String name) {
-        return Holders.applicationContext.getBean(name)
-    }
-
-    static Object containsBean(String name) {
-        return Holders.applicationContext.containsBean(name)
-    }
-
-    static Object removeBean(String name) {
-        return (Holders.applicationContext as GenericApplicationContext).removeBeanDefinition(name)
     }
 
     static Boolean isDomainClass(Class clazz) {
@@ -69,64 +57,35 @@ class Elements {
         }
     }
 
-    static final List<String> groovyExclusions = [
-            'class',
-    ]
-
-    static final List<String> gormExclusions = [
-            // GORM lazy fetching may execute queries each time we access
-            // one of the following properties
-            // Defined watching a debug session, see also: Grails `LazyMetaPropertyMap`
-            'all',
-            'count',
-            'transients',
-            'properties',
-            'constrainedProperties',
-            'gormPersistentEntity',
-            'gormDynamicFinders',
-            'dirtyPropertyNames',
-            'dirty',
-            'hasMany',
-            'belongsTo',
-            'constraints',
-            'mapping',
-            'errors',
-            'attached',
-    ]
-
-    static Map toMap(Object object, List<String> columns = [], List<String> includes = [], List<String> excludes = []) {
+    static Map toMap(Object object, List<String> properties = [], List<String> includes = [], List<String> excludes = []) {
         if (!object) {
             return [:]
         }
 
-        if (object in Map) {
-            return object as Map
-        }
-
         Map results = [:]
 
-        if (columns && object in Collection) {
-            // Collection elements will be assigned to each column in order
+        if (object in Map) {
+            results.putAll(object as Map)
+
+        } else if (object in Collection) { // Collection elements will be assigned to each property following their order
             Integer i = 0
-            for (column in columns) {
-                results[column] = (object as Collection)[i]
+            for (property in properties) {
+                results[property] = (object as Collection)[i]
                 i++
             }
 
         } else if (isDomainClass(object.class)) {
-            results.put('_object_', object)
+            PersistentEntity entity = Holders.grailsApplication.mappingContext.getPersistentEntity(object.class.name)
 
-            Set hasMany = []
-            if (object.hasProperty('hasMany')) {
-                hasMany = (object['hasMany'] as Map).keySet()
+            // id is not present in persistentProperties, we add it explicitly
+            if (entity.identity && !(entity.identity.name in excludes)) {
+                String name = entity.identity.name
+                results[name] = ObjectUtils.getValue(object, name)
             }
 
-            excludes += groovyExclusions
-            excludes += gormExclusions
-
-            for (property in object.metaClass.properties) {
-                String name = property.name
-                if ((name in excludes || name in hasMany) && (name !in columns || name !in includes)) {
+            for (persistentProperty in entity.persistentProperties) {
+                String name = persistentProperty.name
+                if (name in excludes) {
                     continue
                 }
 
@@ -139,14 +98,10 @@ class Elements {
                 results.put(propertyName, value)
             }
 
-        } else {
-            results.put('_object_', object)
-
-            excludes += groovyExclusions
-
+        } else { // POJOs
             for (property in object.properties) {
                 String name = property.key
-                if (name in excludes && (name !in columns || name !in includes)) {
+                if (name in excludes) {
                     continue
                 }
 
@@ -155,6 +110,7 @@ class Elements {
             }
         }
 
+        results.put('_object_', object)
         return results
     }
 

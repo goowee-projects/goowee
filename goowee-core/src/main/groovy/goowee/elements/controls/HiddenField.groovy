@@ -14,6 +14,7 @@
  */
 package goowee.elements.controls
 
+import goowee.commons.utils.ObjectUtils
 import goowee.elements.core.Control
 import goowee.types.Type
 import goowee.types.Types
@@ -52,6 +53,24 @@ class HiddenField extends Control {
         skipFocus = true
         display = false
         containerSpecs.display = false
+    }
+
+    /**
+     * Sets the selected value(s) for this control.
+     * <ul>
+     *   <li>A single object with an {@code id} property is unwrapped to its ID.</li>
+     *   <li>All other values are passed directly to the superclass.</li>
+     * </ul>
+     *
+     * @param value the value to select; accepts {@code null}, a scalar, or a {@link Collection}
+     */
+    @Override
+    void setValue(Object value) {
+        if (ObjectUtils.hasId(value)) {
+            super.setValue(value['id'])
+        } else {
+            super.setValue(value)
+        }
     }
 
 }

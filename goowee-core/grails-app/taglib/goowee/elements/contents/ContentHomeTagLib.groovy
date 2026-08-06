@@ -44,4 +44,5 @@ class ContentHomeTagLib implements WebRequestAware {
             out << g.render(template: tagsTemplatesPath + "ContentHomeFavourite", model: [feature: feature])
         }
     }
+
 }

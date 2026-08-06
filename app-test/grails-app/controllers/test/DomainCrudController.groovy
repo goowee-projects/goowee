@@ -43,33 +43,33 @@ class DomainCrudController implements ElementsController {
 
     private buildForm(TCompany obj = null) {
         def c = obj
-                ? createContent(ContentEdit)
-                : createContent(ContentCreate)
+            ? createContent(ContentEdit)
+            : createContent(ContentCreate)
 
         c.form.with {
             validate = TCompany
             addField(
-                    class: TextField,
-                    id: 'name',
-                    cols: 12,
+                class: TextField,
+                id: 'name',
+                cols: 12,
             )
             addField(
-                    class: Checkbox,
-                    id: 'isOwned',
-                    label: '',
-                    cols: 4,
+                class: Checkbox,
+                id: 'isOwned',
+                label: '',
+                cols: 4,
             )
             addField(
-                    class: Checkbox,
-                    id: 'isClient',
-                    label: '',
-                    cols: 4,
+                class: Checkbox,
+                id: 'isClient',
+                label: '',
+                cols: 4,
             )
             addField(
-                    class: Checkbox,
-                    id: 'isSupplier',
-                    label: '',
-                    cols: 4,
+                class: Checkbox,
+                id: 'isSupplier',
+                label: '',
+                cols: 4,
             )
         }
 

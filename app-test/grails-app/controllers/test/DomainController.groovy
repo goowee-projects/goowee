@@ -30,9 +30,9 @@ class DomainController implements ElementsController {
                 'fullName',
             ]
             columns = [
-                    'shortName',
-                    'packageName',
-                    'pluginName',
+                'shortName',
+                'packageName',
+                'pluginName',
             ]
             actions.removeTailAction()
             actions.defaultAction.controller = 'domainCrud'

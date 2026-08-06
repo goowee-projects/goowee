@@ -14,8 +14,8 @@
  */
 package test
 
-import goowee.elements.TransitionService
 import goowee.elements.ElementsController
+import goowee.elements.TransitionService
 import goowee.elements.components.Button
 import goowee.elements.components.Form
 import goowee.elements.components.Separator
@@ -35,49 +35,49 @@ class WebsocketController implements ElementsController {
         def form = c.addComponent(Form)
         form.with {
             addField(
-                    class: Separator,
-                    id: 'info',
-                    text: 'websocket.info',
+                class: Separator,
+                id: 'info',
+                text: 'websocket.info',
             )
             addField(
-                    class: Select,
-                    id: 'queue',
-                    optionsFromList: ['channel', 'user'],
-                    renderTextPrefix: false,
+                class: Select,
+                id: 'queue',
+                optionsFromList: ['channel', 'user'],
+                renderTextPrefix: false,
             )
             addField(
-                    class: TextField,
-                    id: 'channel',
-                    defaultValue: 'macchina-1',
+                class: TextField,
+                id: 'channel',
+                defaultValue: 'macchina-1',
             )
             addField(
-                    class: Select,
-                    id: 'usr',
-                    optionsFromRecordset: securityService.listAllUser(),
-                    keys: ['username'],
-                    renderTextPrefix: false,
-                    defaultValue: securityService.currentUsername,
+                class: Select,
+                id: 'usr',
+                optionsFromRecordset: securityService.listAllUser(),
+                keys: ['username'],
+                renderTextPrefix: false,
+                defaultValue: securityService.currentUsername,
             )
             addField(
-                    class: TextField,
-                    id: 'contr',
-                    defaultValue: 'form',
+                class: TextField,
+                id: 'contr',
+                defaultValue: 'form',
             )
             addField(
-                    class: TextField,
-                    id: 'acti',
+                class: TextField,
+                id: 'acti',
             )
             addField(
-                    class: Checkbox,
-                    id: 'moda',
-                    defaultValue: true,
+                class: Checkbox,
+                id: 'moda',
+                defaultValue: true,
             )
             addField(
-                    class: Button,
-                    id: 'send',
-                    action: 'onSend',
-                    submit: 'form',
-                    stretch: true,
+                class: Button,
+                id: 'send',
+                action: 'onSend',
+                submit: 'form',
+                stretch: true,
             )
         }
 
@@ -87,9 +87,9 @@ class WebsocketController implements ElementsController {
     def onSend() {
         def t = transitionService.createTransition()
         t.redirect(
-                controller: params.contr,
-                action: params.acti,
-                modal: params.moda,
+            controller: params.contr,
+            action: params.acti,
+            modal: params.moda,
         )
         t.setValue('form.modal', true)
         t.setValue('form.large', true)

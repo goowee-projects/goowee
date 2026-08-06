@@ -17,6 +17,7 @@
 //import goowee.elements.components.BarChart
 //import goowee.elements.components.PieChart
 import goowee.elements.ElementsController
+
 //import goowee.elements.contents.ContentForm
 //
 class ChartsController implements ElementsController {

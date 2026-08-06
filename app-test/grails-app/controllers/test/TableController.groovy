@@ -42,7 +42,7 @@ class TableController implements ElementsController {
         }
         applicationService.registerTransformer('MULTIPLY') { value ->
             println 'BEFORE ' + value
-            Object result =  value ? value * 100 : new Money(1000)
+            Object result = value ? value * 100 : new Money(1000)
             println 'AFTER ' + result
             return result
         }
@@ -59,51 +59,51 @@ class TableController implements ElementsController {
         def table = c.addComponent(Table)
         table.with {
             actionbar.addAction(
-                    action: 'action1',
-                    //confirmMessage: 'Confermare?',
+                action: 'action1',
+                //confirmMessage: 'Confermare?',
             )
 
             filters.with {
                 addField(
-                        class: Select,
-                        id: 'user1',
-                        optionsFromRecordset: personService.list(),
-                        keys: ['id'],
+                    class: Select,
+                    id: 'user1',
+                    optionsFromRecordset: personService.list(),
+                    keys: ['id'],
                 )
                 addField(
-                        class: TextField,
-                        id: 'textfield',
+                    class: TextField,
+                    id: 'textfield',
                 )
             }
 
             rowStriped = true
             columns = [
-                    'name',
-                    'postcode',
-                    'address',
-                    'empty',
-                    'company',
-                    'salary',
-                    'active',
+                'name',
+                'postcode',
+                'address',
+                'empty',
+                'company',
+                'salary',
+                'active',
             ]
             sortable = [
-                    name: 'asc',
+                name: 'asc',
             ]
             labels = [
-                    email: 'Runtime generated label EMAIL',
-                    active: '', // Per non mostrare l'etichetta
-                    empty: '',
+                email : 'Runtime generated label EMAIL',
+                active: '', // Per non mostrare l'etichetta
+                empty : '',
             ]
             transformers = [
-                    address: 'MAIUSCOLO',
-                    salary: 'MULTIPLY',
+                address: 'MAIUSCOLO',
+                salary : 'MULTIPLY',
             ]
             prettyPrinters = [
-                    name: 'NOME_FIGO',
+                name: 'NOME_FIGO',
             ]
             prettyPrinterProperties = [
-                    salary: [decimals: 0, symbolicCurrency: false, prefixedUnit: true],
-                    postcode: [renderZero: '-'],
+                salary  : [decimals: 0, symbolicCurrency: false, prefixedUnit: true],
+                postcode: [renderZero: '-'],
             ]
 
             actions.addAction(action: 'commonAction')
@@ -127,8 +127,8 @@ class TableController implements ElementsController {
             // Assignment of "header", "body" and "footer" data must be done after ".eachRow" setup
             body = personService.list(params)
             footer = [
-                    [actions: 'Subtotale', name: '10.000', postcode: '200'],
-                    [actions: 'Totale', name: '10.000', postcode: '200'],
+                [actions: 'Subtotale', name: '10.000', postcode: '200'],
+                [actions: 'Totale', name: '10.000', postcode: '200'],
             ]
             paginate = personService.count()
         }
@@ -194,10 +194,10 @@ class TableController implements ElementsController {
                     id: 'TimeField1',
             ]*/
             row.cells.address.component = [
-                    class: ProgressBar,
-                    id: 'progress1',
-                    max: 100,
-                    now: 20,
+                class: ProgressBar,
+                id   : 'progress1',
+                max  : 100,
+                now  : 20,
             ]
         }
 
@@ -208,8 +208,8 @@ class TableController implements ElementsController {
             row.actions.addSeparator()
             row.actions.addAction(action: 'rowAction')
             row.cells.postcode.component = [
-                    class: TextField,
-                    id: 'TextField1',
+                class: TextField,
+                id   : 'TextField1',
             ]
             row.cells.postcode.colspan = 2
         }
@@ -239,9 +239,9 @@ class TableController implements ElementsController {
         }
 
         def newActionButton = t.table.addControl(
-                class: Button,
-                id: 'newAction',
-                isDefaultAction: true,
+            class: Button,
+            id: 'newAction',
+            isDefaultAction: true,
         )
         newActionButton.addAction(action: 'action2')
 

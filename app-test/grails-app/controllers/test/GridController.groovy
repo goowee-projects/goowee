@@ -38,14 +38,14 @@ class GridController implements ElementsController {
             def form = col.addComponent(Form, "form${i}")
             form.with {
                 addField(
-                        class: TextField,
-                        id: "text${i}",
-                        cols: 6,
+                    class: TextField,
+                    id: "text${i}",
+                    cols: 6,
                 )
                 addField(
-                        class: NumberField,
-                        id: "number${i}",
-                        cols: 6,
+                    class: NumberField,
+                    id: "number${i}",
+                    cols: 6,
                 )
             }
         }
@@ -61,11 +61,11 @@ class GridController implements ElementsController {
         for (i in 1..10) {
             def col = grid2.addColumn()
             col.addComponent(
-                    class: Label,
-                    id: "label${i}",
-                    text: "Label ${i}",
-                    textAlign: TextAlign.CENTER,
-                    cssClass: 'd-block',
+                class: Label,
+                id: "label${i}",
+                text: "Label ${i}",
+                textAlign: TextAlign.CENTER,
+                cssClass: 'd-block',
             )
         }
 

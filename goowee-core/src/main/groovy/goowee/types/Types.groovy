@@ -250,8 +250,8 @@ class Types {
     static Map serializeValue(Object value, String valueType = null) {
         if (value == null) {
             return [
-                    type: valueType ?: Type.NA.toString(),
-                    value: value,
+                type: valueType ?: Type.NA.toString(),
+                value: value,
             ]
         }
 
@@ -263,75 +263,75 @@ class Types {
         switch (value) {
             case Boolean:
                 return [
-                        type : Type.BOOL.toString(),
-                        value: value,
+                    type : Type.BOOL.toString(),
+                    value: value,
                 ]
 
             case Number:
                 return [
-                        type : Type.NUMBER.toString(),
-                        value: value,
+                    type : Type.NUMBER.toString(),
+                    value: value,
                 ]
 
             case String:
                 return [
-                        type : Type.STRING.toString(),
-                        value: value,
+                    type : Type.STRING.toString(),
+                    value: value,
                 ]
 
             case Map:
                 return [
-                        type : Type.MAP.toString(),
-                        value: value,
+                    type : Type.MAP.toString(),
+                    value: value,
                 ]
 
             case List:
                 return [
-                        type : Type.LIST.toString(),
-                        value: value,
+                    type : Type.LIST.toString(),
+                    value: value,
                 ]
 
             case LocalDateTime:
                 return [
-                        type : Type.DATETIME.toString(),
-                        value: [
-                                year  : (value as LocalDateTime).year,
-                                month : (value as LocalDateTime).monthValue,
-                                day   : (value as LocalDateTime).dayOfMonth,
-                                hour  : (value as LocalDateTime).hour,
-                                minute: (value as LocalDateTime).minute,
-                        ]
+                    type : Type.DATETIME.toString(),
+                    value: [
+                        year  : (value as LocalDateTime).year,
+                        month : (value as LocalDateTime).monthValue,
+                        day   : (value as LocalDateTime).dayOfMonth,
+                        hour  : (value as LocalDateTime).hour,
+                        minute: (value as LocalDateTime).minute,
+                    ]
                 ]
 
             case LocalDate:
                 return [
-                        type : Type.DATE.toString(),
-                        value: [
-                                year : (value as LocalDate).year,
-                                month: (value as LocalDate).monthValue,
-                                day  : (value as LocalDate).dayOfMonth,
-                        ]
+                    type : Type.DATE.toString(),
+                    value: [
+                        year : (value as LocalDate).year,
+                        month: (value as LocalDate).monthValue,
+                        day  : (value as LocalDate).dayOfMonth,
+                    ]
                 ]
 
             case LocalTime:
                 return [
-                        type : Type.TIME.toString(),
-                        value: [
-                                hour  : (value as LocalTime).hour,
-                                minute: (value as LocalTime).minute,
-                        ]
+                    type : Type.TIME.toString(),
+                    value: [
+                        hour  : (value as LocalTime).hour,
+                        minute: (value as LocalTime).minute,
+                    ]
                 ]
 
             case Enum:
                 return [
-                        type: Type.STRING.toString(),
-                        value: (value as Enum).name(),
+                    type: Type.STRING.toString(),
+                    value: (value as Enum).name(),
                 ]
 
             default:
                 return [
-                        type: valueType ?: Type.NA.toString(),
-                        value: value,
+                    type: valueType ?: Type.NA.toString(),
+                    value: value,
                 ]
         }
     }
@@ -376,49 +376,56 @@ class Types {
             return value
         }
 
-        Map valueMap = value as Map
+        Map map = value as Map
+        Type mapType = map.type as Type
+        Object mapValue = map.value
+
+        if (mapValue == null) {
+            return null
+        }
+
         try {
-            switch (valueMap.type) {
-                case Type.BOOL.toString():
-                    return deserializeBoolean(valueMap)
+            switch (mapType) {
+                case Type.BOOL:
+                    return deserializeBoolean(map)
 
-                case Type.NUMBER.toString():
-                    return deserializeNumber(valueMap)
+                case Type.NUMBER:
+                    return deserializeNumber(map)
 
-                case Type.STRING.toString():
-                    return deserializeString(valueMap)
+                case Type.STRING:
+                    return deserializeString(map)
 
-                case Type.MAP.toString():
-                    return deserializeMap(valueMap)
+                case Type.MAP:
+                    return deserializeMap(map)
 
-                case Type.LIST.toString():
-                    return deserializeList(valueMap)
+                case Type.LIST:
+                    return deserializeList(map)
 
-                case Type.DATETIME.toString():
-                    return deserializeLocalDateTime(valueMap)
+                case Type.DATETIME:
+                    return deserializeLocalDateTime(map)
 
-                case Type.DATE.toString():
-                    return deserializeLocalDate(valueMap)
+                case Type.DATE:
+                    return deserializeLocalDate(map)
 
-                case Type.TIME.toString():
-                    return deserializeLocalTime(valueMap)
+                case Type.TIME:
+                    return deserializeLocalTime(map)
 
-                case Type.NA.toString():
-                    return valueMap.value
+                case Type.NA:
+                    return mapValue
 
                 default:
                     try {
-                        CustomType customTypeValue = create(valueMap.type as String)
-                        customTypeValue.deserialize(valueMap)
+                        CustomType customTypeValue = create(mapType.name())
+                        customTypeValue.deserialize(map)
                         return customTypeValue
 
                     } catch (Exception ignore) {
-                        return valueMap.value
+                        return mapValue
                     }
             }
 
         } catch (Exception e) {
-            log.error "Error deserializing '${valueMap}': ${e.message}"
+            log.error "Error deserializing '${map}': ${e.message}"
             return null
         }
     }

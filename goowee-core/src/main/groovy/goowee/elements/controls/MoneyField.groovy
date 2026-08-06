@@ -14,8 +14,8 @@
  */
 package goowee.elements.controls
 
-import goowee.elements.core.Elements
 import goowee.elements.ElementsException
+import goowee.elements.core.Elements
 import goowee.types.Money
 import groovy.transform.CompileStatic
 
@@ -38,9 +38,9 @@ class MoneyField extends NumberField {
      * Sets the view template, value type, decimal places, negative-value flag, and currency prefix.
      *
      * @param args initialisation arguments; recognised keys include:
-     *             {@code decimals} ({@link Integer}, default {@code 2}),
-     *             {@code negative} ({@link Boolean}, default {@code false}),
-     *             {@code currency} ({@link String}, default {@code "EUR"}),
+     * {@code decimals} ({@link Integer}, default {@code 2}),
+     * {@code negative} ({@link Boolean}, default {@code false}),
+     * {@code currency} ({@link String}, default {@code "EUR"}),
      *             plus all keys accepted by {@link NumberField#NumberField(Map)}
      */
     MoneyField(Map args) {
@@ -85,12 +85,12 @@ class MoneyField extends NumberField {
     @Override
     String getValueAsJSON() {
         Map valueMap = [
-                type: valueType,
-                value: [
-                        amount: (value as Money)?.amount,
-                        currency: (value as Money)?.currency,
-                        decimals: decimals,
-                ]
+            type : valueType,
+            value: [
+                amount  : (value as Money)?.amount,
+                currency: (value as Money)?.currency,
+                decimals: decimals,
+            ]
         ]
         return Elements.encodeAsJSON(valueMap)
     }

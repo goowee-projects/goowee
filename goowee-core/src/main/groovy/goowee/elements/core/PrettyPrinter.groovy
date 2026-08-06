@@ -74,7 +74,7 @@ class PrettyPrinter {
      * The canonical class name is used as the template key. The template receives
      * the value bound to the variable {@code it}.
      *
-     * @param clazz    the class whose instances should be rendered with this template
+     * @param clazz the class whose instances should be rendered with this template
      * @param template the Groovy template string (e.g. {@code '${it.firstName} ${it.lastName}'})
      */
     static void register(Class clazz, String template) {
@@ -86,7 +86,7 @@ class PrettyPrinter {
      * Registers a Groovy {@link groovy.text.SimpleTemplateEngine} template under an explicit name.
      *
      * @param templateName the key used to look up the template (usually a canonical class name)
-     * @param template     the Groovy template string
+     * @param template the Groovy template string
      */
     static void register(String templateName, String template) {
         SimpleTemplateEngine templateEngine = new SimpleTemplateEngine()
@@ -146,7 +146,7 @@ class PrettyPrinter {
      * {@link goowee.types.CustomType} → fallback {@link #printObject}.
      * </p>
      *
-     * @param object     the value to render; may be {@code null}
+     * @param object the value to render; may be {@code null}
      * @param properties formatting options; a default instance is used if not supplied
      * @return the formatted string, or an empty string if {@code object} is {@code null} or blank
      */
@@ -246,7 +246,7 @@ class PrettyPrinter {
      *     <li>The canonical class name of {@code value}</li>
      * </ol>
      *
-     * @param value      the object to render
+     * @param value the object to render
      * @param properties formatting options; a default instance is used if not supplied
      * @return the rendered string
      */
@@ -286,7 +286,7 @@ class PrettyPrinter {
      * lookup. If the key is not found in the message source, the raw code is returned as-is.
      * </p>
      *
-     * @param value      the string or i18n message code to render
+     * @param value the string or i18n message code to render
      * @param properties formatting options
      * @return the localised string, or the original code if no message is found
      */
@@ -310,7 +310,7 @@ class PrettyPrinter {
      * Renders a {@link Boolean} value. Delegates to {@link #printObject} so that a
      * registered template or i18n key can customise the output (e.g. "Yes"/"No").
      *
-     * @param value      the boolean to render
+     * @param value the boolean to render
      * @param properties formatting options
      * @return the rendered string
      */
@@ -323,7 +323,7 @@ class PrettyPrinter {
      * {@link PrettyPrinterProperties#decimals} to {@code 0} and delegating to
      * {@link #printDecimal}.
      *
-     * @param value      the integer value as a {@link java.math.BigDecimal}
+     * @param value the integer value as a {@link java.math.BigDecimal}
      * @param properties formatting options
      * @return the formatted integer string
      */
@@ -338,7 +338,7 @@ class PrettyPrinter {
      * If the value is zero and {@link PrettyPrinterProperties#renderZero} is set, that token
      * is returned instead.
      *
-     * @param value      the decimal to render
+     * @param value the decimal to render
      * @param properties formatting options
      * @return the formatted decimal string
      */
@@ -376,7 +376,7 @@ class PrettyPrinter {
      * Renders each element of a list with {@link #printObject} and joins the results
      * using {@link PrettyPrinterProperties#renderDelimiter} (defaults to {@code ", "}).
      *
-     * @param value      the list to render
+     * @param value the list to render
      * @param properties formatting options
      * @return the joined string
      */
@@ -397,7 +397,7 @@ class PrettyPrinter {
      * map entry's value is rendered individually and joined with
      * {@link PrettyPrinterProperties#renderDelimiter} (defaults to {@code ", "}).
      *
-     * @param value      the map to render
+     * @param value the map to render
      * @param properties formatting options
      * @return the rendered string
      */
@@ -421,7 +421,7 @@ class PrettyPrinter {
     /**
      * Renders a single {@link java.util.Map.Entry} by passing its value to {@link #printObject}.
      *
-     * @param value      the map entry to render
+     * @param value the map entry to render
      * @param properties formatting options
      * @return the rendered string for the entry's value
      */
@@ -433,7 +433,7 @@ class PrettyPrinter {
      * Converts a legacy {@link java.util.Date} to {@link java.time.LocalDate} and
      * delegates to {@link #printLocalDate}.
      *
-     * @param value      the date to render
+     * @param value the date to render
      * @param properties formatting options
      * @return the formatted date string
      */
@@ -448,7 +448,7 @@ class PrettyPrinter {
      * {@code dd/MM/yyyy} or {@code MM/dd/yyyy} depending on
      * {@link PrettyPrinterProperties#invertedMonth}.
      *
-     * @param value      the date to render
+     * @param value the date to render
      * @param properties formatting options
      * @return the formatted date string
      */
@@ -472,7 +472,7 @@ class PrettyPrinter {
      * 12-hour (AM/PM) notation based on {@link PrettyPrinterProperties#twelveHours}, with optional
      * seconds controlled by {@link PrettyPrinterProperties#renderSeconds}.
      *
-     * @param value      the time to render
+     * @param value the time to render
      * @param properties formatting options
      * @return the formatted time string
      */
@@ -499,7 +499,7 @@ class PrettyPrinter {
      * separately via {@link #printLocalDate} and {@link #printLocalTime} (both enabled by default)
      * and joined with a space.
      *
-     * @param value      the date/time to render
+     * @param value the date/time to render
      * @param properties formatting options
      * @return the formatted date/time string, or just the date or time portion if the other is disabled
      */
@@ -539,9 +539,9 @@ class PrettyPrinter {
     /**
      * Resolves an i18n message by code, using the Spring {@link org.springframework.context.ApplicationContext}.
      *
-     * @param locale         the locale to use for the lookup
-     * @param code           the message key
-     * @param args           optional interpolation arguments
+     * @param locale the locale to use for the lookup
+     * @param code the message key
+     * @param args optional interpolation arguments
      * @param defaultMessage the value returned when the code is not found; defaults to the code itself
      * @return the resolved message, or {@code defaultMessage} if not found
      */
@@ -553,12 +553,12 @@ class PrettyPrinter {
      * Resolves an i18n message by code, returning an empty string when the code is not found.
      *
      * @param locale the locale to use for the lookup
-     * @param code   the message key
-     * @param args   optional interpolation arguments
+     * @param code the message key
+     * @param args optional interpolation arguments
      * @return the resolved message, or an empty string if not found
      */
     static String messageOrBlank(Locale locale, String code, List args = []) {
-        return message(locale, code, args,'')
+        return message(locale, code, args, '')
     }
 
     /**
@@ -567,15 +567,15 @@ class PrettyPrinter {
      * {@link org.springframework.validation.ObjectError#arguments}.
      *
      * @param locale the locale to use for the lookup
-     * @param error  the validation error to resolve
+     * @param error the validation error to resolve
      * @return the resolved error message
      */
     static String message(Locale locale, ObjectError error) {
         return message(
-                locale,
-                error.code,
-                error.arguments as List,
-                error.code
+            locale,
+            error.code,
+            error.arguments as List,
+            error.code
         )
     }
 

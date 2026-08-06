@@ -14,10 +14,10 @@
  */
 package goowee.types
 
+import goowee.elements.ElementsException
+import goowee.elements.controls.MoneyField
 import goowee.elements.core.PrettyPrinter
 import goowee.elements.core.PrettyPrinterProperties
-import goowee.elements.controls.MoneyField
-import goowee.elements.ElementsException
 import groovy.transform.CompileDynamic
 import org.grails.datastore.gorm.GormEntity
 
@@ -73,7 +73,7 @@ class Money extends Number implements CustomType, GormEntity {
      * Creates a {@code Money} instance from a {@link Number} amount, converting it to
      * {@link BigDecimal} via its {@code double} representation.
      *
-     * @param amount   the monetary amount
+     * @param amount the monetary amount
      * @param currency the ISO 4217 currency code; defaults to {@code "EUR"}
      */
     Money(Number amount, String currency = 'EUR') {
@@ -83,7 +83,7 @@ class Money extends Number implements CustomType, GormEntity {
     /**
      * Creates a {@code Money} instance from a {@link BigDecimal} amount.
      *
-     * @param amount   the monetary amount
+     * @param amount the monetary amount
      * @param currency the ISO 4217 currency code; defaults to {@code "EUR"}
      */
     Money(BigDecimal amount, String currency = 'EUR') {
@@ -117,11 +117,11 @@ class Money extends Number implements CustomType, GormEntity {
      */
     Map serialize() {
         return [
-                type : TYPE_NAME,
-                value: [
-                        amount: amount,
-                        currency: currency,
-                ]
+            type : TYPE_NAME,
+            value: [
+                amount  : amount,
+                currency: currency,
+            ]
         ]
     }
 
@@ -140,8 +140,8 @@ class Money extends Number implements CustomType, GormEntity {
 
         currency = value.currency ?: 'EUR'
         amount = Types.deserializeBigDecimal(
-                value.amount as String,
-                value.decimals as Integer
+            value.amount as String,
+            value.decimals as Integer
         )
     }
 
@@ -163,8 +163,8 @@ class Money extends Number implements CustomType, GormEntity {
 
         Boolean prefixedUnit = properties.prefixedUnit == null ? false : properties.prefixedUnit
         return prefixedUnit
-                ? currency + ' ' + amount
-                : amount + ' ' + currency
+            ? currency + ' ' + amount
+            : amount + ' ' + currency
     }
 
     /**

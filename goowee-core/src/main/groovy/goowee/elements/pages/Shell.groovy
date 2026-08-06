@@ -14,9 +14,9 @@
  */
 package goowee.elements.pages
 
+import goowee.elements.contents.ContentHome
 import goowee.elements.core.LinkDefinition
 import goowee.elements.core.Page
-import goowee.elements.contents.ContentHome
 import groovy.contracts.Requires
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
@@ -68,7 +68,7 @@ class Shell extends Page {
     void setUser(String username, String firstname, String lastname) {
         this.username = username
         this.userFullname = firstname + ' ' + lastname
-        userMenu.title =  firstname ?: lastname ?: username
+        userMenu.title = firstname ?: lastname ?: username
         home.favouriteMenu.createFromFeature(config.features.main, true)
     }
 }

@@ -14,8 +14,8 @@
  */
 package goowee.tenant
 
-import goowee.application.TApplicationProperty
 import goowee.application.PropertyType
+import goowee.application.TApplicationProperty
 import grails.compiler.GrailsCompileStatic
 import grails.gorm.MultiTenant
 import org.grails.datastore.gorm.GormEntity

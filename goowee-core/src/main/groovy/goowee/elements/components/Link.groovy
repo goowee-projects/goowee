@@ -14,8 +14,8 @@
  */
 package goowee.elements.components
 
-import goowee.elements.core.LinkDefinition
 import goowee.elements.core.ComponentEvent
+import goowee.elements.core.LinkDefinition
 import groovy.transform.CompileStatic
 
 /**
@@ -35,14 +35,14 @@ class Link extends Label {
      * Creates a new Link component.
      *
      * @param args a map of configuration options. Supports all {@link Label} arguments plus:
-     *             {@code linkDefinition}, {@code tag}, {@code html}, {@code triggerEvent}, {@code onClick}
+     * {@code linkDefinition}, {@code tag}, {@code html}, {@code triggerEvent}, {@code onClick}
      */
     Link(Map args = [:]) {
         super(args)
 
         linkDefinition = args.linkDefinition
-                ? args.linkDefinition as LinkDefinition
-                : new LinkDefinition(args)
+            ? args.linkDefinition as LinkDefinition
+            : new LinkDefinition(args)
 
         tag = args.tag == null ? false : args.tag
 
@@ -60,14 +60,14 @@ class Link extends Label {
      * and confirm message.
      *
      * @param action an optional action override; if {@code null}, the action from
-     *               {@link #linkDefinition} is used
+     * {@link #linkDefinition} is used
      */
     void onTrigger(String action = null) {
         on(linkDefinition.properties + [
-                event         : triggerEvent,
-                action        : action ?: linkDefinition.action,
-                infoMessage   : message(linkDefinition.infoMessage, linkDefinition.infoMessageArgs),
-                confirmMessage: message(linkDefinition.confirmMessage, linkDefinition.confirmMessageArgs),
+            event         : triggerEvent,
+            action        : action ?: linkDefinition.action,
+            infoMessage   : message(linkDefinition.infoMessage, linkDefinition.infoMessageArgs),
+            confirmMessage: message(linkDefinition.confirmMessage, linkDefinition.confirmMessageArgs),
         ])
     }
 
@@ -81,7 +81,7 @@ class Link extends Label {
     @Override
     String getPropertiesAsJSON(Map properties = [:]) {
         Map thisProperties = [
-                loading: loading,
+            loading: loading,
         ]
         return super.getPropertiesAsJSON(thisProperties + properties)
     }

@@ -74,10 +74,10 @@ assets {
     minifyCss = true
     minifyJs = true
     minifyOptions = [
-            //SIMPLE (default) or ADVANCED or WHITESPACE_ONLY
-            optimizationLevel: "SIMPLE",
+        //SIMPLE (default) or ADVANCED or WHITESPACE_ONLY
+        optimizationLevel: "SIMPLE",
     ]
     excludes = [
-            'webjars/**', // We provide our own external libraries
+        'webjars/**', // We provide our own external libraries
     ]
 }

@@ -14,10 +14,10 @@
  */
 package goowee.elements.pages
 
-import goowee.elements.core.Component
 import goowee.elements.components.Button
 import goowee.elements.components.Image
 import goowee.elements.components.Link
+import goowee.elements.core.Component
 import groovy.contracts.Requires
 import groovy.transform.CompileStatic
 
@@ -40,24 +40,24 @@ class ShellNavbar extends Component {
 
         shell = args.shell as Shell
         home = (Button) createComponent(
-                class: Button,
-                id: 'home',
-                controller: 'shell',
-                icon: 'fa-solid fa-home',
-                text: '',
-                tooltip: 'shell.home.menu',
-                animate: 'fade',
+            class: Button,
+            id: 'home',
+            controller: 'shell',
+            icon: 'fa-solid fa-home',
+            text: '',
+            tooltip: 'shell.home.menu',
+            animate: 'fade',
         )
         logo = (Link) createComponent(
-                class: Link,
-                id: 'logo',
-                controller: 'shell',
-                animate: 'fade',
+            class: Link,
+            id: 'logo',
+            controller: 'shell',
+            animate: 'fade',
         )
         logo.addComponent(
-                class: Image,
-                id: 'logoImg',
-                image: shell.config.display.logo,
+            class: Image,
+            id: 'logoImg',
+            image: shell.config.display.logo,
         )
     }
 }

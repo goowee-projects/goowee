@@ -4,14 +4,14 @@ plugins {
 
 asciidoctor {
     attributes = [
-            "application-name"  : projectName,
-            "revnumber"         : projectVersion,
-            "version-java"      : javaVersion,
-            "version-grails"    : grailsVersion,
-            "source-highlighter": "coderay",
-            "icons"             : "font",
-            "toc"               : "left",
-            "toclevels"         : 2,
+        "application-name"  : projectName,
+        "revnumber"         : projectVersion,
+        "version-java"      : javaVersion,
+        "version-grails"    : grailsVersion,
+        "source-highlighter": "coderay",
+        "icons"             : "font",
+        "toc"               : "left",
+        "toclevels"         : 2,
     ]
 
     baseDirFollowsSourceDir()

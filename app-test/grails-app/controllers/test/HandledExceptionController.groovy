@@ -15,11 +15,11 @@
 package test
 
 import goowee.elements.ElementsController
+import goowee.elements.ElementsException
 import goowee.elements.components.Button
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.TextField
 import goowee.elements.style.TextDefault
-import goowee.elements.ElementsException
 import groovy.util.logging.Slf4j
 
 @Slf4j
@@ -39,32 +39,32 @@ class HandledExceptionController implements ElementsController {
         c.form.with {
             validate = HandleExceptionValidator
             addField(
-                    class: Button,
-                    id: 'e1',
-                    action: 'onExceptionMessage',
-                    cols: 12,
+                class: Button,
+                id: 'e1',
+                action: 'onExceptionMessage',
+                cols: 12,
             )
 
             addField(
-                    class: TextField,
-                    id: 'text',
-                    label: TextDefault.FIND,
-                    placeholder: "Don't write",
-                    cols: 8,
+                class: TextField,
+                id: 'text',
+                label: TextDefault.FIND,
+                placeholder: "Don't write",
+                cols: 8,
             )
             addField(
-                    class: Button,
-                    id: 'e2',
-                    action: 'onExceptionError',
-                    submit: 'form',
-                    cols: 4,
+                class: Button,
+                id: 'e2',
+                action: 'onExceptionError',
+                submit: 'form',
+                cols: 4,
             )
             addField(
-                    class: Button,
-                    id: 'e3',
-                    action: 'onExceptionOutputStream',
-                    submit: 'form',
-                    cols: 4,
+                class: Button,
+                id: 'e3',
+                action: 'onExceptionOutputStream',
+                submit: 'form',
+                cols: 4,
             )
         }
 
@@ -87,7 +87,7 @@ class HandledExceptionController implements ElementsController {
     }
 
     def onExceptionOutputStream() {
-        def image =  linkPublicResource("images/acerola_small.png")
+        def image = linkPublicResource("images/acerola_small.png")
         def os = getDownloadOutputStream(image)
         os.flush()
         throw new Exception("There is a problem here...")

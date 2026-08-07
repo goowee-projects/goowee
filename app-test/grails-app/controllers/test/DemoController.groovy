@@ -26,17 +26,17 @@ class DemoController implements ElementsController {
         c.header.text = "Shopping cart"
 
         c.table.columns = [
-                'product',
-                'quantity',
-                'price',
+            'product',
+            'quantity',
+            'price',
         ]
 
         c.table.body = [
-                ['Pasta', 1, new Money(2.3)],
-                ['Nutella', 2, new Money(4)],
-                ['Milk', 6, new Money(8)],
-                ['Coffee', 1, new Money(3.4)],
-                ['Potatoes', 5, new Money(7)],
+            ['Pasta', 1, new Money(2.3)],
+            ['Nutella', 2, new Money(4)],
+            ['Milk', 6, new Money(8)],
+            ['Coffee', 1, new Money(3.4)],
+            ['Potatoes', 5, new Money(7)],
         ]
 
         display content: c

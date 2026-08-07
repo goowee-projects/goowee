@@ -39,7 +39,7 @@ import java.time.LocalTime
  * <ul>
  *     <li>{@link Boolean} → {@link Type#BOOL}</li>
  *     <li>{@link Number} → {@link Type#NUMBER}</li>
- *     <li>{@link String} / {@link Enum} → {@link Type#TEXT}</li>
+ *     <li>{@link String} / {@link Enum} → {@link Type#STRING}</li>
  *     <li>{@link Map} → {@link Type#MAP}</li>
  *     <li>{@link java.util.List} → {@link Type#LIST}</li>
  *     <li>{@link java.time.LocalDateTime} → {@link Type#DATETIME}</li>
@@ -154,8 +154,8 @@ class Types {
      * @return a list of strings in the form {@code "TYPE_NAME (fully.qualified.ClassName)"}
      */
     static List<String> getAvailableTypeNames() {
-        List primitiveTypes = Type.values().collect {"${it.name()} (${it.clazz?.name})" }
-        List customTypes = registry.collect { "${it.key} (${it.value.name})"}
+        List primitiveTypes = Type.values().collect { "${it.name()} (${it.clazz?.name})" }
+        List customTypes = registry.collect { "${it.key} (${it.value.name})" }
         return (primitiveTypes + customTypes) as List<String>
     }
 
@@ -177,7 +177,7 @@ class Types {
      * to the runtime type of {@code value}.
      * <ul>
      *     <li>{@code null} → {@link Type#NA}</li>
-     *     <li>{@link Enum} → {@link Type#TEXT}</li>
+     *     <li>{@link Enum} → {@link Type#STRING}</li>
      *     <li>Registered {@link CustomType} → the value of its {@code TYPE_NAME} field</li>
      * </ul>
      *
@@ -191,7 +191,7 @@ class Types {
         }
 
         if (value in Enum) {
-            return Type.TEXT
+            return Type.STRING
         }
 
         if (isRegistered(value)) {
@@ -206,7 +206,7 @@ class Types {
                 return Type.NUMBER
 
             case String:
-                return Type.TEXT
+                return Type.STRING
 
             case Map:
                 return Type.MAP
@@ -224,7 +224,7 @@ class Types {
                 return Type.TIME
 
             case Enum:
-                return Type.TEXT
+                return Type.STRING
 
             default:
                 throw new ElementsException("Object of class '${value.getClass()}' cannot be identified as one of the available types: ${availableTypeNames}.")
@@ -242,7 +242,7 @@ class Types {
      *     <li>All other known types are wrapped as-is.</li>
      * </ul>
      *
-     * @param value     the object to serialise; may be {@code null}
+     * @param value the object to serialise; may be {@code null}
      * @param valueType optional type override used only when {@code value} is {@code null}
      *                  or falls through to the {@code default} branch
      * @return a map with {@code type} and {@code value} keys
@@ -250,8 +250,8 @@ class Types {
     static Map serializeValue(Object value, String valueType = null) {
         if (value == null) {
             return [
-                    type: valueType ?: Type.NA.toString(),
-                    value: value,
+                type : valueType ?: Type.NA.toString(),
+                value: value,
             ]
         }
 
@@ -263,75 +263,75 @@ class Types {
         switch (value) {
             case Boolean:
                 return [
-                        type : Type.BOOL.toString(),
-                        value: value,
+                    type : Type.BOOL.toString(),
+                    value: value,
                 ]
 
             case Number:
                 return [
-                        type : Type.NUMBER.toString(),
-                        value: value,
+                    type : Type.NUMBER.toString(),
+                    value: value,
                 ]
 
             case String:
                 return [
-                        type : Type.TEXT.toString(),
-                        value: value,
+                    type : Type.STRING.toString(),
+                    value: value,
                 ]
 
             case Map:
                 return [
-                        type : Type.MAP.toString(),
-                        value: value,
+                    type : Type.MAP.toString(),
+                    value: value,
                 ]
 
             case List:
                 return [
-                        type : Type.LIST.toString(),
-                        value: value,
+                    type : Type.LIST.toString(),
+                    value: value,
                 ]
 
             case LocalDateTime:
                 return [
-                        type : Type.DATETIME.toString(),
-                        value: [
-                                year  : (value as LocalDateTime).year,
-                                month : (value as LocalDateTime).monthValue,
-                                day   : (value as LocalDateTime).dayOfMonth,
-                                hour  : (value as LocalDateTime).hour,
-                                minute: (value as LocalDateTime).minute,
-                        ]
+                    type : Type.DATETIME.toString(),
+                    value: [
+                        year  : (value as LocalDateTime).year,
+                        month : (value as LocalDateTime).monthValue,
+                        day   : (value as LocalDateTime).dayOfMonth,
+                        hour  : (value as LocalDateTime).hour,
+                        minute: (value as LocalDateTime).minute,
+                    ]
                 ]
 
             case LocalDate:
                 return [
-                        type : Type.DATE.toString(),
-                        value: [
-                                year : (value as LocalDate).year,
-                                month: (value as LocalDate).monthValue,
-                                day  : (value as LocalDate).dayOfMonth,
-                        ]
+                    type : Type.DATE.toString(),
+                    value: [
+                        year : (value as LocalDate).year,
+                        month: (value as LocalDate).monthValue,
+                        day  : (value as LocalDate).dayOfMonth,
+                    ]
                 ]
 
             case LocalTime:
                 return [
-                        type : Type.TIME.toString(),
-                        value: [
-                                hour  : (value as LocalTime).hour,
-                                minute: (value as LocalTime).minute,
-                        ]
+                    type : Type.TIME.toString(),
+                    value: [
+                        hour  : (value as LocalTime).hour,
+                        minute: (value as LocalTime).minute,
+                    ]
                 ]
 
             case Enum:
                 return [
-                        type: Type.TEXT.toString(),
-                        value: (value as Enum).name(),
+                    type : Type.STRING.toString(),
+                    value: (value as Enum).name(),
                 ]
 
             default:
                 return [
-                        type: valueType ?: Type.NA.toString(),
-                        value: value,
+                    type : valueType ?: Type.NA.toString(),
+                    value: value,
                 ]
         }
     }
@@ -376,49 +376,56 @@ class Types {
             return value
         }
 
-        Map valueMap = value as Map
+        Map map = value as Map
+        Type mapType = map.type as Type
+        Object mapValue = map.value
+
+        if (mapValue == null) {
+            return null
+        }
+
         try {
-            switch (valueMap.type) {
-                case Type.BOOL.toString():
-                    return deserializeBoolean(valueMap)
+            switch (mapType) {
+                case Type.BOOL:
+                    return deserializeBoolean(map)
 
-                case Type.NUMBER.toString():
-                    return deserializeNumber(valueMap)
+                case Type.NUMBER:
+                    return deserializeNumber(map)
 
-                case Type.TEXT.toString():
-                    return deserializeString(valueMap)
+                case Type.STRING:
+                    return deserializeString(map)
 
-                case Type.MAP.toString():
-                    return deserializeMap(valueMap)
+                case Type.MAP:
+                    return deserializeMap(map)
 
-                case Type.LIST.toString():
-                    return deserializeList(valueMap)
+                case Type.LIST:
+                    return deserializeList(map)
 
-                case Type.DATETIME.toString():
-                    return deserializeLocalDateTime(valueMap)
+                case Type.DATETIME:
+                    return deserializeLocalDateTime(map)
 
-                case Type.DATE.toString():
-                    return deserializeLocalDate(valueMap)
+                case Type.DATE:
+                    return deserializeLocalDate(map)
 
-                case Type.TIME.toString():
-                    return deserializeLocalTime(valueMap)
+                case Type.TIME:
+                    return deserializeLocalTime(map)
 
-                case Type.NA.toString():
-                    return valueMap.value
+                case Type.NA:
+                    return mapValue
 
                 default:
                     try {
-                        CustomType customTypeValue = create(valueMap.type as String)
-                        customTypeValue.deserialize(valueMap)
+                        CustomType customTypeValue = create(mapType.name())
+                        customTypeValue.deserialize(map)
                         return customTypeValue
 
                     } catch (Exception ignore) {
-                        return valueMap.value
+                        return mapValue
                     }
             }
 
         } catch (Exception e) {
-            log.error "Error deserializing '${valueMap}': ${e.message}"
+            log.error "Error deserializing '${map}': ${e.message}"
             return null
         }
     }
@@ -450,7 +457,7 @@ class Types {
     /**
      * Extracts a {@link String} from a typed-value map.
      *
-     * @param valueMap the typed-value map with type {@link Type#TEXT}
+     * @param valueMap the typed-value map with type {@link Type#STRING}
      * @return the deserialised {@link String}
      */
     static String deserializeString(Map valueMap) {
@@ -468,7 +475,7 @@ class Types {
             return [:]
         }
 
-        return deserialize(valueMap.value as Map)?: [:]
+        return deserialize(valueMap.value as Map) ?: [:]
     }
 
     /**
@@ -496,7 +503,7 @@ class Types {
      * Parses a string representation of a decimal number and returns it as a
      * {@link BigDecimal} with the requested scale (defaulting to 2 decimal places).
      *
-     * @param value    the string to parse
+     * @param value the string to parse
      * @param decimals the number of decimal places for scaling; defaults to {@code 2} if {@code null}
      * @return the parsed {@link BigDecimal}, or {@code null} if parsing fails
      */

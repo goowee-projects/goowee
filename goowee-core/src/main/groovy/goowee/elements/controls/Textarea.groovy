@@ -19,7 +19,7 @@ import goowee.types.Type
 import groovy.transform.CompileStatic
 
 /**
- * A multi-line text-input control backed by {@link goowee.types.Type#TEXT}.
+ * A multi-line text-input control backed by {@link goowee.types.Type#STRING}.
  * <p>
  * Extends {@link TextField} with multi-line rendering, optional newline acceptance, and
  * optional Base64 encoding of the submitted value. When {@link #encode} is {@code true},
@@ -41,19 +41,19 @@ class Textarea extends TextField {
 
     /**
      * Creates a {@code Textarea} instance configured from the supplied argument map.
-     * Sets the value type to {@link goowee.types.Type#TEXT}, disables auto-select by default,
+     * Sets the value type to {@link goowee.types.Type#STRING}, disables auto-select by default,
      * and marks the container as multi-line.
      *
      * @param args initialisation arguments; recognised keys include:
-     *             {@code autoSelect} ({@link Boolean}, default {@code false}),
-     *             {@code acceptNewLine} ({@link Boolean}, default {@code true}),
-     *             {@code encode} ({@link Boolean}, default {@code false}),
+     * {@code autoSelect} ({@link Boolean}, default {@code false}),
+     * {@code acceptNewLine} ({@link Boolean}, default {@code true}),
+     * {@code encode} ({@link Boolean}, default {@code false}),
      *             plus all keys accepted by {@link TextField#TextField(Map)}
      */
     Textarea(Map args) {
         super(args)
 
-        valueType = Type.TEXT
+        valueType = Type.STRING
         autoSelect = args.autoSelect == null ? false : args.autoSelect
         acceptNewLine = args.acceptNewLine == null ? true : args.acceptNewLine
         encode = args.encode == null ? false : args.encode
@@ -71,9 +71,9 @@ class Textarea extends TextField {
     @Override
     String getPropertiesAsJSON(Map properties = [:]) {
         Map thisProperties = [
-                autoSelect: autoSelect,
-                acceptNewLine: acceptNewLine,
-                encode: encode,
+            autoSelect   : autoSelect,
+            acceptNewLine: acceptNewLine,
+            encode       : encode,
         ]
         return super.getPropertiesAsJSON(thisProperties + properties)
     }

@@ -14,6 +14,7 @@
  */
 package goowee.elements.controls
 
+import goowee.commons.utils.ObjectUtils
 import goowee.elements.core.Control
 import goowee.types.Type
 import goowee.types.Types
@@ -26,7 +27,7 @@ import groovy.transform.CompileStatic
  * {@code HiddenField} is used internally by {@link goowee.elements.components.Form#addKeyField}
  * to transmit primary-key and surrogate-key values. The value type is inferred from the
  * supplied value via {@link Types#serializeValue(Object)} when not specified explicitly, and
- * defaults to {@link Type#TEXT} when no value is present.
+ * defaults to {@link Type#STRING} when no value is present.
  * </p>
  *
  * @author Gianluca Sartori
@@ -39,19 +40,37 @@ class HiddenField extends Control {
      * The field is hidden from both the UI and the form layout.
      *
      * @param args initialisation arguments; recognised keys include:
-     *             {@code value} — the value to carry (type is auto-detected if not specified),
-     *             {@code valueType} ({@link String} or {@link Type}) — explicit type override,
+     * {@code value} — the value to carry (type is auto-detected if not specified),
+     * {@code valueType} ({@link String} or {@link Type}) — explicit type override,
      *             plus all keys accepted by {@link Control#Control(Map)}
      */
     HiddenField(Map args) {
         super(args)
 
         Map value = Types.serializeValue(args.value)
-        valueType = args.valueType ?: value?.type ?: Type.TEXT
+        valueType = args.valueType ?: value?.type ?: Type.STRING
 
         skipFocus = true
         display = false
         containerSpecs.display = false
+    }
+
+    /**
+     * Sets the selected value(s) for this control.
+     * <ul>
+     *   <li>A single object with an {@code id} property is unwrapped to its ID.</li>
+     *   <li>All other values are passed directly to the superclass.</li>
+     * </ul>
+     *
+     * @param value the value to select; accepts {@code null}, a scalar, or a {@link Collection}
+     */
+    @Override
+    void setValue(Object value) {
+        if (ObjectUtils.hasId(value)) {
+            super.setValue(value['id'])
+        } else {
+            super.setValue(value)
+        }
     }
 
 }

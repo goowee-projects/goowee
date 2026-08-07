@@ -14,7 +14,6 @@
  */
 package goowee.elements
 
-
 import goowee.tenant.TenantPropertyService
 import goowee.utils.EnvUtils
 

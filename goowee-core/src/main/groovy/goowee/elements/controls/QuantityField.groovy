@@ -14,9 +14,9 @@
  */
 package goowee.elements.controls
 
-import goowee.elements.core.PrettyPrinterProperties
-import goowee.elements.core.Elements
 import goowee.elements.ElementsException
+import goowee.elements.core.Elements
+import goowee.elements.core.PrettyPrinterProperties
 import goowee.types.Quantity
 import goowee.types.QuantityUnit
 import groovy.transform.CompileStatic
@@ -47,10 +47,10 @@ class QuantityField extends NumberField {
      * Sets the view template, value type, decimal places, negative-value flag, and available units.
      *
      * @param args initialisation arguments; recognised keys include:
-     *             {@code decimals} ({@link Integer}, default {@code 2}),
-     *             {@code negative} ({@link Boolean}, default {@code false}),
-     *             {@code availableUnits} ({@link List} of {@link QuantityUnit}),
-     *             {@code defaultUnit} ({@link QuantityUnit}),
+     * {@code decimals} ({@link Integer}, default {@code 2}),
+     * {@code negative} ({@link Boolean}, default {@code false}),
+     * {@code availableUnits} ({@link List} of {@link QuantityUnit}),
+     * {@code defaultUnit} ({@link QuantityUnit}),
      *             plus all keys accepted by {@link NumberField#NumberField(Map)}
      */
     QuantityField(Map args) {
@@ -153,12 +153,12 @@ class QuantityField extends NumberField {
     @Override
     String getValueAsJSON() {
         Map valueMap = [
-                type: valueType,
-                value: [
-                        amount: (value as Quantity)?.amount,
-                        unit: (value as Quantity)?.unit as String,
-                        decimals: decimals,
-                ]
+            type : valueType,
+            value: [
+                amount  : (value as Quantity)?.amount,
+                unit    : (value as Quantity)?.unit as String,
+                decimals: decimals,
+            ]
         ]
 
         return Elements.encodeAsJSON(valueMap)

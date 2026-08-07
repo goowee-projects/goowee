@@ -7,9 +7,9 @@
    width="940"
    height="430"
    viewBox="0 0 939.99998 430"
-   sodipodi:docname="login-logo.svg"
+   sodipodi:docname="goowee-logo.svg"
    inkscape:version="1.4.2 (ebf0e940, 2025-05-08)"
-   inkscape:export-filename="../main/resources/brand/login-logo.png"
+   inkscape:export-filename="/Users/sartori/IdeaProjects/dueuno-elements-release/dueuno.com/images/dueuno-logo.png"
    inkscape:export-xdpi="96"
    inkscape:export-ydpi="96"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
@@ -772,21 +772,21 @@
      inkscape:deskcolor="#d1d1d1"
      showgrid="false"
      inkscape:zoom="0.71743565"
-     inkscape:cx="470.42547"
-     inkscape:cy="259.95363"
-     inkscape:window-width="1424"
+     inkscape:cx="443.94225"
+     inkscape:cy="211.16876"
+     inkscape:window-width="1512"
      inkscape:window-height="842"
      inkscape:window-x="0"
      inkscape:window-y="34"
      inkscape:window-maximized="0"
-     inkscape:current-layer="g26098">
+     inkscape:current-layer="g1">
     <inkscape:page
        x="0"
        y="0"
        id="page26096"
        width="940"
        height="430"
-       inkscape:export-filename="../main/resources/brand/login-logo.png"
+       inkscape:export-filename="../src/main/resources/deploy/public/brand/login-logo.png"
        inkscape:export-xdpi="156.28"
        inkscape:export-ydpi="156.28"
        margin="0"
@@ -797,37 +797,95 @@
      inkscape:groupmode="layer"
      inkscape:label="Page 1"
      transform="matrix(1.3333333,0,0,-1.3333333,0,793.70133)">
+    <text
+       xml:space="preserve"
+       transform="matrix(0.75000002,0,0,-0.75000002,0,595.27601)"
+       id="text29114"
+       style="font-family:Lobster;-inkscape-font-specification:Lobster;white-space:pre;shape-inside:url(#rect29116);display:inline;fill:#ffffff;fill-opacity:0.284974;stroke:none;stroke-width:1.88976" />
+    <text
+       xml:space="preserve"
+       transform="matrix(0.75000002,0,0,-0.75000002,0,595.27601)"
+       id="text29157"
+       style="font-family:Lobster;-inkscape-font-specification:Lobster;white-space:pre;shape-inside:url(#rect29159);display:inline;fill:#ffffff;fill-opacity:0.284974;stroke:none;stroke-width:1.88976" />
+    <rect
+       style="fill:none;fill-opacity:1;stroke-width:1.875;stroke-linecap:square"
+       id="rect2212"
+       width="283.8537"
+       height="147.84047"
+       x="73.181038"
+       y="324.88501"
+       transform="scale(1,-1)"
+       inkscape:export-filename="../../../../../../../DueunoProjects/dartmaster/src/main/resources/deploy/public/brand/login-logo.png"
+       inkscape:export-xdpi="152.19109"
+       inkscape:export-ydpi="152.19109" />
     <g
-       id="g1">
-      <path
-         id="rect1"
-         style="fill:#255aa8;stroke-width:12"
-         d="M 201.90496,443.47247 H 501.6425 l 135,-48.08793 H 66.904953 Z"
-         sodipodi:nodetypes="ccccc" />
+       id="g8289"
+       transform="translate(-68.44496,146.67926)"
+       inkscape:export-filename="../src/main/resources/deploy/public/brand/logo.png"
+       inkscape:export-xdpi="150.84"
+       inkscape:export-ydpi="150.84">
       <g
-         id="g5878"
-         transform="matrix(3.1411974,0,0,3.1411974,-444.49931,937.73363)"
-         style="stroke:#ffffff;stroke-width:3.58144;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
-         inkscape:export-filename="logo.png"
-         inkscape:export-xdpi="130"
-         inkscape:export-ydpi="130">
+         id="g1"
+         inkscape:export-filename="../main/resources/deploy/public/brand/logo.png"
+         inkscape:export-xdpi="96"
+         inkscape:export-ydpi="96">
         <g
            id="g5876"
-           style="stroke:#ffffff;stroke-width:3.58144;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers">
+           style="stroke:#ffffff;stroke-width:2.7794;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+           transform="matrix(4.3174729,0,0,4.3174729,-677.09403,914.15907)">
           <text
              xml:space="preserve"
-             style="font-size:35.1992px;line-height:285.3;font-family:Anton;-inkscape-font-specification:Anton;text-align:center;text-anchor:middle;fill:#1a1a1a;stroke:#ffffff;stroke-width:4.09586;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
-             x="253.72224"
-             y="164.11639"
+             style="font-size:30.7784px;line-height:285.3;font-family:Anton;-inkscape-font-specification:Anton;text-align:center;text-anchor:middle;fill:#1a1a1a;stroke:#ffffff;stroke-width:2.7794;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+             x="254.52451"
+             y="163.48201"
              id="text5874"
              transform="scale(1,-1)"><tspan
                sodipodi:role="line"
                id="tspan5872"
-               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Lobster;-inkscape-font-specification:Lobster;fill:#1a1a1a;stroke:#ffffff;stroke-width:4.09586;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
-               x="253.72224"
-               y="164.11639">appname</tspan></text>
+               style="font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;font-family:Lobster;-inkscape-font-specification:Lobster;fill:#1a1a1a;stroke:#ffffff;stroke-width:2.7794;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+               x="254.52451"
+               y="163.48201">goowee</tspan></text>
+        </g>
+        <rect
+           style="fill:#255aa8;fill-opacity:1;stroke:#ffffff;stroke-width:8.68435;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+           id="rect1981-7-9"
+           width="103.81566"
+           height="118.81565"
+           x="-401.24261"
+           y="-480.35281"
+           rx="14.635457"
+           ry="59.407825"
+           transform="matrix(0,-1,-1,0,0,0)" />
+        <g
+           id="g3-6"
+           transform="translate(2.46494,10.114889)">
+          <rect
+             style="fill:#ffffff;stroke:none;stroke-width:7.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+             id="rect1981-71"
+             width="21.185846"
+             height="45.63105"
+             x="394.07159"
+             y="-366.53543"
+             rx="0"
+             ry="10.592923"
+             transform="scale(1,-1)" />
+          <rect
+             style="fill:#ffffff;stroke:none;stroke-width:7.5;stroke-linecap:square;stroke-dasharray:none;stroke-opacity:1;paint-order:stroke fill markers"
+             id="rect1981-7-8"
+             width="21.185846"
+             height="45.63105"
+             x="439.70264"
+             y="-366.53543"
+             rx="0"
+             ry="10.592923"
+             transform="scale(1,-1)" />
         </g>
       </g>
     </g>
+    <text
+       xml:space="preserve"
+       transform="matrix(0.75000002,0,0,-0.75000002,0,595.27601)"
+       id="text1414"
+       style="font-size:53.3333px;line-height:285.3;font-family:'Arial Black';-inkscape-font-specification:'Arial Black, ';text-align:center;white-space:pre;shape-inside:url(#rect1416);display:inline;fill:#3b5a9c;stroke:#ffffff;stroke-width:15;stroke-linecap:square;paint-order:stroke fill markers" />
   </g>
 </svg>

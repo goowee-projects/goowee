@@ -49,7 +49,7 @@ import java.security.SecureRandom
  *
  * // Decrypt the message
  * String decrypted = CryptoUtils.decrypt(encrypted, loadedKey, "myAAD")
- * }</pre>
+ *}</pre>
  */
 @Slf4j
 @CompileStatic
@@ -68,7 +68,7 @@ class CryptoUtils {
      * <p>Usage example:</p>
      * <pre>{@code
      * byte[] key = CryptoUtils.generateAESKey(32)
-     * }</pre>
+     *}</pre>
      */
     static byte[] generateAESKey(int bytes = 32) {
         byte[] key = new byte[bytes]
@@ -88,7 +88,7 @@ class CryptoUtils {
      * <pre>{@code
      * byte[] key = CryptoUtils.generateAESKey()
      * CryptoUtils.saveAESKey(key, "secret.key")
-     * }</pre>
+     *}</pre>
      */
     static void saveAESKey(byte[] password, String pathname) {
         Path path = Paths.get(pathname)
@@ -101,8 +101,8 @@ class CryptoUtils {
 
         try {
             Set<PosixFilePermission> perms = [
-                    PosixFilePermission.OWNER_READ,
-                    PosixFilePermission.OWNER_WRITE
+                PosixFilePermission.OWNER_READ,
+                PosixFilePermission.OWNER_WRITE
             ] as Set
             Files.setPosixFilePermissions(path, perms)
 
@@ -120,7 +120,7 @@ class CryptoUtils {
      * <p>Usage example:</p>
      * <pre>{@code
      * byte[] key = CryptoUtils.loadAESKey("secret.key")
-     * }</pre>
+     *}</pre>
      */
     static byte[] loadAESKey(String pathname) {
         try {
@@ -147,7 +147,7 @@ class CryptoUtils {
      * <p>Usage example:</p>
      * <pre>{@code
      * String encrypted = CryptoUtils.encrypt("Hello world", key, "myAAD")
-     * }</pre>
+     *}</pre>
      */
     static String encrypt(String value, byte[] symmetricKey, String aad = null) {
         if (!value) return ''
@@ -186,7 +186,7 @@ class CryptoUtils {
      * <p>Usage example:</p>
      * <pre>{@code
      * String decrypted = CryptoUtils.decrypt(encrypted, key, "myAAD")
-     * }</pre>
+     *}</pre>
      */
     static String decrypt(String encryptedValue, byte[] symmetricKey, String aad = null) {
         if (!encryptedValue) return ''

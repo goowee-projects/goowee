@@ -15,12 +15,12 @@
 package goowee.application
 
 import goowee.commons.utils.FileUtils
+import goowee.elements.ElementsException
+import goowee.elements.LinkGeneratorAware
 import goowee.elements.core.Elements
 import goowee.elements.core.Feature
-import goowee.elements.LinkGeneratorAware
 import goowee.elements.core.PrettyPrinter
 import goowee.elements.core.Transformer
-import goowee.elements.ElementsException
 import goowee.tenant.TenantService
 import goowee.utils.EnvUtils
 import goowee.utils.LocaleUtils
@@ -375,10 +375,10 @@ class ApplicationService implements LinkGeneratorAware {
             }
 
             new TApplicationInstall(
-                    plugin: pluginName,
-                    revision: revisionName,
-                    tenantId: tenantId,
-                    dev: isDev,
+                plugin: pluginName,
+                revision: revisionName,
+                tenantId: tenantId,
+                dev: isDev,
             ).save(flush: true, failOnError: true)
 
             log.info "...done."
@@ -483,11 +483,11 @@ class ApplicationService implements LinkGeneratorAware {
     private void registerUserMenuLanguages() {
         for (language in languages) {
             registerUserFeature(
-                    text: 'default.language.' + language,
-                    image: 'libs/flags/' + LocaleUtils.getFlagCode(language) + '.svg',
-                    controller: 'shell',
-                    action: 'switchLanguage',
-                    params: [id: language],
+                text: 'default.language.' + language,
+                image: 'libs/flags/' + LocaleUtils.getFlagCode(language) + '.svg',
+                controller: 'shell',
+                action: 'switchLanguage',
+                params: [id: language],
             )
         }
 
@@ -500,10 +500,10 @@ class ApplicationService implements LinkGeneratorAware {
         }
 
         registerUserFeature(
-                text: 'shell.user.menu.credits',
-                icon: 'fa-circle-info',
-                controller: 'shell',
-                action: 'credits',
+            text: 'shell.user.menu.credits',
+            icon: 'fa-circle-info',
+            controller: 'shell',
+            action: 'credits',
         )
 
         registerUserFeature()

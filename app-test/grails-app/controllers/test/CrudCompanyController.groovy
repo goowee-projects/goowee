@@ -25,12 +25,12 @@ class CrudCompanyController implements ElementsController {
         c.with {
             table.with {
                 sortable = [
-                        name: 'asc',
+                    name: 'asc',
                 ]
                 columns = [
-                        'dateCreated',
-                        'name',
-                        'employees',
+                    'dateCreated',
+                    'name',
+                    'employees',
                 ]
 
                 body.eachRow { TableRow row, Map values ->

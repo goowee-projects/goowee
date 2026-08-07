@@ -16,9 +16,9 @@ package goowee.application
 
 import goowee.elements.PageService
 import goowee.elements.pages.ShellService
-import goowee.tenant.TenantPropertyService
 import goowee.security.CryptoService
 import goowee.security.SecurityService
+import goowee.tenant.TenantPropertyService
 import goowee.types.Money
 import goowee.types.Quantity
 import goowee.types.Types

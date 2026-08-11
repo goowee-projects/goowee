@@ -16,11 +16,11 @@ class Transition {
         Transition.wsSubscribe(wsClient, "/queue/username/" + username);
 
         $.ajax({url: _21_.app.url + "transition/channels"})
-        .done(function(channels) {
-            for (let channel of channels) {
-                Transition.wsSubscribe(wsClient, "/queue/channel/" + channel);
-            }
-        });
+            .done(function(channels) {
+                for (let channel of channels) {
+                    Transition.wsSubscribe(wsClient, "/queue/channel/" + channel);
+                }
+            });
     }
 
     static wsOnError(frame) {
@@ -41,7 +41,7 @@ class Transition {
         };
 
         log.debug('');
-        log.debug('>>> WEB SOCKET');
+        log.debug('%c>>> WEB SOCKET', 'font-weight: bold');
         Transition.log(transition);
 
         for (let command of transition.commands) {
@@ -51,7 +51,7 @@ class Transition {
 
     static execute(transition, componentEvent) {
         log.debug('');
-        log.debug('<<< RESPONSE /' + componentEvent.controller + '/' + componentEvent.action);
+        log.debug('%c<<< RESPONSE /' + componentEvent.controller + '/' + componentEvent.action, 'font-weight: bold');
         Transition.log(transition);
 
         if (!transition.commands) {
@@ -85,7 +85,7 @@ class Transition {
                 TransitionCommand.redirect(valueMap.value);
                 break;
 
-            case TransitionCommand.CONTENT:
+            case TransitionCommand.RENDER_CONTENT:
                 TransitionCommand.renderContent($components, componentEvent);
                 break;
 
@@ -302,7 +302,8 @@ class Transition {
 
     static call(url, values, componentEvent, async, silentFail) {
         log.debug('');
-        log.debug('>>> REQUEST ' + url);
+        log.debug('%c>>> REQUEST ' + url, 'font-weight: bold');
+        log.debug('VALUES:');
         log.debug(JSON.stringify(JSON.parse(values._21Params), null, 2));
 
         Transition.ajaxCall(url, values, componentEvent, async, silentFail);
@@ -384,13 +385,21 @@ class Transition {
     }
 
     static log(transition) {
-        let commands = JSON.stringify(transition.commands, null, 2)
-        log.debug(commands);
+        if (!_21_.log?.debug) {
+            return;
+        }
+
         let hasComponents = transition.$components && transition.$components.children().length;
         if (hasComponents) {
+            log.debug('COMPONENTS:');
             for (let element of transition.$components.children().children()) {
-                log.debug(element);
+                log.debug(element.cloneNode(true));
             }
         }
+
+        let commands = JSON.stringify(transition.commands, null, 2)
+        log.debug('COMMANDS:');
+        log.debug(commands);
     }
+
 }

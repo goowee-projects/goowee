@@ -106,11 +106,4 @@ class Control extends Component {
         if ($formField) FormField.setReadonly($formField, value);
     }
 
-    static setFocus($element, value) {
-        if (value) {
-            $element[0].select();
-        } else {
-            document.activeElement.blur();
-        }
-    }
 }

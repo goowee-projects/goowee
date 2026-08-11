@@ -3,7 +3,7 @@ class TransitionCommand {
     // Temporary solutions until we get support for static fields
     // See: https://github.com/google/closure-compiler/issues/2731
     static get REDIRECT() { return 'REDIRECT' }
-    static get CONTENT() { return 'CONTENT' }
+    static get RENDER_CONTENT() { return 'RENDER_CONTENT' }
     static get APPEND() { return 'APPEND' }
     static get REPLACE() { return 'REPLACE' }
     static get REMOVE() { return 'REMOVE' }
@@ -222,13 +222,14 @@ class TransitionCommand {
             case 'fade':
                 $prevElement.addClass('fade-out');
                 $nextElement.addClass('fade-in');
-            break;
+                break;
 
             case 'back':
-            break;
+                break;
 
             case 'next':
-            break;
+                break;
         }
     }
+
 }

@@ -96,6 +96,6 @@ class CompanyService {
     @Transactional
     void delete(Serializable id) {
         TCompany obj = get(id)
-        obj.delete(flush: true, failOnError: true)
+        obj.delete(flush: true)
     }
 }

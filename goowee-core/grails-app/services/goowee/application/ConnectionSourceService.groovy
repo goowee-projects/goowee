@@ -199,6 +199,6 @@ class ConnectionSourceService {
 
     void delete(Serializable id) {
         TConnectionSource obj = get(id)
-        obj.delete(flush: true, failOnError: true)
+        obj.delete(flush: true)
     }
 }

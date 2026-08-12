@@ -15,9 +15,9 @@
 package goowee
 
 import goowee.application.SessionInitializer
-import goowee.security.CustomUserDetailsService
-import goowee.security.ExternalIdAuthenticationFilter
-import goowee.security.ExternalIdAuthenticationProvider
+import goowee.security.PhysicalIdAuthenticationFilter
+import goowee.security.PhysicalIdAuthenticationProvider
+import goowee.security.PhysicalUserDetailsService
 import goowee.tenant.TenantForCurrentUserResolver
 import grails.plugin.springsecurity.SpringSecurityUtils
 import grails.plugins.Plugin
@@ -77,16 +77,16 @@ class GooweeGrailsPlugin extends Plugin {
             tenantForCurrentUserResolver(TenantForCurrentUserResolver)
             sessionInitializer(SessionInitializer)
 
-            customUserDetailsService(CustomUserDetailsService) {
+            physicalUserDetailsService(PhysicalUserDetailsService) {
                 grailsApplication = ref('grailsApplication')
             }
 
-            externalIdAuthenticationProvider(ExternalIdAuthenticationProvider) {
-                customUserDetailsService = ref('customUserDetailsService')
+            physicalIdAuthenticationProvider(PhysicalIdAuthenticationProvider) {
+                physicalUserDetailsService = ref('physicalUserDetailsService')
             }
 
             ConfigObject conf = SpringSecurityUtils.securityConfig
-            externalIdAuthenticationFilter(ExternalIdAuthenticationFilter, conf.externalId.filterProcessesUrl) {
+            physicalIdAuthenticationFilter(PhysicalIdAuthenticationFilter, conf.physicalId.filterProcessesUrl) {
                 authenticationManager = ref('authenticationManager')
                 authenticationSuccessHandler = ref('authenticationSuccessHandler')
                 authenticationFailureHandler = ref('authenticationFailureHandler')

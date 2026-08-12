@@ -14,7 +14,6 @@
  */
 package goowee.security
 
-
 import goowee.application.ApplicationService
 import goowee.commons.utils.StringUtils
 import goowee.elements.ElementsException
@@ -177,6 +176,10 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
             controller: 'connectionSource',
             icon: 'fa-plug',
         )
+//        applicationService.registerSuperadminFeature(
+//                controller: 'authenticationProvider',
+//                icon: 'fa-at',
+//        )
         applicationService.registerSuperadminFeature(
             controller: 'applicationProperty',
             icon: 'fa-tools',
@@ -581,7 +584,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         if (filterParams.containsKey('id')) query = query.where { id == filterParams.id }
         if (filterParams.containsKey('username')) query = query.where { username == filterParams.username }
         if (filterParams.containsKey('apiKey')) query = query.where { apiKey == filterParams.apiKey }
-        if (filterParams.containsKey('externalId')) query = query.where { externalId == filterParams.externalId }
+        if (filterParams.containsKey('physicalId')) query = query.where { physicalId == filterParams.physicalId }
         if (filterParams.containsKey('tenant')) query = query.where { tenant.id == filterParams.tenant }
         if (filterParams.containsKey('tenantId')) query = query.where { tenant.tenantId == filterParams.tenantId }
         if (filterParams.containsKey('deletable')) query = query.where { deletable == filterParams.deletable }
@@ -591,7 +594,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
             query = query.where {
                 true
                     || apiKey =~ "%${filterParams.find}%"
-                    || externalId =~ "%${filterParams.find}%"
+                    || physicalId =~ "%${filterParams.find}%"
                     || username =~ "%${filterParams.find}%"
                     || firstname =~ "%${filterParams.find}%"
                     || lastname =~ "%${filterParams.find}%"
@@ -628,8 +631,8 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         return query.get(fetch: fetchAll) as TUser
     }
 
-    TUser getUserByExternalId(String externalId) {
-        def query = TUser.where { externalId == externalId }
+    TUser getUserByPhysicalId(String physicalId) {
+        def query = TUser.where { physicalId == physicalId }
         return query.get(fetch: fetchAll) as TUser
     }
 
@@ -697,12 +700,11 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
     }
 
     /**
-     * Generates an password
+     * Generates a secure user password
      * @return the password
      */
     String generatePassword() {
-        List alphabet = ('A'..'Z') + ('0'..'9') + ('a'..'z') + ['!', '@', '#', '$', '%', '^', '&', '*', '(', ')', '-', '_', '=', '+', ';', ':', '?', '.', '>']
-        return StringUtils.generateRandomToken(16, alphabet)
+        return StringUtils.generateRandomToken()
     }
 
     /**
@@ -772,7 +774,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         user = new TUser(
             tenant: tenant,
             apiKey: args.apiKey,
-            externalId: args.externalId,
+            physicalId: args.physicalId,
             deletable: args.deletable == null ? true : args.deletable,
             username: args.username,
             password: args.password ? encodePassword((String) args.password) : null,
@@ -939,7 +941,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
     void deleteUser(String username) {
         TUser user = getUserByUsername(username)
         TUserRoleGroup.removeAll(user)
-        user.delete(flush: true, failOnError: true)
+        user.delete(flush: true)
     }
 
     @CompileDynamic
@@ -1078,6 +1080,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
     @CompileDynamic
     @Requires({ args.id || args.tenantId })
     TRoleGroup updateGroup(Map args) {
+        Serializable id = args.id as Serializable
         if (args.failOnError == null) args.failOnError = false
 
         if (args.tenantId && !args.name) {
@@ -1091,9 +1094,9 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         TTenant tenant = TTenant.findByTenantId(args.tenantId)
         TRoleGroup roleGroup = tenant
             ? TRoleGroup.findByTenantAndName(tenant, groupName)
-            : TRoleGroup.get(args.id)
+            : TRoleGroup.get(id)
         if (!roleGroup) {
-            throw new ElementsException("Group '${args.id}' not found!")
+            throw new ElementsException("Group '${id}' not found!")
         }
 
         if (args.authorities != null) {
@@ -1124,7 +1127,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         log.info "Deleting group '${roleGroup}' with authorities ${roleGroup.authorities}"
 
         TRoleGroupRole.removeAll(roleGroup)
-        roleGroup.delete(flush: true, failOnError: true)
+        roleGroup.delete(flush: true)
     }
 
     /**

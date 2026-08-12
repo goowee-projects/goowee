@@ -63,14 +63,14 @@ class Login extends Page {
 
                 if ($username.val().length > 0 && $password.val().length > 0) {
                     data = {
-                       processUrl: 'authentication/authenticate',
-                       username: $username.val(),
-                       password: $password.val(),
-                   };
+                        processUrl: 'authentication/authenticate',
+                        username: $username.val(),
+                        password: $password.val(),
+                    };
                 } else if ($search.val().length > 0) {
                     data = {
                         processUrl: 'api/auth/external',
-                        externalId: $search.val(),
+                        physicalId: $search.val(),
                     };
                 }
 
@@ -114,36 +114,36 @@ class Login extends Page {
         LoadingScreen.show(true, 500);
 
         $.ajax(call)
-        .done(function (data, textStatus, request) {
-            if (data.success) {
-                let params = $.getQueryParameters();
-                let url = _21_.app.url;
-                if (params.landingPage) {
-                    url = url + params.landingPage;
-                } else if (data.redirect) {
-                    url = url + data.redirect;
+            .done(function (data, textStatus, request) {
+                if (data.success) {
+                    let params = $.getQueryParameters();
+                    let url = _21_.app.url;
+                    if (params.landingPage) {
+                        url = url + params.landingPage;
+                    } else if (data.redirect) {
+                        url = url + data.redirect;
+                    }
+                    window.location.replace(url);
                 }
-                window.location.replace(url);
-            }
 
-            if (data.error) {
-                LoadingScreen.show(false);
-                $loginError.removeClass('d-none');
-                $username.val('').focus();
-                $password.val('');
-            }
+                if (data.error) {
+                    LoadingScreen.show(false);
+                    $loginError.removeClass('d-none');
+                    $username.val('').focus();
+                    $password.val('');
+                }
 
-            if (data.customError) {
+                if (data.customError) {
+                    LoadingScreen.show(false);
+                    PageMessageBox.info(null, data.customError);
+                    $username.val('').focus();
+                    $password.val('');
+                }
+            })
+            .fail(function (request, textStatus, errorThrown) {
                 LoadingScreen.show(false);
-                PageMessageBox.info(null, data.customError);
-                $username.val('').focus();
-                $password.val('');
-            }
-        })
-        .fail(function (request, textStatus, errorThrown) {
-            LoadingScreen.show(false);
-            PageMessageBox.error(null, {infoMessage: request.status + ': ' + request.responseText});
-        });
+                PageMessageBox.error(null, {infoMessage: request.status + ': ' + request.responseText});
+            });
     }
 }
 

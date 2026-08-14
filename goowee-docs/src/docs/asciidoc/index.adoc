@@ -4,6 +4,9 @@
 :icons: font
 :toc: left
 :toclevels: 2
+:description: Goowee documentation and API reference
+:revdate: {localdate}
+:revremark: Covers Goowee {revnumber}
 
 // Install the "AsciiDoc" IntelliJ plugin
 // IT - http://ramses.altervista.org/AppuntiAsciidoc.html
@@ -23,8 +26,8 @@ include::chapters/chapter-7.adoc[]
 include::chapters/chapter-8.adoc[]
 include::chapters/chapter-9.adoc[]
 include::chapters/chapter-10.adoc[]
+include::chapters/chapter-11.adoc[]
 
 == ---
 
 include::chapters/z.api-reference.adoc[]
-

@@ -38,20 +38,9 @@ import org.grails.datastore.gorm.GormEntity
  * @author Gianluca Sartori
  * @author Francesco Piceghello
  */
+
 @CompileDynamic
 class Money extends Number implements CustomType, GormEntity {
-
-    /** The Elements type name used to identify this custom type in the serialisation protocol. */
-    static final TYPE_NAME = 'MONEY'
-
-    /** The UI control class used to render and edit {@code Money} values. */
-    static final TYPE_FIELD = MoneyField
-
-    /** The Java type of the primary value property ({@link #amount}). */
-    static final TYPE_VALUE_PROPERTY_TYPE = Number
-
-    /** The name of the primary value property. */
-    static final TYPE_VALUE_PROPERTY_NAME = 'amount'
 
     /** The monetary amount, stored with up to 6 decimal places. */
     BigDecimal amount
@@ -92,22 +81,24 @@ class Money extends Number implements CustomType, GormEntity {
     }
 
     /**
-     * Returns the Elements type name for this custom type ({@link #TYPE_NAME}).
+     * Returns the Elements type name for this custom type.
      *
      * @return {@code "MONEY"}
      */
-    static String getCustomTypeName() {
-        return TYPE_NAME
-    }
+    String getTypeName() { 'MONEY' }
 
     /**
      * Returns the UI control class associated with this type ({@link goowee.elements.controls.MoneyField}).
      *
      * @return the {@link goowee.elements.controls.MoneyField} class
      */
-    static Class getCustomTypeField() {
+    Class getTypeField() {
         return MoneyField
     }
+
+    Class getValuePropertyType() { Number }
+
+    String getValuePropertyName() { 'amount' }
 
     /**
      * Serialises this instance to the typed-value map protocol expected by the Elements frontend.
@@ -117,7 +108,7 @@ class Money extends Number implements CustomType, GormEntity {
      */
     Map serialize() {
         return [
-            type : TYPE_NAME,
+            type : typeName,
             value: [
                 amount  : amount,
                 currency: currency,

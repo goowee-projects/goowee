@@ -42,11 +42,14 @@ class Control extends Component {
     }
 
     static getServerValue($element) {
-        return JSON.parse($element.attr('data-21-value'))
+        // The server value is immutable client-side and comes only from the DOM attribute.
+        let value = JSON.parse($element.attr('data-21-value'));
+        return TypedValue.require(value);
     }
 
     static getValueType($element) {
-        return $element.data('21-value')['type'];
+        let control = Control.getByElement($element);
+        return control?.valueType ?? Control.getServerValue($element).type;
     }
 
     static getValue($element) {
@@ -105,5 +108,4 @@ class Control extends Component {
         let $formField = $element.closest('[data-21-component="FormField"]');
         if ($formField) FormField.setReadonly($formField, value);
     }
-
 }

@@ -71,6 +71,13 @@ class Table extends Component {
         $cell.text(value.value);
     }
 
+    static setHtmlByKey($element, valueMap) {
+        let $cell = $element.find('.component-table-row:has(.component-table-values):has([data-21-id="' + valueMap.keyName + '"][value="' + valueMap.keyValue + '"]) .' + valueMap.column);
+        $cell.html(valueMap.value);
+        PageTooltips.initialize();
+        PageTooltips.finalize();
+    }
+
     static getValues($element) {
         let $rows = $element.find('tbody tr');
         let rows = [];
@@ -91,11 +98,11 @@ class Table extends Component {
                 values[columnName] = value;
             });
 
-            rows.push({type: Type.MAP, value: values});
+            rows.push(TypedValue.map(values));
             i++;
         });
 
-        return {rows: {type: Type.LIST, value: rows}};
+        return {rows: TypedValue.list(rows)};
     }
 
     static processColumnName(name) {

@@ -1,4 +1,4 @@
-// Must be kept aligned with the server class 'dueuno.types.Type'.
+// Must be kept aligned with the server class 'goowee.types.Type'.
 const Type = Object.freeze({
     NA: 'NA',
     BOOL: 'BOOL',

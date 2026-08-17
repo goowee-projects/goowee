@@ -309,7 +309,7 @@ class Form extends Component {
     }
 
     /**
-     * Serialises this form's properties to JSON, adding {@link #autofocus} to the
+     * Serialises this form's properties to JSON, adding {@code autofocus} to the
      * standard component properties.
      *
      * @param properties additional properties to merge before serialisation

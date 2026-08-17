@@ -61,7 +61,7 @@ class LinkDefinition implements Serializable {
     /** An explicit URL target. When set it takes precedence over the controller/action pair and {@code direct} defaults to {@code true}. */
     String url
 
-    /** When {@code true}, the link response is rendered as a full HTML page or raw HTTP body instead of a {@link goowee.elements.core.Transition}. */
+    /** When {@code true}, the link response is rendered as a full HTML page or raw HTTP body instead of a {@link Transition}. */
     Boolean direct
 
     /** Names of the components whose data should be submitted with the request. If empty the closest container component is submitted. */
@@ -79,16 +79,16 @@ class LinkDefinition implements Serializable {
     /** When set, an informational pop-up with this message is displayed and the link is never executed. */
     String infoMessage
 
-    /** Optional interpolation arguments for {@link #infoMessage}. */
+    /** Optional interpolation arguments for {@code infoMessage}. */
     List infoMessageArgs
 
     /** When set, a confirmation pop-up with this message is displayed, giving the user a chance to cancel before the link is executed. */
     String confirmMessage
 
-    /** Optional interpolation arguments for {@link #confirmMessage}. */
+    /** Optional interpolation arguments for {@code confirmMessage}. */
     List confirmMessageArgs
 
-    /** Optional map defining the action to invoke when the user confirms the {@link #confirmMessage} dialog. */
+    /** Optional map defining the action to invoke when the user confirms the {@code confirmMessage} dialog. */
     Map confirmMessageOnConfirm
 
     /**
@@ -139,7 +139,7 @@ class LinkDefinition implements Serializable {
 
     /**
      * Returns {@code true} when the link is configured to open in a new browser tab
-     * (i.e. {@link #target} equals {@code "_blank"}).
+     * (i.e. {@code target} equals {@code "_blank"}).
      *
      * @return {@code true} if the link opens in a new tab
      */
@@ -149,8 +149,8 @@ class LinkDefinition implements Serializable {
 
     /**
      * Convenience setter that configures the link to open in a new browser tab.
-     * When {@code value} is {@code true}, sets {@link #direct} to {@code true}
-     * and {@link #target} to {@code "_blank"}.
+     * When {@code value} is {@code true}, sets {@code direct} to {@code true}
+     * and {@code target} to {@code "_blank"}.
      *
      * @param value {@code true} to open the link in a new tab
      */
@@ -163,8 +163,8 @@ class LinkDefinition implements Serializable {
 
     /**
      * Sets the browsing context for the link. When {@code value} is {@code "_self"},
-     * {@link #direct} is also set to {@code true} so that the response replaces the
-     * current page rather than being processed as a {@link goowee.elements.core.Transition}.
+     * {@code direct} is also set to {@code true} so that the response replaces the
+     * current page rather than being processed as a {@link Transition}.
      *
      * @param value the target browsing context (e.g. {@code "_self"})
      */
@@ -176,7 +176,7 @@ class LinkDefinition implements Serializable {
     }
 
     /**
-     * Sets {@link #submit} to a single-element list containing the given component name.
+     * Sets {@code submit} to a single-element list containing the given component name.
      * Does nothing if {@code value} is blank.
      *
      * @param value the name of the component to submit
@@ -190,7 +190,7 @@ class LinkDefinition implements Serializable {
     }
 
     /**
-     * Sets {@link #submit} to the provided list of component names.
+     * Sets {@code submit} to the provided list of component names.
      * Does nothing if {@code value} is empty or {@code null}.
      *
      * @param value the list of component names to submit

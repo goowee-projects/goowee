@@ -19,20 +19,37 @@ import goowee.elements.core.LinkDefinition
 import groovy.transform.CompileStatic
 
 /**
+ * A {@link Label}-based component that renders a navigable link.
+ * <p>
+ * {@code Link} wraps a {@link LinkDefinition} and registers a client-side
+ * event (default: {@code "click"}) that triggers the configured server-side action.
+ * All navigation properties ({@code controller}, {@code action}, {@code url}, etc.)
+ * are delegated to the underlying {@code linkDefinition}; changing any of them
+ * automatically re-registers the click event via {@link #onTrigger(String)}.
+ * </p>
+ * <p>
+ * Additional render options (modal display, animations, scroll behaviour, etc.) are
+ * stored in {@link goowee.elements.core.PageRenderProperties} accessible through
+ * {@code linkDefinition}.
+ * </p>
+ *
  * @author Gianluca Sartori
  */
 
 @CompileStatic
 class Link extends Label {
 
-    /** The link */
+    /** The underlying link definition holding all navigation and render properties. */
     LinkDefinition linkDefinition
 
     /** The event that triggers the link. Defaults to 'click' */
     String triggerEvent
 
     /**
-     * Creates a new Link component.
+     * Creates a {@code Link} component from the given argument map.
+     * All {@link Label} arguments are supported, plus all {@link LinkDefinition}
+     * properties. If no {@code action} is provided it defaults to {@code "index"}.
+     * An optional {@code onClick} key may specify an action name override for the click event.
      *
      * @param args a map of configuration options. Supports all {@link Label} arguments plus:
      * {@code linkDefinition}, {@code tag}, {@code html}, {@code triggerEvent}, {@code onClick}
@@ -72,11 +89,11 @@ class Link extends Label {
     }
 
     /**
-     * Returns a JSON string of this component's properties, merged with any additional
-     * properties provided by subclasses or callers.
+     * Returns a JSON string of this link's client-side properties, adding the
+     * {@code loading} flag on top of the inherited {@link Label} properties.
      *
-     * @param properties additional properties to merge into the JSON output
-     * @return JSON representation of this component's properties
+     * @param properties additional properties to merge
+     * @return a JSON representation of all component properties
      */
     @Override
     String getPropertiesAsJSON(Map properties = [:]) {
@@ -87,10 +104,9 @@ class Link extends Label {
     }
 
     /**
-     * Returns a human-readable representation of this link, including the resolved path
-     * and any query parameters.
+     * Returns a debug-friendly string showing the link path and query parameters.
      *
-     * @return a string in the form {@code "Link: /namespace/controller/action?param=value"}
+     * @return a string in the form {@code "Link: /namespace/controller/action?key=value&..."}
      */
     String toString() {
         String ns = linkDefinition.namespace ?: ''
@@ -101,12 +117,11 @@ class Link extends Label {
     }
 
     /**
-     * Returns a development-time URL for this link, useful for previewing navigation
-     * targets without a full server context.
-     * Returns the explicit {@code url} if set, otherwise falls back to
-     * {@code /controller/action}, or {@code null} if neither is available.
+     * Returns a simplified URL string suitable for development/debugging purposes.
+     * Returns the explicit {@code url} if set, a {@code /controller/action} path if both
+     * are present, or {@code null} otherwise.
      *
-     * @return the dev URL string, or {@code null}
+     * @return a dev-friendly URL string, or {@code null}
      */
     String getDevUrl() {
         if (url) return url
@@ -114,440 +129,183 @@ class Link extends Label {
         return null
     }
 
-    /**
-     * Sets a new {@link LinkDefinition} and re-registers the trigger event accordingly.
-     *
-     * @param link the new link definition to apply
-     */
-    void setLinkDefinition(LinkDefinition link) {
-        linkDefinition = link
-        onTrigger()
-    }
+    /** @see LinkDefinition#target */
+    String getTarget() { return linkDefinition.target }
+    /** @see LinkDefinition#target */
+    void setTarget(String value) { linkDefinition.target = value }
 
-    /**
-     * Returns the HTML {@code target} attribute of the link (e.g. {@code "_blank"}).
-     *
-     * @return the target value, or {@code null} if not set
-     */
-    String getTarget() {
-        return linkDefinition.target
-    }
-
-    /**
-     * Sets the HTML {@code target} attribute of the link.
-     *
-     * @param value the target value (e.g. {@code "_blank"})
-     */
-    void setTarget(String value) {
-        linkDefinition.target = value
-    }
-
-    /**
-     * Returns the Grails URL namespace segment of the link.
-     *
-     * @return the namespace, or {@code null} if not set
-     */
-    String getNamespace() {
-        return linkDefinition.namespace
-    }
-
-    /**
-     * Sets the Grails URL namespace and re-registers the trigger event.
-     *
-     * @param value the namespace to set
-     */
+    /** @see LinkDefinition#namespace */
+    String getNamespace() { return linkDefinition.namespace }
+    /** Sets the controller namespace and re-registers the click event. */
     void setNamespace(String value) {
         linkDefinition.namespace = value
         onTrigger()
     }
 
-    /**
-     * Returns the Grails controller name targeted by this link.
-     *
-     * @return the controller name, or {@code null} if not set
-     */
-    String getController() {
-        return linkDefinition.controller
-    }
-
-    /**
-     * Sets the Grails controller name and re-registers the trigger event.
-     *
-     * @param value the controller name to set
-     */
+    /** @see LinkDefinition#controller */
+    String getController() { return linkDefinition.controller }
+    /** Sets the controller name and re-registers the click event. */
     void setController(String value) {
         linkDefinition.controller = value
         onTrigger()
     }
 
-    /**
-     * Returns the Grails controller action targeted by this link.
-     *
-     * @return the action name, or {@code null} if not set
-     */
-    String getAction() {
-        return linkDefinition.action
-    }
-
-    /**
-     * Sets the Grails controller action and re-registers the trigger event.
-     *
-     * @param value the action name to set
-     */
+    /** @see LinkDefinition#action */
+    String getAction() { return linkDefinition.action }
+    /** Sets the action name and re-registers the click event. */
     void setAction(String value) {
         linkDefinition.action = value
         onTrigger()
     }
 
-    /**
-     * Returns the query parameters map appended to the link URL.
-     *
-     * @return a map of parameter key-value pairs, never {@code null}
-     */
-    Map getParams() {
-        return linkDefinition.params
-    }
-
-    /**
-     * Sets the query parameters map and re-registers the trigger event.
-     *
-     * @param value the map of query parameters to set
-     */
+    /** @see LinkDefinition#params */
+    Map getParams() { return linkDefinition.params }
+    /** Sets the request parameters and re-registers the click event. */
     void setParams(Map value) {
         linkDefinition.params = value
         onTrigger()
     }
 
-    /**
-     * Returns the URL fragment (anchor) of the link.
-     *
-     * @return the fragment string, or {@code null} if not set
-     */
-    String getFragment() {
-        return linkDefinition.fragment
-    }
-
-    /**
-     * Sets the URL fragment (anchor) and re-registers the trigger event.
-     *
-     * @param value the fragment string to set
-     */
+    /** @see LinkDefinition#fragment */
+    String getFragment() { return linkDefinition.fragment }
+    /** Sets the URL fragment and re-registers the click event. */
     void setFragment(String value) {
         linkDefinition.fragment = value
         onTrigger()
     }
 
-    /**
-     * Returns the explicit path of the link, used when not relying on controller/action routing.
-     *
-     * @return the path string, or {@code null} if not set
-     */
-    String getPath() {
-        return linkDefinition.path
-    }
-
-    /**
-     * Sets the explicit path and re-registers the trigger event.
-     *
-     * @param value the path string to set
-     */
+    /** @see LinkDefinition#path */
+    String getPath() { return linkDefinition.path }
+    /** Sets the path and re-registers the click event. */
     void setPath(String value) {
         linkDefinition.path = value
         onTrigger()
     }
 
-    /**
-     * Returns the absolute URL of the link, bypassing controller/action resolution.
-     *
-     * @return the URL string, or {@code null} if not set
-     */
-    String getUrl() {
-        return linkDefinition.url
-    }
-
-    /**
-     * Sets the absolute URL and re-registers the trigger event.
-     *
-     * @param value the URL string to set
-     */
+    /** @see LinkDefinition#url */
+    String getUrl() { return linkDefinition.url }
+    /** Sets the explicit URL and re-registers the click event. */
     void setUrl(String value) {
         linkDefinition.url = value
         onTrigger()
     }
 
-    /**
-     * Returns the list of form IDs that should be submitted when this link is triggered.
-     *
-     * @return a list of form ID strings, or {@code null} if not set
-     */
-    List<String> getSubmit() {
-        return linkDefinition.submit
-    }
+    /** @see LinkDefinition#submit */
+    List<String> getSubmit() { return linkDefinition.submit }
 
     /**
-     * Convenience setter that wraps a single form ID in a list before delegating
+     * Convenience overload that wraps a single component name in a list before delegating
      * to {@link #setSubmit(List)}.
      *
-     * @param value a single form ID string
+     * @param value the name of the component to submit
      */
-    void setSubmit(String value) {
-        setSubmit([value])
-    }
+    void setSubmit(String value) { setSubmit([value]) }
 
-    /**
-     * Sets the list of form IDs to submit and re-registers the trigger event.
-     *
-     * @param value the list of form ID strings to set
-     */
+    /** Sets the submit component list and re-registers the click event. */
     void setSubmit(List<String> value) {
         linkDefinition.submit = value
         onTrigger()
     }
 
-    /**
-     * Returns whether the link navigates directly to the URL without going through
-     * the Grails URL mapping system.
-     *
-     * @return {@code true} if direct navigation is enabled, {@code false} otherwise
-     */
-    Boolean getDirect() {
-        return linkDefinition.direct
-    }
+    /** @see LinkDefinition#direct */
+    Boolean getDirect() { return linkDefinition.direct }
+    /** @see LinkDefinition#direct */
+    void setDirect(Boolean value) { linkDefinition.direct = value }
 
-    /**
-     * Sets whether the link should navigate directly, bypassing URL mapping.
-     *
-     * @param value {@code true} to enable direct navigation
-     */
-    void setDirect(Boolean value) {
-        linkDefinition.direct = value
-    }
-
-    /**
-     * Returns whether the link response should be rendered in a modal dialog.
-     *
-     * @return {@code true} if the response opens in a modal, {@code false} otherwise
-     */
-    Boolean getModal() {
-        return linkDefinition.renderProperties.modal
-    }
-
-    /**
-     * Sets whether the link response should open in a modal dialog and re-registers
-     * the trigger event.
-     *
-     * @param value {@code true} to render the response in a modal
-     */
+    /** Whether this link opens its target in a modal dialog. */
+    Boolean getModal() { return linkDefinition.renderProperties.modal }
+    /** Sets whether this link opens its target in a modal dialog and re-registers the click event. */
     void setModal(Boolean value) {
         linkDefinition.renderProperties.modal = value
         onTrigger()
     }
 
-    /**
-     * Returns whether the link should be rendered in a small visual style.
-     *
-     * @return {@code true} if the small style is enabled, {@code false} otherwise
-     */
-    Boolean getSmall() {
-        return linkDefinition.renderProperties.small
-    }
-
-    /**
-     * Sets whether the link should use the small visual style.
-     *
-     * @param value {@code true} to enable the small style
-     */
+    /** Whether this link renders in a small (compact) style. */
+    Boolean getSmall() { return linkDefinition.renderProperties.small }
+    /** Sets the small (compact) rendering style and re-registers the click event. */
     void setSmall(Boolean value) {
         linkDefinition.renderProperties.small = value
+        onTrigger()
     }
 
-    /**
-     * Returns whether the link should be rendered in a large visual style.
-     *
-     * @return {@code true} if the large style is enabled, {@code false} otherwise
-     */
-    Boolean getLarge() {
-        return linkDefinition.renderProperties.large
-    }
-
-    /**
-     * Sets whether the link should use the large visual style and re-registers
-     * the trigger event.
-     *
-     * @param value {@code true} to enable the large style
-     */
+    /** Whether this link renders in a large style. */
+    Boolean getLarge() { return linkDefinition.renderProperties.large }
+    /** Sets the large rendering style and re-registers the click event. */
     void setLarge(Boolean value) {
         linkDefinition.renderProperties.large = value
         onTrigger()
     }
 
-    /**
-     * Returns the animation style applied to the link during loading or transitions.
-     *
-     * @return the animation identifier string, or {@code null} if not set
-     */
-    String getAnimate() {
-        return linkDefinition.renderProperties.animate
-    }
-
-    /**
-     * Sets the animation style and re-registers the trigger event.
-     *
-     * @param value the animation identifier string to set
-     */
+    /** The CSS animation name applied when navigating via this link. */
+    String getAnimate() { return linkDefinition.renderProperties.animate }
+    /** Sets the CSS animation for navigation and re-registers the click event. */
     void setAnimate(String value) {
         linkDefinition.renderProperties.animate = value
         onTrigger()
     }
 
-    /**
-     * Returns whether a close button should be shown alongside this link
-     * (typically inside a modal).
-     *
-     * @return {@code true} if the close button is enabled, {@code false} otherwise
-     */
-    Boolean getCloseButton() {
-        return linkDefinition.renderProperties.closeButton
-    }
-
-    /**
-     * Sets whether a close button should be shown and re-registers the trigger event.
-     *
-     * @param value {@code true} to display the close button
-     */
+    /** Whether a close button is shown when the target is displayed in a modal. */
+    Boolean getCloseButton() { return linkDefinition.renderProperties.closeButton }
+    /** Sets whether a close button is shown in the modal and re-registers the click event. */
     void setCloseButton(Boolean value) {
         linkDefinition.renderProperties.closeButton = value
         onTrigger()
     }
 
-    /**
-     * Returns the scroll behaviour applied after the link response is rendered.
-     *
-     * @return the scroll target or mode string, or {@code null} if not set
-     */
-    String getScroll() {
-        return linkDefinition.renderProperties.scroll
-    }
-
-    /**
-     * Sets the scroll behaviour and re-registers the trigger event.
-     *
-     * @param value the scroll target or mode string to set
-     */
+    /** The scroll behaviour applied when navigating via this link (e.g. {@code "reset"}). */
+    String getScroll() { return linkDefinition.renderProperties.scroll }
+    /** Sets the scroll behaviour and re-registers the click event. */
     void setScroll(String value) {
         linkDefinition.renderProperties.scroll = value
         onTrigger()
     }
 
-    /**
-     * Returns whether the link should open in a new browser tab or window.
-     *
-     * @return {@code true} if the link opens in a new tab/window, {@code false} otherwise
-     */
-    Boolean getTargetNew() {
-        return linkDefinition.targetNew
-    }
-
-    /**
-     * Sets whether the link should open in a new browser tab or window and
-     * re-registers the trigger event.
-     *
-     * @param value {@code true} to open in a new tab/window
-     */
+    /** @see LinkDefinition#getTargetNew() */
+    Boolean getTargetNew() { return linkDefinition.targetNew }
+    /** Sets whether the link opens in a new tab and re-registers the click event. */
     void setTargetNew(Boolean value) {
         linkDefinition.targetNew = value
         onTrigger()
     }
 
-    /**
-     * Returns whether the link should display a loading indicator while the request
-     * is in progress.
-     *
-     * @return {@code true} if the loading indicator is enabled, {@code false} otherwise
-     */
-    Boolean getLoading() {
-        return linkDefinition.loading
-    }
-
-    /**
-     * Sets whether the loading indicator should be shown and re-registers the trigger event.
-     *
-     * @param value {@code true} to enable the loading indicator
-     */
+    /** @see LinkDefinition#loading */
+    Boolean getLoading() { return linkDefinition.loading }
+    /** Sets the loading indicator flag and re-registers the click event. */
     void setLoading(Boolean value) {
         linkDefinition.loading = value
         onTrigger()
     }
 
-    /**
-     * Returns the i18n message code for the informational toast/notification shown
-     * after the link action completes.
-     *
-     * @return the message code, or {@code null} if not set
-     */
-    String getInfoMessage() {
-        return linkDefinition.infoMessage
-    }
-
-    /**
-     * Sets the i18n message code for the informational notification and re-registers
-     * the trigger event.
-     *
-     * @param value the message code to set
-     */
+    /** @see LinkDefinition#infoMessage */
+    String getInfoMessage() { return linkDefinition.infoMessage }
+    /** Sets the info message and re-registers the click event. */
     void setInfoMessage(String value) {
         linkDefinition.infoMessage = value
         onTrigger()
     }
-
-    /**
-     * Sets the arguments used to interpolate the info message and re-registers
-     * the trigger event.
-     *
-     * @param value the list of arguments for the info message
-     */
+    /** Sets the info message interpolation arguments and re-registers the click event. */
     void setInfoMessageArgs(List value) {
         linkDefinition.infoMessageArgs = value
         onTrigger()
     }
 
-    /**
-     * Returns the i18n message code for the confirmation dialog shown before the
-     * link action is executed.
-     *
-     * @return the message code, or {@code null} if not set
-     */
-    String getConfirmMessage() {
-        return linkDefinition.confirmMessage
-    }
-
-    /**
-     * Sets the i18n message code for the confirmation dialog and re-registers
-     * the trigger event.
-     *
-     * @param value the message code to set
-     */
+    /** @see LinkDefinition#confirmMessage */
+    String getConfirmMessage() { return linkDefinition.confirmMessage }
+    /** Sets the confirmation dialog message and re-registers the click event. */
     void setConfirmMessage(String value) {
         linkDefinition.confirmMessage = value
         onTrigger()
     }
-
-    /**
-     * Sets the arguments used to interpolate the confirm message and re-registers
-     * the trigger event.
-     *
-     * @param value the list of arguments for the confirm message
-     */
+    /** Sets the confirmation message interpolation arguments and re-registers the click event. */
     void setConfirmMessageArgs(List value) {
         linkDefinition.confirmMessageArgs = value
         onTrigger()
     }
-
     /**
-     * Sets the event to fire when the user confirms the confirmation dialog, then
-     * re-registers the trigger event.
+     * Sets the {@link ComponentEvent} to invoke when the user confirms the confirmation dialog,
+     * and re-registers the click event.
      *
-     * @param value the {@link ComponentEvent} to execute on confirmation
+     * @param value the event to fire on confirmation
      */
     void setConfirmMessageOnConfirm(ComponentEvent value) {
         linkDefinition.confirmMessageOnConfirm = value.asMap()

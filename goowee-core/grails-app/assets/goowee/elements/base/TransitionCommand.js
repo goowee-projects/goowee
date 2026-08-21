@@ -9,6 +9,7 @@ class TransitionCommand {
     static get REMOVE() { return 'REMOVE' }
     static get TRIGGER() { return 'TRIGGER' }
     static get LOADING() { return 'LOADING' }
+    static get DELAY() { return 'DELAY' }
     static get CALL() { return 'CALL' }
     static get SET() { return 'SET' }
 
@@ -106,6 +107,10 @@ class TransitionCommand {
 
     static loading(show) {
         LoadingScreen.show(show);
+    }
+
+    static async delay(milliseconds) {
+        await sleep(milliseconds);
     }
 
     static append($element, componentId, newComponentId, $components) {

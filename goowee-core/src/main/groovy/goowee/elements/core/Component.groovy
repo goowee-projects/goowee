@@ -48,7 +48,7 @@ abstract class Component implements WebRequestAware, Serializable {
     /** A component can respond to Events */
     private Map<String, ComponentEvent> events
 
-    /** Path of the component GSP file. Defaults to '/goowee/components/'. Eg: '/mycomponents/' */
+    /** Path of the component GSP file. Defaults to '/goowee/elements/components/'. Eg: '/mycomponents/' */
     protected String viewPath
 
     /** Name of the component GSP file. Defaults to the component simple class name. Eg: 'MyChart'. */
@@ -632,6 +632,7 @@ abstract class Component implements WebRequestAware, Serializable {
     @Requires({ args.event && args.action })
     Component on(Map args) {
         args.controller = args.controller ?: controllerName
+
         List eventList = (args.event in List)
             ? (List) args.event
             : [args.event]
@@ -749,5 +750,3 @@ abstract class Component implements WebRequestAware, Serializable {
     }
 
 }
-
-

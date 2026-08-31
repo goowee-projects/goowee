@@ -89,7 +89,11 @@ class ControlConfigurationSpec extends Specification {
         numberField.renderTextPrefix = true
         numberField.textPrefix = 'invoice.amount'
         numberField.textArgs = ['2026']
-        select.options = [draft: 'Draft', final: 'Final']
+        select.options = [
+            [draft: 'Draft'],
+            [final: 'Final'],
+        ]
+        select.multiple = true
         multipleCheckbox.optionsFromList = ['read', 'write']
         multipleCheckbox.readonly = true
 
@@ -97,7 +101,11 @@ class ControlConfigurationSpec extends Specification {
         numberField.renderTextPrefix
         numberField.textPrefix == 'invoice.amount'
         numberField.textArgs == ['2026']
-        select.options == [draft: 'Draft', final: 'Final']
+        select.options == [
+            [draft: 'Draft'],
+            [final: 'Final'],
+        ]
+        select.multiple
         multipleCheckbox.checkboxes.keySet() == ['read', 'write'] as Set
         multipleCheckbox.readonly
         multipleCheckbox.checkboxes.values().every { it.readonly }
@@ -109,16 +117,22 @@ class ControlConfigurationSpec extends Specification {
 
         when:
         FormField field = form.addField(Select, 'status') { Select control, FormField wrapper ->
-            control.options = [draft: 'Draft', final: 'Final']
+            control.options = [
+                [draft: 'Draft'],
+                [final: 'Final'],
+            ]
             control.multiple = true
             wrapper.cols = 6
         }
 
         then:
         field.component instanceof Select
-        (field.component as Select).options == [draft: 'Draft', final: 'Final']
+        (field.component as Select).options == [
+            [draft: 'Draft'],
+            [final: 'Final'],
+        ]
         (field.component as Select).multiple
-        field.cols == ' col-sm-6'
+        field.cols == ' col-sm-6 col-6'
     }
 
 }

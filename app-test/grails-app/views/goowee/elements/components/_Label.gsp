@@ -4,8 +4,8 @@ ATTENTION PLEASE
 ================
 
 When modifying this template, please update also:
-- The Label components embedded in `_TableRow.gsp`
-- The `_Link.gsp` template
+ - The Label components embedded in `_TableRow.gsp`
+ - The `_Link.gsp` template
 
 --%>
 <span class="component-label w-100 ${c.textAlign} ${c.textWrap} ${c.textStyle} ${c.tag ? 'tag' : ''}  ${c.userSelect ? 'user-select-text' : ''} ${c.html ? 'html' : ''} ${c.cssClass}"

@@ -78,7 +78,7 @@ class Transition {
         let trigger = command.trigger;
         let $components = transition.$components;
 
-        log.trace('EXECUTING: ' + method + ' ' + componentId + '.' + property + ' = ' + JSON.stringify(valueMap));
+        log.trace('EXECUTING: ' + componentId + ' ' + method + ' ' + property);
 
         switch (method) {
             case TransitionCommand.REDIRECT:
@@ -127,68 +127,55 @@ class Transition {
 
     static getTargetElement(componentId) {
         if (!componentId) {
-            return $(null);
+            return $();
         }
 
-        let dotPosition = componentId.indexOf('.');
-        let rootName = dotPosition > 0 ? componentId.substring(0, dotPosition) : componentId;
-        let targetName = componentId.slice(dotPosition + 1);
+        const roots = {
+            page: Page.$self,
+            messagebox: PageMessageBox.$self,
+            modal: PageModal.$self,
+            content: $.merge(PageContent.$self, PageStickyBox.$self),
+        };
+
+        const parts = componentId.split('.');
 
         let $root;
-        switch (rootName) {
-            case 'page':
-                $root = Page.$self;
-                if (rootName == targetName) return $root;
-                break;
 
-            case 'messagebox':
-                $root = PageMessageBox.$self;
-                if (rootName == targetName) return $root;
-                break;
+        // A recognized root is handled separately.
+        if (roots[parts[0]]) {
+            $root = roots[parts.shift()];
 
-            case 'modal':
-                $root = PageModal.$self;
-                if (rootName == targetName) return $root;
-                break;
-
-            case 'content':
-                $root = $.merge(PageContent.$self, PageStickyBox.$self);
-                if (rootName == targetName) return $root;
-                break;
-
-            default:
-                $root = PageModal.isActive
-                    ? PageModal.$self
-                    : $.merge(PageContent.$self, PageStickyBox.$self);
-                targetName = componentId;
-        }
-
-        // Check for components with dotted name (Eg. 'company.name')
-        let $component = $root.find('[data-21-id="' + componentId + '"]');
-        if ($component.exists()) {
-            return $component;
-        }
-
-        // Select the component from its dotted path
-        let path = '';
-        let nameList = targetName.split('.');
-        for (let name of nameList) {
-            path += '[data-21-id="' + name + '"] ';
-        }
-
-        $component = $root.find(path);
-        if (!$component.exists()) {
-            log.error('Cannot find component "' + componentId + '"');
-            return $(null);
-
-        } else if ($component.length > 1) {
-            log.error('Multiple components found with the same id "' + targetName
-                + '". Do you have a controller named "' + capitalize(targetName) + "Controller'? ");
-            return $(null);
+            // The component ID is exactly the root.
+            if (parts.length === 0) {
+                return $root;
+            }
 
         } else {
-            return $component;
+            $root = PageModal.isActive
+                ? PageModal.$self
+                : $.merge(PageContent.$self, PageStickyBox.$self);
         }
+
+        for (let i = 0; i < parts.length; i++) {
+            const id = parts.slice(i).join('.');
+
+            // First try the complete remaining ID.
+            const $component = $root.find('[data-21-id="' + CSS.escape(id) + '"]');
+
+            if ($component.length) {
+                return $component;
+            }
+
+            // Move into the first component and continue searching.
+            $root = $root.find('[data-21-id="' + CSS.escape(parts[i]) + '"]');
+
+            if (!$root.length) {
+                break;
+            }
+        }
+
+        log.error(`Cannot find component "${componentId}"`);
+        return $();
     }
 
     static triggerEvent($element, eventName, async = true) {

@@ -40,7 +40,7 @@
 <script>const serviceWorkerFilename = "${asset.assetPath(src:'pwa/service-worker.js')}"</script>
 <asset:javascript src="pwa/register.js"/>
 
-<%-- Goowee --%>
+<%-- Elements --%>
 <asset:javascript src="includes.js"/>
 <g:each var="componentsImplementation" in="${c.componentsRegistry}">
     <asset:javascript src="${componentsImplementation}.js"/>

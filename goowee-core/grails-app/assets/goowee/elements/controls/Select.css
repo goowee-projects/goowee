@@ -19,6 +19,7 @@
 }
 
 .control-select .vscomp-wrapper {
+    display: flex;
     color: rgb(var(--elements-main-text));
     font-family: inherit;
     font-size: inherit;
@@ -84,6 +85,16 @@
 .control-select .vscomp-wrapper:focus .vscomp-toggle-button {
     border: none;
     box-shadow: 0 0 0 .27rem rgb(var(--elements-primary-bg-shaded));
+}
+
+/* Virtual Select retains focus while its dropdown is rendered in a portal. */
+.input-group.control-focus-group:has(> .control-select:not([disabled]) .vscomp-wrapper.focused):not(:has(a:focus, button:focus)) {
+    border-radius: var(--bs-border-radius-sm);
+    box-shadow: 0 0 0 .27rem rgb(var(--elements-primary-bg-shaded)) !important;
+}
+
+.input-group.control-focus-group > .control-select .vscomp-toggle-button {
+    box-shadow: none !important;
 }
 
 /* DROPDOWN */
@@ -324,6 +335,15 @@
 
 .component-form-field:has(.help-message.collapsing, .help-message.collapse.show) .control-select .vscomp-toggle-button {
     border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.input-group:has(> .control-select) > .component-link:has(+ .component-help) {
+    margin-right: 0;
+}
+
+.input-group:has(> .control-select) > .component-link + .component-help {
+    margin-left: 0 !important;
 }
 
 .input-group:has(.control-select[disabled]) > a,

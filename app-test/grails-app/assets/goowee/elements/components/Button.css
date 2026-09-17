@@ -8,6 +8,10 @@ button,
     border: none;
 }
 
+.input-group:has(> .component-button) {
+    --elements-focus-border-radius: var(--bs-border-radius);
+}
+
 .component-button button {
     padding-left: .75rem;
     padding-right: .75rem;
@@ -31,9 +35,17 @@ button,
     opacity: 1;
 }
 
+.component-button.btn-group > .btn:focus {
+    z-index: 5;
+}
+
 .component-button .component-link:not(:last-child),
 .input-group .component-link:not(:last-child) {
-    margin-right: .142857rem;
+    margin-right: .1rem;
+}
+
+.component-button.btn-group > .btn + .btn {
+    margin-left: 0 !important;
 }
 
 a.btn,
@@ -111,7 +123,8 @@ button:active,
 .dropdown-item:hover,
 .dropdown-item:focus,
 .dropdown-item:active,
-.btn-group :not(.btn-check)+.btn:active {
+.btn-group :not(.btn-check)+.btn:active,
+.btn.dropdown-toggle.show {
     background-color: rgb(var(--elements-secondary-bg));
     color: rgb(var(--elements-secondary-text));
     border: none;

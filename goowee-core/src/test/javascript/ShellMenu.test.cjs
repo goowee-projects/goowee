@@ -19,7 +19,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const { test } = require('node:test');
 
-for (const moduleName of ['dueuno-core', 'app-test']) {
+for (const moduleName of ['goowee-core', 'app-test']) {
     test(`${moduleName}: the current controller determines the persistent menu item`, () => {
         const content = {};
         let controller = 'form';
@@ -50,7 +50,7 @@ for (const moduleName of ['dueuno-core', 'app-test']) {
             $: value => wrap(typeof value === 'string' ? links : [value]),
         });
         const source = path.resolve(__dirname, '../../../..', moduleName,
-            'grails-app/assets/dueuno/elements/pages/ShellMenu.js');
+            'grails-app/assets/goowee/elements/pages/ShellMenu.js');
         vm.runInContext(fs.readFileSync(source, 'utf8'), context);
         const ShellMenu = vm.runInContext('ShellMenu', context);
 
@@ -65,7 +65,7 @@ for (const moduleName of ['dueuno-core', 'app-test']) {
     });
 }
 
-for (const moduleName of ['dueuno-core', 'app-test']) {
+for (const moduleName of ['goowee-core', 'app-test']) {
     test(`${moduleName}: content focus skips unusable controls and falls back to the content`, () => {
         const document = { activeElement: null };
         const disabled = { disabled: true };
@@ -91,7 +91,7 @@ for (const moduleName of ['dueuno-core', 'app-test']) {
             $: value => value,
         });
         const source = path.resolve(__dirname, '../../../..', moduleName,
-            'grails-app/assets/dueuno/elements/pages/ShellMenu.js');
+            'grails-app/assets/goowee/elements/pages/ShellMenu.js');
         vm.runInContext(fs.readFileSync(source, 'utf8'), context);
         const ShellMenu = vm.runInContext('ShellMenu', context);
         ShellMenu.focusContent(content);
@@ -130,7 +130,7 @@ for (const moduleName of ['dueuno-core', 'app-test']) {
                 requestAnimationFrame: callback => frame = callback,
             });
             const source = path.resolve(__dirname, '../../../..', moduleName,
-                'grails-app/assets/dueuno/elements/pages/ShellMenu.js');
+                'grails-app/assets/goowee/elements/pages/ShellMenu.js');
             vm.runInContext(fs.readFileSync(source, 'utf8'), context);
             const ShellMenu = vm.runInContext('ShellMenu', context);
             ShellMenu.focusContent = value => focused = value;
@@ -154,7 +154,7 @@ for (const moduleName of ['dueuno-core', 'app-test']) {
     }
 }
 
-for (const moduleName of ['dueuno-core', 'app-test']) {
+for (const moduleName of ['goowee-core', 'app-test']) {
     for (const [inside, keyboardFocus, hasActive, alreadyActive, shouldMove] of [
         [false, true, true, false, true],
         [true, true, true, false, false],
@@ -183,7 +183,7 @@ for (const moduleName of ['dueuno-core', 'app-test']) {
                 $: value => value === target ? { is: () => keyboardFocus } : items,
             });
             const source = path.resolve(__dirname, '../../../..', moduleName,
-                'grails-app/assets/dueuno/elements/pages/ShellMenu.js');
+                'grails-app/assets/goowee/elements/pages/ShellMenu.js');
             vm.runInContext(fs.readFileSync(source, 'utf8'), context);
             const ShellMenu = vm.runInContext('ShellMenu', context);
             ShellMenu.onMenuFocusIn({ currentTarget: items, target, relatedTarget: {} });
@@ -192,7 +192,7 @@ for (const moduleName of ['dueuno-core', 'app-test']) {
     }
 }
 
-for (const moduleName of ['dueuno-core', 'app-test']) {
+for (const moduleName of ['goowee-core', 'app-test']) {
     for (const [type, key, shiftKey, index, expected] of [
         ['keydown', 'Tab', true, 2, 2],
         ['keydown', 'Tab', true, 0, 0],
@@ -233,7 +233,7 @@ for (const moduleName of ['dueuno-core', 'app-test']) {
                     : { closest: () => ({ length: 1 }) },
             });
             const source = path.resolve(__dirname, '../../../..', moduleName,
-                'grails-app/assets/dueuno/elements/pages/ShellMenu.js');
+                'grails-app/assets/goowee/elements/pages/ShellMenu.js');
             vm.runInContext(fs.readFileSync(source, 'utf8'), context);
             const ShellMenu = vm.runInContext('ShellMenu', context);
             ShellMenu.onInitialContentInteraction({ type: 'keydown', key: 'Shift' });

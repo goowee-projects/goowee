@@ -19,7 +19,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const { test } = require('node:test');
 
-for (const moduleName of ['dueuno-core', 'app-test']) {
+for (const moduleName of ['goowee-core', 'app-test']) {
     for (const shiftKey of [false, true]) {
         for (const hasNext of [false, true]) {
             test(`${moduleName}: ${shiftKey ? 'Shift+Tab' : 'Tab'} closes before navigation (target: ${hasNext})`, () => {
@@ -41,7 +41,7 @@ for (const moduleName of ['dueuno-core', 'app-test']) {
                     },
                 });
                 const source = path.resolve(__dirname, '../../../..', moduleName,
-                    'grails-app/assets/dueuno/elements/controls/Select.js');
+                    'grails-app/assets/goowee/elements/controls/Select.js');
                 vm.runInContext(fs.readFileSync(source, 'utf8'), context);
                 const Select = vm.runInContext('Select', context);
                 Select.getTrailingFocusable = () => [];
@@ -67,7 +67,7 @@ for (const moduleName of ['dueuno-core', 'app-test']) {
     }
 }
 
-for (const moduleName of ['dueuno-core', 'app-test']) {
+for (const moduleName of ['goowee-core', 'app-test']) {
     for (const hasActions of [true, false]) {
         test(`${moduleName}: Shift+Tab enters the previous Select at its last action (${hasActions})`, () => {
             let closed = false;
@@ -85,7 +85,7 @@ for (const moduleName of ['dueuno-core', 'app-test']) {
                 } },
             });
             const source = path.resolve(__dirname, '../../../..', moduleName,
-                'grails-app/assets/dueuno/elements/controls/Select.js');
+                'grails-app/assets/goowee/elements/controls/Select.js');
             vm.runInContext(fs.readFileSync(source, 'utf8'), context);
             const Select = vm.runInContext('Select', context);
             Select.getAdjacentControl = () => previous;

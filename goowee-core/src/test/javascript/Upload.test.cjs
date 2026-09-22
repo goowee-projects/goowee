@@ -29,7 +29,7 @@ const context = vm.createContext({
     },
 });
 vm.runInContext(fs.readFileSync(path.join(__dirname,
-    '../../../grails-app/assets/dueuno/elements/controls/Upload.js'), 'utf8'), context);
+    '../../../grails-app/assets/goowee/elements/controls/Upload.js'), 'utf8'), context);
 const Upload = vm.runInContext('Upload', context);
 
 test('readonly switches the upload message and restores the configured idle label', () => {

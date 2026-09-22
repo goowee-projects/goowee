@@ -19,7 +19,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const { test } = require('node:test');
 
-for (const moduleName of ['dueuno-core', 'app-test']) {
+for (const moduleName of ['goowee-core', 'app-test']) {
     test(`${moduleName}: restores modal focusability before assigning initial focus`, () => {
         const root = {};
         let tabindex;
@@ -41,7 +41,7 @@ for (const moduleName of ['dueuno-core', 'app-test']) {
             $: () => dialog,
         });
         const source = path.resolve(__dirname, '../../../..', moduleName,
-            'grails-app/assets/dueuno/elements/base/PageMessageBox.js');
+            'grails-app/assets/goowee/elements/base/PageMessageBox.js');
         vm.runInContext(fs.readFileSync(source, 'utf8'), context);
         const PageMessageBox = vm.runInContext('PageMessageBox', context);
         PageMessageBox.dialog = { show() {} };

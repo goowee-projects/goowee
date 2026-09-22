@@ -22,13 +22,13 @@ const { test } = require('node:test');
 
 const chrome = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
-for (const moduleName of ['dueuno-core', 'app-test']) {
+for (const moduleName of ['goowee-core', 'app-test']) {
     test(`${moduleName}: detached dropdown keyboard navigation stays with its owner`, {
         skip: !fs.existsSync(chrome) && 'Set CHROME_BIN to run the browser regression test',
     }, () => {
-        const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'dueuno-dropdown-'));
+        const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'goowee-dropdown-'));
         try {
-            const assets = path.resolve(__dirname, '../../../..', moduleName, 'grails-app/assets/dueuno');
+            const assets = path.resolve(__dirname, '../../../..', moduleName, 'grails-app/assets/goowee');
             const read = file => fs.readFileSync(path.join(assets, file), 'utf8');
             const button = id => `<div class="component-button btn-group"><button id="${id}" class="btn dropdown-toggle" data-bs-toggle="dropdown">Actions</button>
                 <ul class="dropdown-menu"><li><a class="dropdown-item" href="#" id="${id}-first">First</a></li>

@@ -209,13 +209,13 @@ class DateTimeField extends Control {
         }
 
         return TypedValue.of(Type.DATETIME, {
-                year: date.year,
-                month: date.month + 1,
-                day: date.date,
-                hour: date.hours,
-                minute: date.minutes,
-                second: date.seconds,
-            });
+            year: date.year,
+            month: date.month + 1,
+            day: date.date,
+            hour: date.hours,
+            minute: date.minutes,
+            second: date.seconds,
+        });
     }
 
     static setReadonly($element, value) {

@@ -99,10 +99,10 @@ class TimeField extends DateTimeField {
         }
 
         return TypedValue.of(Type.TIME, {
-                hour: time.hours,
-                minute: time.minutes,
-                second: time.seconds,
-            });
+            hour: time.hours,
+            minute: time.minutes,
+            second: time.seconds,
+        });
     }
 }
 

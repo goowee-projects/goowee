@@ -37,7 +37,7 @@ import java.time.temporal.Temporal
  * The row lifecycle consists of two phases driven by {@link TableRowset}:
  * </p>
  * <ol>
- *   <li>{@link #preProcessRow()} — converts the raw record to a value map, creates all cells,
+ *   <li>{@link #preProcessRow()} — creates all cells from the value map,
  *       processes keys, copies actions from the table, applies transformers, creates hidden
  *       submit fields, and applies pretty-printer configuration.</li>
  *   <li>{@link #postProcessRow()} — injects key params into the action button, resolves final
@@ -70,8 +70,8 @@ class TableRow extends Component {
     /** Zero-based index of this row within its rowset. */
     Integer index
 
-    /** The raw record or value map used to populate this row's cells. */
-    Object values
+    /** Value map used to populate this row's cells, converted from the raw record during construction. */
+    Map<String, Object> values
 
     /** Per-row action {@link Button} populated from the table's action definitions. */
     Button actions
@@ -96,7 +96,7 @@ class TableRow extends Component {
 
     /**
      * Creates a {@code TableRow} instance configured from the supplied argument map.
-     * Initialises the per-row action button and selection checkbox.
+     * Converts the raw record to a value map and initialises the per-row action button and selection checkbox.
      *
      * @param args initialisation arguments; recognised keys include:
      * {@code table} ({@link Table}, required),
@@ -120,7 +120,7 @@ class TableRow extends Component {
 
         cells = [:]
         submit = [:]
-        values = args.values ?: [:]
+        values = Elements.toMap(args.values, table.columns, table.includeValues, table.excludeValues)
 
         isHeader = (args.isHeader == null) ? false : args.isHeader
         isFooter = (args.isFooter == null) ? false : args.isFooter
@@ -145,14 +145,13 @@ class TableRow extends Component {
     }
 
     /**
-     * First phase of row processing: converts the raw record to a value map, creates all
+     * First phase of row processing: creates all
      * {@link TableCell} instances, and runs the key, action, transformer, submit-value, and
      * pretty-printer processing steps.
      * Called by {@link TableRowset#setRows(Collection)} before the user's {@code eachRow} closure.
      */
     void preProcessRow() {
         selected.readonly = table.readonly
-        values = Elements.toMap(values, table.columns, table.includeValues, table.excludeValues)
 
         createCells()
 
@@ -398,14 +397,21 @@ class TableRow extends Component {
     /**
      * Resolves the key values from the row's value map according to the table's key column list.
      * GORM object IDs are extracted as strings. Custom key columns (user-declared keys that have
-     * no matching value) are back-filled from the {@code id} column to avoid conflicts when
-     * passing IDs to another page.
+     * no matching value and no nested property path) are back-filled from the {@code id} column
+     * to avoid conflicts when passing IDs to another page.
      *
      * @return a map of key column name → resolved key value
      */
     private Map processKeys() {
         Map results = [:]
         List<String> keyColumns = table.keys
+
+        // Resolve nested keys before filling aliases, regardless of the position of 'id'.
+        for (keyColumn in keyColumns) {
+            if (keyColumn.contains('.') && !values.containsKey(keyColumn)) {
+                values[keyColumn] = ObjectUtils.getValue(values, keyColumn)
+            }
+        }
 
         for (keyColumn in keyColumns) {
             Object value
@@ -419,9 +425,9 @@ class TableRow extends Component {
             if (keyColumn == 'id') {
                 results[keyColumn] = value
 
-                // We copy id's value into null keyColumns (user declared keyColumns that don't match any record value)
+                // Copy id into null aliases, but preserve null values of nested property paths.
                 // These keyColumns are used when passing an id to another page to avoid "id" conflicts with the next page
-                List customKeyColumns = keyColumns.findAll { values[it] == null }
+                List customKeyColumns = keyColumns.findAll { !it.contains('.') && values[it] == null }
                 for (customKeyColumn in customKeyColumns) {
                     values[customKeyColumn] = value
                 }

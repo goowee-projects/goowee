@@ -79,7 +79,7 @@ class TenantService {
     void eachTenant(Closure closure) {
         List<TTenant> tenantList = list()
         for (tenant in tenantList) {
-            Tenants.withId(tenant.tenantId) {
+            withTenant(tenant.tenantId) {
                 closure.call(tenant.tenantId)
             }
         }
@@ -112,7 +112,7 @@ class TenantService {
      * Returns the name of the current tenantId
      * @return the name of the current tenantId
      */
-    String getCurrentTenantId() {
+    static String getCurrentTenantId() {
         return Tenants.currentId()
     }
 
@@ -126,6 +126,7 @@ class TenantService {
         return getByTenantId(currentTenantId)
     }
 
+    @Transactional
     TTenant get(Serializable id) {
         return TTenant.get(id) as TTenant
     }
@@ -150,12 +151,14 @@ class TenantService {
         return query
     }
 
+    @Transactional
     List<TTenant> list(Map filterParams = [:], Map fetchParams = [:]) {
         if (!fetchParams.sort) fetchParams.sort = [dateCreated: 'asc']
         def query = buildQuery(filterParams)
         return query.list(fetchParams)
     }
 
+    @Transactional
     Number count(Map filters = [:]) {
         def query = buildQuery(filters)
         return query.count()
@@ -199,7 +202,7 @@ class TenantService {
             )
 
             if (obj.tenantId != defaultTenantId) { // Default tenant gets its 'dataSource' from application.yml
-                log.info "${obj.tenantId} Tenant - Connecting to database..."
+                log.info "'${obj.tenantId}' tenant - Connecting to database..."
                 connectionSourceService.connect(obj.connectionSource)
             }
         }
@@ -207,26 +210,30 @@ class TenantService {
         return obj
     }
 
+    @Transactional
     void provision(String tenantId) {
         withTenant(tenantId) {
-            provisionTenant()
+            provisionTenant(tenantId)
         }
     }
 
+    @Transactional
     void provisionAllTenants() {
         eachTenant { String tenantId ->
-            provisionTenant()
+            provisionTenant(tenantId)
         }
     }
 
-    private void provisionTenant() {
-        applicationService.executeOnPluginTenantInstall()
-        applicationService.executeOnTenantInstall()
+    @Transactional
+    private void provisionTenant(String tenantId) {
+        applicationService.executeOnPluginTenantInstall(tenantId)
+        applicationService.executeOnTenantInstall(tenantId)
     }
 
+    @Transactional
     void updateAllTenants() {
         eachTenant { String tenantId ->
-            applicationService.executeOnUpdate()
+            applicationService.executeOnUpdate(tenantId)
         }
     }
 

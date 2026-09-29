@@ -22,6 +22,7 @@ import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentTable
+import goowee.elements.controls.PasswordField
 import goowee.elements.controls.Select
 import goowee.elements.controls.TextField
 import goowee.elements.style.Color
@@ -101,6 +102,7 @@ class TenantController implements ElementsController {
             addField(
                 class: TextField,
                 id: 'host',
+                readonly: false,
                 cols: 6,
             )
             addField(
@@ -135,7 +137,7 @@ class TenantController implements ElementsController {
                 cols: 6,
             )
             addField(
-                class: TextField,
+                class: PasswordField,
                 id: 'connectionSource.password',
                 cols: 6,
             )

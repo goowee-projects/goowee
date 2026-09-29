@@ -20,7 +20,6 @@ import goowee.elements.ElementsException
 import goowee.elements.LinkGeneratorAware
 import goowee.elements.WebRequestAware
 import goowee.elements.core.Feature
-import goowee.elements.core.LinkDefinition
 import goowee.elements.core.Menu
 import goowee.elements.core.PrettyPrinterDecimalFormat
 import goowee.elements.pages.Shell
@@ -155,7 +154,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         tenantPropertyService.setString('LOGOUT_LANDING_URL', '')
         tenantPropertyService.setString('LOGIN_REGISTRATION_URL', '')
         tenantPropertyService.setString('LOGIN_PASSWORD_RECOVERY_URL', '')
-        tenantPropertyService.setString('LOGIN_COPY', 'Copyright &copy; <a href="https://goowee.org">Goowee</a><br/>All rights reserved')
+        tenantPropertyService.setString('LOGIN_COPY', 'Copyright &copy; <a href="https://goowee.com">Goowee</a><br/>All rights reserved')
 
         tenantPropertyService.setString('LOGIN_BACKGROUND_IMAGE', linkPublicResource(tenantId, '/brand/login-background.jpg', false))
         tenantPropertyService.setString('LOGIN_LOGO', linkPublicResource(tenantId, '/brand/login-logo.png', false))
@@ -243,12 +242,12 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         applicationService.registerDeveloperUserFeature(
             controller: 'shell',
             action: 'toggleDevHints',
-            icon: 'fa-message',
+            icon: 'fa-key',
             order: 10000050,
         )
         applicationService.registerDeveloperUserFeature(
             controller: 'gormExplorer',
-            icon: 'fa-database',
+            icon: 'fa-table',
             targetNew: true,
             order: 10000060,
         )
@@ -295,8 +294,6 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
 
         Shell shell = shellService.shell
         shell.setUser(currentUsername, user.firstname, user.lastname)
-        shell.setLogoLink(new LinkDefinition(url: loginLandingPage))
-
         setMenuVisibility(shell.menu)
         setMenuVisibility(shell.userMenu)
     }
@@ -399,14 +396,6 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
     }
 
     /**
-     * Returns the list of currently logged in user groups
-     * @return the list of currently logged in user groups
-     */
-    List<TRoleGroup> getCurrentUserGroups() {
-        return TRoleGroup.listByUser(getCurrentUser().id)
-    }
-
-    /**
      * Returns the currently logged in user
      * @return the currently logged in user
      */
@@ -476,10 +465,10 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         initializeShell()
 
         // Executes custom login code
-        applicationService.executeBootEvents('afterLogin', session)
-
         String tenantId = tenantService.currentTenantId
-        log.info "${tenantId} Tenant - Login '${currentUsername}', language '${currentLanguage}', authorised for ${currentUserAuthorities}"
+        applicationService.executeBootEvents(tenantId, 'afterLogin', session)
+
+        log.info "'${tenantId}' tenant - Login '${currentUsername}', language '${currentLanguage}', authorised for ${currentUserAuthorities}"
         auditService.log(AuditOperation.LOGIN, currentUserAuthorities.join(', '))
     }
 
@@ -520,51 +509,51 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
      */
     void executeAfterLogout() {
         auditService.log(AuditOperation.LOGOUT, "-")
-        applicationService.executeBootEvents('afterLogout')
+        applicationService.executeBootEvents(tenantService.defaultTenantId, 'afterLogout')
         executeLogout()
     }
 
     /**
-     * Returns the default landing page URL configured for the current user
+     * Returns the default landing page configured for the current user
      * @return
      */
     @CompileDynamic
     String getUserLandingPage() {
-        if (isSuperAdmin()) {
-            return 'shell/index'
-        }
+        if (isSuperAdmin())
+            return ''
 
         TRoleGroup currentUserGroup = currentUser.defaultGroup
 
         // User configured DEFAULT GROUP
         if (currentUserGroup && currentUserGroup.landingPage) {
-            return currentUserGroup.landingPage
+            return '/' + currentUserGroup.landingPage
 
         } else { // USERS Group (applies to all users of a tenant)
             TTenant currentTenant = tenantService.currentTenant
             TRoleGroup usersGroup = TRoleGroup.findByTenantAndName(currentTenant, GROUP_USERS)
             if (usersGroup && usersGroup.landingPage) {
-                return usersGroup.landingPage
+                return '/' + usersGroup.landingPage
             }
         }
 
         // Application defined landing page (applies to ALL users)
-        return tenantPropertyService.getString('LOGIN_LANDING_URL', true) ?: 'shell/index'
+        return tenantPropertyService.getString('LOGIN_LANDING_URL', true)
     }
 
     String getLoginLandingPage() {
-        String requestLandingPage = requestParams.landingPage
         String shellUrlMapping = tenantPropertyService.getString('SHELL_URL_MAPPING', true)
+        String loginLandingPage = userLandingPage
+        String urlLandingPage = requestParams.landingPage
 
-        return requestLandingPage ?: userLandingPage ?: shellUrlMapping ?: 'shell'
+        return urlLandingPage ?: loginLandingPage ?: shellUrlMapping ?: '/'
     }
 
     String getLogoutLandingPage() {
-        String requestLandingPage = requestParams.landingPage
-        String logoutLandingPage = tenantPropertyService.getString('LOGOUT_LANDING_URL', true)
         String shellUrlMapping = tenantPropertyService.getString('SHELL_URL_MAPPING', true)
+        String logoutLandingPage = tenantPropertyService.getString('LOGOUT_LANDING_URL', true)
+        String urlLandingPage = requestParams.landingPage
 
-        return requestLandingPage ?: logoutLandingPage ?: shellUrlMapping ?: 'login'
+        return urlLandingPage ?: logoutLandingPage ?: shellUrlMapping ?: '/'
     }
 
     //
@@ -762,11 +751,11 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
             ?: tenantService.getByTenantId(args.tenantId as String)
             ?: tenantService.currentTenant
 
-        log.info "${tenant.tenantId} Tenant - Creating user '${args.username}' in groups ${groups} (default '${defaultGroup}')"
+        log.info "'${tenant.tenantId}' tenant - Creating user '${args.username}' in groups ${groups} (default '${defaultGroup}')"
 
         TUser user = TUser.findByUsername(args.username as String)
         if (user) {
-            log.warn "${tenant.tenantId} Tenant - User '${args.username}' already exists, skipping user creation."
+            log.warn "'${tenant.tenantId}' tenant - User '${args.username}' already exists, skipping user creation."
             user.errors.rejectValue('username', 'user.username.already.exists', [args.username] as Object[], 'user.username.already.exists')
             return user
         }
@@ -802,7 +791,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         user.save(flush: true, failOnError: args.failOnError)
 
         if (user.hasErrors()) {
-            log.error "${tenant.tenantId} Tenant - Error creating user '${args.username}' initialised as: ${args}"
+            log.error "'${tenant.tenantId}' tenant - Error creating user '${args.username}' initialised as: ${args}"
             log.error user.errors.toString()
             return user
         }
@@ -813,7 +802,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
             if (roleGroup) {
                 TUserRoleGroup.create(user, roleGroup)
             } else {
-                log.error "${tenant.tenantId} Tenant - Error assigning group '${groupName}' to user '${args.username}', group not found!"
+                log.error "'${tenant.tenantId}' tenant - Error assigning group '${groupName}' to user '${args.username}', group not found!"
             }
         }
 
@@ -1040,7 +1029,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
 
         TRoleGroup roleGroup = TRoleGroup.findByNameAndTenant(groupName, tenant)
         if (!roleGroup) {
-            log.info "${tenant.tenantId} Tenant - Creating group '${groupName}' with authorities: ${authorities}"
+            log.info "'${tenant.tenantId}' tenant - Creating group '${groupName}' with authorities: ${authorities}"
             roleGroup = new TRoleGroup(
                 tenant: tenant,
                 name: groupName,
@@ -1049,7 +1038,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
             )
             roleGroup.save(flush: true, failOnError: args.failOnError)
         } else {
-            log.info "${tenant.tenantId} Tenant - Updating group '${groupName}' with authorities: ${authorities}"
+            log.info "'${tenant.tenantId} tenant' - Updating group '${groupName}' with authorities: ${authorities}"
         }
 
         for (authority in authorities) {
@@ -1094,7 +1083,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
         TTenant tenant = TTenant.findByTenantId(args.tenantId)
         TRoleGroup roleGroup = tenant
             ? TRoleGroup.findByTenantAndName(tenant, groupName)
-            : TRoleGroup.get(id)
+            : TRoleGroup.get(id as Serializable)
         if (!roleGroup) {
             throw new ElementsException("Group '${id}' not found!")
         }

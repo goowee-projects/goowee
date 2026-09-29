@@ -84,7 +84,7 @@ class ShellController implements ElementsController {
     @Secured(['permitAll'])
     def toggleDevHints() {
         devDisplayHints = !devDisplayHints
-        display url: securityService.userLandingPage
+        display controller: securityService.userLandingPage ?: 'shell', direct: true
     }
 
     @Secured(['permitAll'])
@@ -92,13 +92,13 @@ class ShellController implements ElementsController {
         Boolean logs = tenantPropertyService.getBoolean('LOG_ERROR')
         tenantPropertyService.setBoolean('LOG_ERROR', !logs)
         tenantPropertyService.setBoolean('LOG_DEBUG', !logs)
-        display url: securityService.userLandingPage
+        display controller: securityService.userLandingPage ?: 'shell', direct: true
     }
 
     @Secured(['permitAll'])
     def switchLanguage() {
         currentLanguage = (String) params.id
         securityService.saveCurrentUserLanguage()
-        display url: securityService.userLandingPage
+        display controller: securityService.userLandingPage ?: 'shell', direct: true
     }
 }

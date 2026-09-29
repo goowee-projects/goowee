@@ -24,6 +24,7 @@ import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentTable
 import goowee.elements.controls.Checkbox
+import goowee.elements.controls.PasswordField
 import goowee.elements.controls.Select
 import goowee.elements.controls.TextField
 import goowee.elements.style.Color
@@ -135,7 +136,7 @@ class ConnectionSourceController implements ElementsController {
                 cols: 6,
             )
             addField(
-                class: TextField,
+                class: PasswordField,
                 id: 'password',
                 cols: 6,
             )

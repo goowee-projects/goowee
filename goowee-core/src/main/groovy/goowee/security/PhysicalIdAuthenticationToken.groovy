@@ -11,7 +11,7 @@ class PhysicalIdAuthenticationToken extends AbstractAuthenticationToken {
     private final Object principal
 
     PhysicalIdAuthenticationToken(Object principal) {
-        super(null)
+        super([])
         this.principal = principal
         setAuthenticated(false)
     }

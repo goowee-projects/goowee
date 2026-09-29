@@ -23,7 +23,6 @@ import goowee.elements.core.PrettyPrinter
 import goowee.elements.core.Transformer
 import goowee.tenant.TenantService
 import goowee.utils.EnvUtils
-import goowee.utils.LocaleUtils
 import grails.core.GrailsApplication
 import grails.gorm.transactions.Transactional
 import grails.util.Holders
@@ -40,6 +39,7 @@ import org.grails.io.support.Resource
  *
  * @author Gianluca Sartori
  */
+
 @Slf4j
 @CompileStatic
 class ApplicationService implements LinkGeneratorAware {
@@ -84,10 +84,10 @@ class ApplicationService implements LinkGeneratorAware {
 
     /**
      * Enables third party components implementations.
-     * See BootStrap.groovy in the `goowee-extra` project
+     * See BootStrap.groovy in the 'elements-extra' project
      *
      * @param componentsImplementation The path to the components implementation assets (.css and .js main files),
-     * Eg: /thirdparty/my-components (see "Goowee Extra" implementation)
+     * Eg: /thirdparty/my-components (see "Elements Extra" implementation)
      */
     void registerComponents(String componentsImplementation) {
         Elements.registerComponents(componentsImplementation)
@@ -106,10 +106,11 @@ class ApplicationService implements LinkGeneratorAware {
         startApplication()
     }
 
+    @Transactional
     void performInstallation() {
         connectionSourceService.installOrConnect()
 
-        if (!systemInstalled) {
+        if (!applicationInstalled) {
             executeOnPluginInstall()
             executeOnInstall()
         }
@@ -286,7 +287,7 @@ class ApplicationService implements LinkGeneratorAware {
             log.info "INSTALLING APPLICATION"
             log.info "-" * 78
 
-            executeInstall('onInstall')
+            executeInstall(tenantService.defaultTenantId, 'onInstall')
         }
     }
 
@@ -296,49 +297,49 @@ class ApplicationService implements LinkGeneratorAware {
             log.info "INSTALLING PLUGINS"
             log.info "-" * 78
 
-            executeInstall('onPluginInstall')
+            executeInstall(tenantService.defaultTenantId, 'onPluginInstall')
         }
     }
 
-    void executeOnPluginTenantInstall() {
-        String tenantId = tenantService.currentTenantId
+    @Transactional
+    void executeOnPluginTenantInstall(String tenantId) {
         if (hasBootEvents('onPluginTenantInstall')) {
             log.info "-" * 78
-            log.info "${tenantId} Tenant - SETTING UP PLUGINS"
+            log.info "'${tenantId}' tenant - SETTING UP PLUGINS"
             log.info "-" * 78
 
-            executeInstall('onPluginTenantInstall', false, true)
+            executeInstall(tenantId, 'onPluginTenantInstall', false, true)
         }
     }
 
-    void executeOnTenantInstall() {
-        String tenantId = tenantService.currentTenantId
+    @Transactional
+    void executeOnTenantInstall(String tenantId) {
         if (hasBootEvents('onTenantInstall') || hasBootEvents('onDevInstall')) {
             log.info "-" * 78
-            log.info "${tenantId} Tenant - SETTING UP APPLICATION"
+            log.info "'${tenantId}' tenant - SETTING UP APPLICATION"
             log.info "-" * 78
 
-            executeInstall('onTenantInstall')
+            executeInstall(tenantId, 'onTenantInstall')
             if (EnvUtils.isDevelopment()) {
-                executeInstall('onDevInstall', true)
+                executeInstall(tenantId, 'onDevInstall', true)
             }
         }
     }
 
-    void executeOnUpdate() {
-        String tenantId = tenantService.currentTenantId
+    @Transactional
+    void executeOnUpdate(String tenantId) {
         if (hasBootEvents('onUpdate')) {
             log.info "-" * 78
-            log.info "${tenantId} Tenant - UPDATING APPLICATION"
+            log.info "'${tenantId}' tenant - UPDATING APPLICATION"
             log.info "-" * 78
 
-            executeInstall('onUpdate', false, true)
+            executeInstall(tenantId, 'onUpdate', false, true)
         }
     }
 
     @Transactional
     @CompileDynamic
-    Boolean getSystemInstalled() {
+    Boolean getApplicationInstalled() {
         return TApplicationInstall.count() > 0
     }
 
@@ -350,8 +351,7 @@ class ApplicationService implements LinkGeneratorAware {
 
     @Transactional
     @CompileDynamic
-    private void executeInstall(String listName, Boolean isDev = false, Boolean sort = false) {
-        String tenantId = tenantService.currentTenantId
+    private void executeInstall(String tenantId, String listName, Boolean isDev = false, Boolean sort = false) {
         Map<String, Closure> eventList = getBootEvents(listName)
         Map revisionList = sort ? eventList.sort() : eventList
 
@@ -366,12 +366,14 @@ class ApplicationService implements LinkGeneratorAware {
                 continue
             }
 
-            log.info "${tenantId} Tenant - Executing '${revisionName}'..."
+            log.info "'${tenantId}' tenant - Executing '${revisionName}'..."
 
-            if (closure.maximumNumberOfParameters == 1) {
-                closure.call(tenantId)
-            } else {
-                closure.call(tenantId, pluginName)
+            tenantService.withTenant(tenantId) {
+                if (closure.maximumNumberOfParameters == 1) {
+                    closure.call(tenantId)
+                } else {
+                    closure.call(tenantId, pluginName)
+                }
             }
 
             new TApplicationInstall(
@@ -391,49 +393,50 @@ class ApplicationService implements LinkGeneratorAware {
      *
      * @param listName Name of the list to execute
      */
-    void executeBootEvents(String listName, GrailsHttpSession session = null) {
-        String tenantId = tenantService.currentTenantId
+    void executeBootEvents(String tenantId, String listName, GrailsHttpSession session = null) {
         Map<String, Closure> eventList = getBootEvents(listName)
         for (revision in eventList) {
             String revisionName = revision.key
             Closure closure = revision.value
 
-            log.info "${tenantId} Tenant - Executing '${revisionName}'..."
-            if (closure.maximumNumberOfParameters == 1) {
-                closure.call(tenantId)
-            } else {
-                closure.call(tenantId, session)
+            log.info "'${tenantId}' tenant - Executing '${revisionName}'..."
+            tenantService.withTenant(tenantId) {
+                if (closure.maximumNumberOfParameters == 1) {
+                    closure.call(tenantId)
+                } else {
+                    closure.call(tenantId, session)
+                }
             }
         }
     }
 
     private void executeBeforeInit() {
-        executeBootEvents('beforeInit')
+        executeBootEvents(tenantService.defaultTenantId, 'beforeInit')
     }
 
     private void executeOnInit() {
-        executeBootEvents('onInit')
+        executeBootEvents(tenantService.defaultTenantId, 'onInit')
     }
 
     private void executeAfterInit() {
-        executeBootEvents('afterInit')
+        executeBootEvents(tenantService.defaultTenantId, 'afterInit')
     }
 
     private void executeBeforeTenantInit() {
         tenantService.eachTenant { String tenantId ->
-            executeBootEvents('beforeTenantInit')
+            executeBootEvents(tenantId, 'beforeTenantInit')
         }
     }
 
     private void executeOnTenantInit() {
         tenantService.eachTenant { String tenantId ->
-            executeBootEvents('onTenantInit')
+            executeBootEvents(tenantId, 'onTenantInit')
         }
     }
 
     private void executeAfterTenantInit() {
         tenantService.eachTenant { String tenantId ->
-            executeBootEvents('afterTenantInit')
+            executeBootEvents(tenantId, 'afterTenantInit')
         }
     }
 
@@ -484,7 +487,7 @@ class ApplicationService implements LinkGeneratorAware {
         for (language in languages) {
             registerUserFeature(
                 text: 'default.language.' + language,
-                image: 'libs/flags/' + LocaleUtils.getFlagCode(language) + '.svg',
+                image: 'libs/flags/' + getFlagCode(language) + '.svg',
                 controller: 'shell',
                 action: 'switchLanguage',
                 params: [id: language],
@@ -652,7 +655,7 @@ class ApplicationService implements LinkGeneratorAware {
         }
 
         List<String> languages = languageFiles.collect { resource ->
-            def filename = resource.filename.toLowerCase()
+            def filename = resource.filename
             if (filename == 'messages.properties') {
                 filename = 'en'
             } else {
@@ -680,5 +683,27 @@ class ApplicationService implements LinkGeneratorAware {
         } else {
             return filename.startsWith('messages')
         }
+    }
+
+    private String getFlagCode(String lang) {
+        // Per riferimento:
+        // - Java Locale docs:                     https://docs.oracle.com/javase/7/docs/api/java/util/Locale.html
+        // - Icon library:                         https://www.flaticon.com/packs/countrys-flags
+        // - Locale uses ISO 639 Alpha 2 codes:    https://www.loc.gov/standards/iso639-2/php/English_list.php
+        // - Flags uses ISO 3166-1 Alpha 2 codes:  https://www.iso.org/obp/ui/
+        Map localeToFlag = [
+            en   : 'gb',    // defaults to UK (cause we're european ;-)
+            en_GB: 'gb',
+            en_US: 'us',
+            pt_PT: 'pt',
+            pt_BR: 'br',
+            zh_CN: 'cn',
+            cs   : 'cs_CZ',
+            da   : 'dk',
+            ja   : 'jp',
+            nb   : 'no',
+        ]
+        String flagLang = localeToFlag[lang] ?: lang
+        return flagLang
     }
 }

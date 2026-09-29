@@ -26,7 +26,7 @@ environments:
       port: 9443
       port-http: 9080
       servlet:
-        context-path: /test
+        context-path: /apptest
         session:
           persistent: true
           store-dir: app-test
@@ -109,7 +109,6 @@ dataSource:
   pooled: true
   jmxExport: true
   driverClassName: com.mysql.cj.jdbc.Driver
-  dialect: org.hibernate.dialect.MySQLDialect
 
   url: jdbc:mysql://localhost:3306/goowee?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
   username: root

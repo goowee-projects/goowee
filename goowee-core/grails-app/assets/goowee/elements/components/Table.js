@@ -49,7 +49,7 @@ class Table extends Component {
     static onSelectAll(event) {
         let $element = $(event.currentTarget);
         let $checkboxes = $element.closest('table').find('.component-table-selection input');
-        Checkbox.setValue($checkboxes, {value: $element.is(':checked')});
+        Checkbox.setValue($checkboxes, TypedValue.bool($element.is(':checked')));
 
         Table.displayGroupFeatures($element);
     }
@@ -69,6 +69,13 @@ class Table extends Component {
     static setValueByKey($element, value) {
         let $cell = $element.find('.component-table-row:has(.component-table-values):has([data-21-id="' + value.keyName + '"][value="' + value.keyValue + '"]) .' + value.column + ' span');
         $cell.text(value.value);
+    }
+
+    static setHtmlByKey($element, valueMap) {
+        let $cell = $element.find('.component-table-row:has(.component-table-values):has([data-21-id="' + valueMap.keyName + '"][value="' + valueMap.keyValue + '"]) .' + valueMap.column);
+        $cell.html(valueMap.value);
+        PageTooltips.initialize();
+        PageTooltips.finalize();
     }
 
     static getValues($element) {
@@ -91,11 +98,11 @@ class Table extends Component {
                 values[columnName] = value;
             });
 
-            rows.push({type: Type.MAP, value: values});
+            rows.push(TypedValue.map(values));
             i++;
         });
 
-        return {rows: {type: Type.LIST, value: rows}};
+        return {rows: TypedValue.list(rows)};
     }
 
     static processColumnName(name) {
@@ -125,7 +132,7 @@ class Table extends Component {
 
     static displaySelectAllRows($element, value) {
         let $tableSelectAllRows = $element.closest('table').find('.component-table-selection-header input');
-        Checkbox.setValue($tableSelectAllRows, {value: value});
+        Checkbox.setValue($tableSelectAllRows, TypedValue.bool(value));
     }
 }
 

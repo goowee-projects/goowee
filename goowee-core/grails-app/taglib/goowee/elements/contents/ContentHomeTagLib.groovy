@@ -14,8 +14,8 @@
  */
 package goowee.elements.contents
 
-import goowee.core.WebRequestAware
-import goowee.elements.Menu
+import goowee.elements.WebRequestAware
+import goowee.elements.core.Menu
 import goowee.elements.pages.Shell
 import goowee.elements.pages.ShellService
 
@@ -44,4 +44,5 @@ class ContentHomeTagLib implements WebRequestAware {
             out << g.render(template: tagsTemplatesPath + "ContentHomeFavourite", model: [feature: feature])
         }
     }
+
 }

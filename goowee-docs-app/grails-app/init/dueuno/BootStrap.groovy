@@ -14,7 +14,7 @@
  */
 package goowee
 
-import goowee.core.ApplicationService
+import goowee.application.ApplicationService
 
 class BootStrap {
 

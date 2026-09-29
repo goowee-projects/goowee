@@ -15,7 +15,7 @@
 package goowee.elements.controls
 
 import goowee.commons.utils.FileUtils
-import goowee.core.WebRequestAware
+import goowee.elements.WebRequestAware
 
 /**
  * @author Gianluca Sartori

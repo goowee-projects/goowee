@@ -14,7 +14,7 @@
  */
 package goowee.elements.components
 
-import goowee.elements.Component
+import goowee.elements.core.Component
 import groovy.transform.CompileStatic
 
 /**
@@ -44,9 +44,9 @@ abstract class Chart extends Component {
     @Override
     String getPropertiesAsJSON(Map properties = [:]) {
         Map thisProperties = [
-                values: values,
-                labels: labels,
-                colors: colors,
+            values: values,
+            labels: labels,
+            colors: colors,
         ]
 
         return super.getPropertiesAsJSON(thisProperties + properties)

@@ -47,7 +47,7 @@ class PersonService {
     TPerson get(Serializable id) {
         // Add single-sided relationships here (Eg. references to other Domain Objects)
         Map fetch = [
-                company: 'join',
+            company: 'join',
         ]
 
         return buildQuery(id: id).get(fetch: fetch)
@@ -59,7 +59,7 @@ class PersonService {
         // Add single-sided relationships here (Eg. references to other DomainObjects)
         // DO NOT add hasMany relationships, you are going to have troubles with pagination
         fetchParams.fetch = [
-                company: 'join',
+            company: 'join',
         ]
 
         def query = buildQuery(filterParams)
@@ -95,6 +95,6 @@ class PersonService {
     @Transactional
     void delete(Serializable id) {
         TPerson obj = get(id)
-        obj.delete(flush: true, failOnError: true)
+        obj.delete(flush: true)
     }
 }

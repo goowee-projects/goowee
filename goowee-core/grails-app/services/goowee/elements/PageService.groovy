@@ -14,13 +14,15 @@
  */
 package goowee.elements
 
+
 import goowee.commons.utils.FileUtils
-import goowee.core.LinkGeneratorAware
-import goowee.core.WebRequestAware
 import goowee.elements.contents.ContentHeader
-import goowee.properties.TenantPropertyService
+import goowee.elements.core.Component
+import goowee.elements.core.Page
+import goowee.elements.core.Transition
 import goowee.security.SecurityService
-import goowee.tenants.TenantService
+import goowee.tenant.TenantPropertyService
+import goowee.tenant.TenantService
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
@@ -106,10 +108,10 @@ class PageService implements WebRequestAware, LinkGeneratorAware {
         args.requiredTextColor = tenantPropertyService.getString('REQUIRED_TEXT_COLOR')
 
         args.keyPress = [
-                triggerKey: tenantPropertyService.getString('KEYPRESS_TRIGGER_KEY'),
-                readingSpeed: tenantPropertyService.getNumber('KEYPRESS_READING_SPEED'),
-                bufferCleanupTimeout: tenantPropertyService.getNumber('KEYPRESS_BUFFER_CLEANUP_TIMEOUT'),
-                keepClean: tenantPropertyService.getBoolean('KEYPRESS_KEEP_CLEAN'),
+            triggerKey          : tenantPropertyService.getString('KEYPRESS_TRIGGER_KEY'),
+            readingSpeed        : tenantPropertyService.getNumber('KEYPRESS_READING_SPEED'),
+            bufferCleanupTimeout: tenantPropertyService.getNumber('KEYPRESS_BUFFER_CLEANUP_TIMEOUT'),
+            keepClean           : tenantPropertyService.getBoolean('KEYPRESS_KEEP_CLEAN'),
         ]
 
         return args

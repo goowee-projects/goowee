@@ -14,9 +14,9 @@
  */
 package goowee.elements.pages
 
-import goowee.elements.Page
-import goowee.elements.PageContent
 import goowee.elements.contents.ContentBlank
+import goowee.elements.core.Page
+import goowee.elements.core.PageContent
 import groovy.transform.CompileStatic
 
 /**

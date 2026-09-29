@@ -5,9 +5,11 @@ import goowee.elements.ElementsController
 import goowee.elements.components.Button
 import goowee.elements.components.Form
 import goowee.elements.components.Grid
+import goowee.elements.components.Separator
 import goowee.elements.components.Timer
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.NumberField
+import goowee.elements.controls.TextField
 import goowee.elements.style.TextDefault
 import grails.plugin.springsecurity.annotation.Secured
 import groovy.util.logging.Slf4j
@@ -37,21 +39,65 @@ class TimerController implements ElementsController {
         def c = createContent(ContentForm)
         c.header.removeNextButton()
         c.form.addField(
-                class: Button,
-                id: 'show',
-                action: 'show',
-                displayLabel: false,
-                cols: 3,
+            class: Button,
+            id: 'show',
+            action: 'show',
+            displayLabel: false,
+            cols: 3,
         )
         c.form.addField(
-                class: Button,
-                id: 'showModal',
-                action: 'show',
-                modal: true,
-                fullscreen: true,
-                displayLabel: false,
-                cols: 3,
+            class: Button,
+            id: 'showModal',
+            action: 'show',
+            modal: true,
+            fullscreen: true,
+            displayLabel: false,
+            cols: 3,
         )
+
+        def form = c.addComponent(Form, 'fTransition')
+        form.with {
+            addField(
+                class: Separator,
+                id: 'delay',
+            )
+            addField(
+                class: Button,
+                id: 'b1',
+                action: 'onConfirm',
+                displayLabel: false,
+            )
+            addField(
+                class: TextField,
+                id: 'f1',
+                cols: 2,
+            )
+            addField(
+                class: TextField,
+                id: 'f2',
+                cols: 2,
+            )
+            addField(
+                class: TextField,
+                id: 'f3',
+                cols: 2,
+            )
+            addField(
+                class: TextField,
+                id: 'f4',
+                cols: 2,
+            )
+            addField(
+                class: TextField,
+                id: 'f5',
+                cols: 2,
+            )
+            addField(
+                class: TextField,
+                id: 'f6',
+                cols: 2,
+            )
+        }
         display content: c
     }
 
@@ -66,25 +112,25 @@ class TimerController implements ElementsController {
         }
 
         c.addComponent(Timer, 'timer1', [
-                interval: 1300,
-                action: 'reload1',
-                enabled: false,
-                executeImmediately: true,
+            interval          : 1300,
+            action            : 'reload1',
+            enabled           : false,
+            executeImmediately: true,
         ])
 
         c.addComponent(Timer, 'timer2', [
-                interval: 2000,
-                action: 'reload2',
-                enabled: false,
-                executeImmediately: true,
+            interval          : 2000,
+            action            : 'reload2',
+            enabled           : false,
+            executeImmediately: true,
         ])
 
         c.addComponent(Grid).with {
             addColumn(sm: 9).with {
                 addComponent(Form, 'formNum').with {
                     addField(
-                            class: NumberField,
-                            id: 'number',
+                        class: NumberField,
+                        id: 'number',
                     )
                 }
                 addComponent(timerService.createGrid(7))
@@ -148,6 +194,38 @@ class TimerController implements ElementsController {
         t.replace('formHead', 'formHead')
         t.replace('table', 'table')
         t.loading(false)
+        display transition: t
+    }
+
+
+    def onConfirm() {
+        def t = createTransition()
+        t.loading(false)
+        t.setValue('f1', 'A')
+        t.addCssClass('f6', 'invisible')
+        t.delay(500)
+        t.setValue('f2', 'B')
+        t.removeCssClass('f6', 'invisible')
+        t.delay(500)
+        t.setValue('f3', 'C')
+        t.addCssClass('f6', 'invisible')
+        t.delay(500)
+        t.setValue('f4', 'D')
+        t.removeCssClass('f6', 'invisible')
+        t.delay(500)
+        t.setValue('f5', 'E')
+        t.addCssClass('f6', 'invisible')
+        t.delay(500)
+        t.setValue('f6', 'F')
+        t.removeCssClass('f6', 'invisible')
+        t.delay(1000)
+        t.setValue('f1', null)
+        t.setValue('f2', null)
+        t.setValue('f3', null)
+        t.setValue('f4', null)
+        t.setValue('f5', null)
+        t.setValue('f6', null)
+
         display transition: t
     }
 }

@@ -40,18 +40,19 @@ class TPerson implements GormEntity, MultiTenant<TPerson> {
 
     TCompany company
     static belongsTo = [
-            company: TCompany,
+        company: TCompany,
     ]
 
     static embedded = [
-            'salary',
-            'distanceKm',
+        'salary',
+        'distanceKm'
     ]
 
     static constraints = {
-        name nullable: false
-        address nullable: false
-        postcode nullable: false
+        picture nullable: true
+        salary nullable: true
+        distanceKm nullable: true
+        dateStart nullable: true
+        dateEnd nullable: true
     }
-
 }

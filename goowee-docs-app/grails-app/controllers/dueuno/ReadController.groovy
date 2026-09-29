@@ -14,7 +14,7 @@
  */
 package goowee
 
-import goowee.core.ElementsController
+import goowee.application.ElementsController
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.Select
 import goowee.elements.controls.Textarea

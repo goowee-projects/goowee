@@ -15,9 +15,7 @@
 package goowee.database
 
 import groovy.transform.CompileStatic
-import org.hibernate.boot.model.naming.Identifier
-import org.hibernate.boot.model.naming.PhysicalNamingStrategy
-import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment
+import org.hibernate.cfg.ImprovedNamingStrategy
 
 /**
  * Table names start with "t_" to avoid conflicting with database keywords
@@ -26,36 +24,14 @@ import org.hibernate.engine.jdbc.env.spi.JdbcEnvironment
  */
 
 @CompileStatic
-class TNamingStrategy implements PhysicalNamingStrategy {
+class TNamingStrategy extends ImprovedNamingStrategy {
 
-    @Override
-    Identifier toPhysicalTableName(Identifier logicalName, JdbcEnvironment jdbcEnvironment) {
-        String className = logicalName.text
-        String tableName = className.startsWith('T')
-                ? className.drop(1)
-                : className
-        return Identifier.toIdentifier(tableName.toLowerCase())
-
-    }
-
-    @Override
-    Identifier toPhysicalColumnName(Identifier name, JdbcEnvironment environment) {
-        Identifier.toIdentifier(name.text.toLowerCase())
-    }
-
-    @Override
-    Identifier toPhysicalCatalogName(Identifier name, JdbcEnvironment environment) {
-        return name
-    }
-
-    @Override
-    Identifier toPhysicalSchemaName(Identifier name, JdbcEnvironment environment) {
-        return name
-    }
-
-    @Override
-    Identifier toPhysicalSequenceName(Identifier name, JdbcEnvironment environment) {
-        return name
+    String classToTableName(String className) {
+        String domainName = className.startsWith('T')
+            ? className.drop(1)
+            : className
+        String tableName = super.classToTableName(domainName)
+        return tableName
     }
 
 }

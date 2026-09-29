@@ -29,11 +29,11 @@ class StaticResourcesController implements ElementsController {
         def table = c.addComponent(Table)
         table.with {
             columns = [
-                    'image',
-                    'name',
+                'image',
+                'name',
             ]
             sortable = [
-                    name: 'asc',
+                name: 'asc',
             ]
             body.eachRow { TableRow row, Map values ->
                 def image = linkPublicResource("images/${values.image}")

@@ -14,7 +14,7 @@
  */
 package goowee.elements
 
-
+import goowee.elements.core.Transition
 import grails.plugin.springwebsocket.WebSocket
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j

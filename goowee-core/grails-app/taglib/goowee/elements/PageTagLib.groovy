@@ -14,7 +14,7 @@
  */
 package goowee.elements
 
-
+import goowee.elements.core.Component
 import jakarta.servlet.ServletContext
 
 /**

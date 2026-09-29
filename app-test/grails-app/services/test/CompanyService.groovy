@@ -48,7 +48,7 @@ class CompanyService {
     TCompany get(Serializable id) {
         // Add single-sided relationships here (Eg. references to other Domain Objects)
         Map fetch = [
-                employees: 'join',
+            employees: 'join',
         ]
 
         return buildQuery(id: id).get(fetch: fetch)
@@ -96,6 +96,6 @@ class CompanyService {
     @Transactional
     void delete(Serializable id) {
         TCompany obj = get(id)
-        obj.delete(flush: true, failOnError: true)
+        obj.delete(flush: true)
     }
 }

@@ -14,11 +14,12 @@
  */
 package goowee.elements
 
-import goowee.core.PrettyPrinter
-import goowee.core.WebRequestAware
 import goowee.elements.components.Form
 import goowee.elements.components.FormField
 import goowee.elements.controls.HiddenField
+import goowee.elements.core.Component
+import goowee.elements.core.Control
+import goowee.elements.core.PrettyPrinter
 
 /**
  * Render tags
@@ -49,7 +50,7 @@ class RenderTagLib implements WebRequestAware {
                 component[property.key] = property.value
             }
 
-            String attributes = attrs.collect {it.key + '="' + it.value + '"' }.join(', ')
+            String attributes = attrs.collect { it.key + '="' + it.value + '"' }.join(', ')
             out << render(template: component.getView(), model: component.getModel() + [attributes: attributes])
 
 //            sw.stop()
@@ -94,9 +95,9 @@ class RenderTagLib implements WebRequestAware {
      */
     def message = { attrs ->
         out << PrettyPrinter.message(
-                locale,
-                attrs.code as String,
-                attrs.args as List
+            locale,
+            attrs.code as String,
+            attrs.args as List
         )
     }
 

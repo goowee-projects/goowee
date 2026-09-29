@@ -14,7 +14,7 @@
  */
 package goowee.elements
 
-import goowee.tenants.TenantService
+import goowee.tenant.TenantService
 
 /**
  * @author Gianluca Sartori
@@ -28,4 +28,5 @@ class TenantTagLib {
     def current = { Map attrs ->
         out << tenantService.currentTenantId
     }
+
 }

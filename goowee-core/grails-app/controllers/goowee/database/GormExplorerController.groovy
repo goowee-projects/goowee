@@ -14,9 +14,8 @@
  */
 package goowee.database
 
+import goowee.application.ConnectionSourceService
 import goowee.commons.utils.SqlUtils
-import goowee.core.ConnectionSourceService
-import goowee.elements.Elements
 import goowee.elements.ElementsController
 import goowee.elements.components.Button
 import goowee.elements.components.Form
@@ -26,9 +25,10 @@ import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.*
+import goowee.elements.core.Elements
 import goowee.elements.style.TextDefault
 import goowee.security.SecurityService
-import goowee.tenants.TenantService
+import goowee.tenant.TenantService
 import goowee.types.CustomType
 import goowee.types.Types
 import grails.gorm.DetachedCriteria
@@ -108,45 +108,45 @@ class GormExplorerController implements ElementsController {
             sticky = true
             if (securityService.isSuperAdmin()) {
                 addField(
-                        class: Select,
-                        id: 'tenantId',
-                        optionsFromRecordset: tenantService.list(),
-                        keys: ['tenantId'],
-                        allowClear: false,
-                        defaultValue: tenantService.defaultTenantId,
-                        onChange: 'index',
-                        submit: 'form',
-                        cols: 3,
+                    class: Select,
+                    id: 'tenantId',
+                    optionsFromRecordset: tenantService.list(),
+                    keys: ['tenantId'],
+                    allowClear: false,
+                    defaultValue: tenantService.defaultTenantId,
+                    onChange: 'index',
+                    submit: 'form',
+                    cols: 3,
                 )
             } else {
                 addField(
-                        class: TextField,
-                        id: 'tenantId',
-                        defaultValue: tenantId,
-                        readonly: true,
-                        cols: 3,
+                    class: TextField,
+                    id: 'tenantId',
+                    defaultValue: tenantId,
+                    readonly: true,
+                    cols: 3,
                 )
             }
 
             addField(
-                    class: Select,
-                    id: 'domainClassName',
-                    optionsFromList: grailsApplication.domainClasses*.fullName,
-                    defaultValue: domainClassName,
-                    renderTextPrefix: false,
-                    search: true,
-                    onChange: 'index',
-                    submit: 'form',
-                    cols: 7,
+                class: Select,
+                id: 'domainClassName',
+                optionsFromList: grailsApplication.domainClasses*.fullName,
+                defaultValue: domainClassName,
+                renderTextPrefix: false,
+                search: true,
+                onChange: 'index',
+                submit: 'form',
+                cols: 7,
             )
             addField(
-                    class: Button,
-                    id: 'btnCreate',
-                    action: 'create',
-                    text: TextDefault.CREATE,
-                    icon: 'fa-plus',
-                    readonly: !domainClassName,
-                    cols: 2,
+                class: Button,
+                id: 'btnCreate',
+                action: 'create',
+                text: TextDefault.CREATE,
+                icon: 'fa-plus',
+                readonly: !domainClassName,
+                cols: 2,
             )
         }
 
@@ -157,16 +157,16 @@ class GormExplorerController implements ElementsController {
                 filters.with {
                     fold = true
                     addField(
-                            class: NumberField,
-                            id: 'id',
-                            label: 'Id',
-                            cols: 2,
+                        class: NumberField,
+                        id: 'id',
+                        label: 'Id',
+                        cols: 2,
                     )
                     addField(
-                            class: TextField,
-                            id: 'find',
-                            label: TextDefault.FIND,
-                            cols: 10,
+                        class: TextField,
+                        id: 'find',
+                        label: TextDefault.FIND,
+                        cols: 10,
                     )
                 }
 
@@ -213,11 +213,11 @@ class GormExplorerController implements ElementsController {
                                 if (searchText && propertyClass in String) {
                                     ilike propertyName, "%${searchText}%"
 
-                                } else if (searchText && propertyClass in CustomType && propertyClass['TYPE_VALUE_PROPERTY_TYPE'] == String) {
-                                    ilike propertyName + '.' + propertyClass['TYPE_VALUE_PROPERTY_NAME'], "%${searchText}%"
+                                } else if (searchText && propertyClass in CustomType && Types.getValuePropertyType(propertyClass) == String) {
+                                    ilike propertyName + '.' + Types.getValuePropertyName(propertyClass), "%${searchText}%"
 
-                                } else if (searchNumber && propertyClass in CustomType && propertyClass['TYPE_VALUE_PROPERTY_TYPE'] == Number) {
-                                    eq propertyName + '.' + propertyClass['TYPE_VALUE_PROPERTY_NAME'], searchNumber
+                                } else if (searchNumber && propertyClass in CustomType && Types.getValuePropertyType(propertyClass) == Number) {
+                                    eq propertyName + '.' + Types.getValuePropertyName(propertyClass), searchNumber
 
                                 } else if (searchNumber && propertyClass in Number) {
                                     eq propertyName, searchNumber
@@ -237,8 +237,8 @@ class GormExplorerController implements ElementsController {
 
     private buildForm(String tenantId, Class domainClass, Object obj = null) {
         def c = obj
-                ? createContent(ContentEdit)
-                : createContent(ContentCreate)
+            ? createContent(ContentEdit)
+            : createContent(ContentCreate)
 
         c.header.text = domainClass.simpleName
 
@@ -246,10 +246,10 @@ class GormExplorerController implements ElementsController {
             validate = domainClass
 
             addField(
-                    class: NumberField,
-                    id: 'id',
-                    label: 'id',
-                    readonly: true,
+                class: NumberField,
+                id: 'id',
+                label: 'id',
+                readonly: true,
             )
 
             for (property in getDomainProperties(domainClass)) {
@@ -258,19 +258,19 @@ class GormExplorerController implements ElementsController {
 
                 if (Types.isRegistered(propertyClass)) {
                     addField(
-                            class: propertyClass['TYPE_FIELD'],
-                            id: propertyName,
-                            label: propertyName,
+                        class: Types.getTypeField(propertyClass),
+                        id: propertyName,
+                        label: propertyName,
                     )
                     continue
                 }
 
                 if (Elements.isDomainClass(propertyClass)) {
                     addField(
-                            class: Select,
-                            id: propertyName,
-                            label: propertyName,
-                            optionsFromRecordset: propertyClass.list(),
+                        class: Select,
+                        id: propertyName,
+                        label: propertyName,
+                        optionsFromRecordset: propertyClass.list(),
                     )
                     continue
                 }
@@ -306,10 +306,10 @@ class GormExplorerController implements ElementsController {
                 }
 
                 addField(
-                        class: fieldClass,
-                        id: propertyName,
-                        label: propertyName,
-                        text: propertyName,
+                    class: fieldClass,
+                    id: propertyName,
+                    label: propertyName,
+                    text: propertyName,
                 )
 
             }
@@ -391,7 +391,7 @@ class GormExplorerController implements ElementsController {
         tenantService.withTenant(tenantId) {
             try {
                 def obj = domainClass.get(params.id)
-                obj.delete(flush: true, failOnError: true)
+                obj.delete(flush: true)
                 display action: 'index'
 
             } catch (e) {
@@ -409,17 +409,17 @@ class GormExplorerController implements ElementsController {
 
         c.form.with {
             addField(
-                    class: Select,
-                    id: 'connectionSource',
-                    optionsFromRecordset: connectionSourceService.list(),
-                    keys: ['name'],
-                    allowClear: false,
-                    defaultValue: tenantService.defaultTenantId,
+                class: Select,
+                id: 'connectionSource',
+                optionsFromRecordset: connectionSourceService.list(),
+                keys: ['name'],
+                allowClear: false,
+                defaultValue: tenantService.defaultTenantId,
             )
             addField(
-                    class: Textarea,
-                    id: 'sql',
-                    rows: 4,
+                class: Textarea,
+                id: 'sql',
+                rows: 4,
             )
         }
 

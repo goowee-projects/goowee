@@ -12,7 +12,7 @@
                 <div class="dev-hints p-1 px-2 mt-1" role="alert">
                     <g:each in="${c.keyFields}">
                         <div><render:icon icon="fa-solid fa-key"/> (${it.component.valueType}) ${it.component.getId()} =
-                            ${it.component.valueType == goowee.types.Type.TEXT.toString() ? '"' + it.component.value.toString() + '"' : it.component.value.toString()}
+                            ${it.component.valueType == goowee.types.Type.STRING.toString() ? '"' + it.component.value.toString() + '"' : it.component.value.toString()}
                         </div>
                     </g:each>
                 </div>

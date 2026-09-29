@@ -4,7 +4,7 @@ ATTENTION PLEASE
 ================
 
 When modifying this template, please update also:
-- `_TableRowComponent.gsp`
+ - `_TableRowComponent.gsp`
 --%>
 <tr class="component-table-row ${c.textStyle} ${c.cssClass}"
     style="${c.backgroundColor ? '--bs-table-striped-bg: ' + c.backgroundColor + '; ' : ''}${c.cssStyleColors}"

@@ -12,7 +12,7 @@
 <title>${c.message('app.name')}</title>
 <link rel="manifest" href="${createLink(uri: '/pwa/manifest.json')}">
 
-<%-- Goowee --%>
+<%-- Elements --%>
 <asset:stylesheet src="includes.css" media="screen"/>
 <g:each var="componentsImplementation" in="${c.componentsRegistry}">
     <asset:stylesheet src="${componentsImplementation}.css" media="screen"/>

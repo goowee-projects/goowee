@@ -28,7 +28,7 @@ class GooweeExtraGrailsPlugin extends Plugin {
 
     static final String NAME = 'goowee-extra'
     def loadAfter = [
-            'goowee-core',
+        'goowee-core',
     ]
 
     // the version or versions of Grails the plugin is designed for
@@ -64,9 +64,11 @@ class GooweeExtraGrailsPlugin extends Plugin {
     // Online location of the plugin's browseable source code.
 //    def scm = [ url: 'http://svn.codehaus.org/grails-plugins/' ]
 
-    Closure doWithSpring() { { ->
-        // no-op
-    } }
+    Closure doWithSpring() {
+        { ->
+            // no-op
+        }
+    }
 
     void doWithDynamicMethods() {
         // TODO Implement registering dynamic methods to classes (optional)

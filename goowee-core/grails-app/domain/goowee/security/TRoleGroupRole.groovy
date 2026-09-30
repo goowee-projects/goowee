@@ -14,6 +14,7 @@
  */
 package goowee.security
 
+
 import grails.compiler.GrailsCompileStatic
 import grails.gorm.DetachedCriteria
 import groovy.transform.ToString
@@ -32,6 +33,11 @@ class TRoleGroupRole implements GormEntity, Serializable {
 
     TRoleGroup roleGroup
     TRole role
+
+    static constraints = {
+        roleGroup nullable: false
+        role nullable: false
+    }
 
     static mapping = {
         table 'sys_role_group_role'
@@ -92,5 +98,4 @@ class TRoleGroupRole implements GormEntity, Serializable {
     static Number removeAll(TRoleGroup rg) {
         rg == null ? 0 : TRoleGroupRole.where { roleGroup == rg }.deleteAll()
     }
-
 }

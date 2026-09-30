@@ -14,6 +14,7 @@
  */
 package goowee.security
 
+
 import goowee.tenant.TTenant
 import grails.compiler.GrailsCompileStatic
 import groovy.transform.EqualsAndHashCode
@@ -36,12 +37,12 @@ class TRoleGroup implements GormEntity, Serializable {
     TTenant tenant
 
     String name
-    Boolean deletable = false
+    Boolean deletable
     String landingPage
 
     static constraints = {
-        name blank: false, unique: ['tenant']
-        landingPage nullable: true
+        tenant nullable: false
+        name nullable: false, blank: false, unique: ['tenant']
     }
 
     static mapping = {
@@ -52,12 +53,4 @@ class TRoleGroup implements GormEntity, Serializable {
     List<TRole> getAuthorities() {
         TRoleGroupRole.findAllByRoleGroup(this)*.role
     }
-
-    static List<TRoleGroup> listByUser(long userId) {
-        List<TUserRoleGroup> userRoleGroupList = TUserRoleGroup.where {
-            user == TUser.load(userId)
-        }.list(fetch: [roleGroup: 'join']) as List<TUserRoleGroup>
-        userRoleGroupList.collect { it.roleGroup }
-    }
-
 }

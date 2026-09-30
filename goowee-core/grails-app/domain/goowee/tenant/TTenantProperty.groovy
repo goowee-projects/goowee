@@ -29,7 +29,6 @@ import java.time.LocalTime
  */
 
 // KEEP ALIGNED WITH TApplicationProperty
-//
 @GrailsCompileStatic
 class TTenantProperty implements GormEntity, MultiTenant<TTenantProperty> {
 

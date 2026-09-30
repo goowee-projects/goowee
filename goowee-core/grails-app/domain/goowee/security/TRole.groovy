@@ -20,6 +20,8 @@ import groovy.transform.ToString
 import org.grails.datastore.gorm.GormEntity
 
 /**
+ * Renamed to 'user_role' to avoid conflicting with database keywords (DB2, H2 have problems with 'user' or 'role')
+ *
  * @author Gianluca Sartori
  */
 
@@ -35,12 +37,11 @@ class TRole implements GormEntity, Serializable {
     String authority
 
     static constraints = {
-        authority blank: false, unique: true
+        authority nullable: false, blank: false, unique: true
     }
 
     static mapping = {
         table 'sys_role'
         cache true
     }
-
 }

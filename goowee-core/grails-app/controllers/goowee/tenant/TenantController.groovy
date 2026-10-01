@@ -14,7 +14,7 @@
  */
 package goowee.tenant
 
-import goowee.application.ConnectionSourceService
+import goowee.database.ConnectionSourceService
 import goowee.elements.ElementsController
 import goowee.elements.components.Label
 import goowee.elements.components.Separator

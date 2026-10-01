@@ -15,7 +15,6 @@
 package goowee.database
 
 import goowee.application.ApplicationService
-import goowee.application.ConnectionSourceService
 import goowee.application.TConnectionSource
 import goowee.elements.ElementsController
 import goowee.elements.components.Label

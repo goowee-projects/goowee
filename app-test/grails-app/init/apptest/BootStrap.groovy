@@ -16,7 +16,7 @@ package apptest
 
 import goowee.application.ApplicationPropertyService
 import goowee.application.ApplicationService
-import goowee.application.ConnectionSourceService
+import goowee.database.ConnectionSourceService
 import goowee.commons.utils.FileUtils
 import goowee.elements.TransitionService
 import goowee.elements.pages.ShellService

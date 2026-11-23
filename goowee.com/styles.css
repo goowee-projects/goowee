@@ -163,7 +163,6 @@
     --divider: #cbd4e1;
     --card-shadow: rgba(27, 44, 71, 0.025);
     --card-hover-shadow: rgba(27, 44, 71, 0.075);
-    --card-hover-border: rgba(37, 90, 168, 0.35);
     --soft-border: #dce7f5;
     --soft-blue: #edf4ff;
     --soft-blue-ink: #315487;
@@ -210,7 +209,6 @@ html[data-theme="dark"] {
     --divider: #434b57;
     --card-shadow: rgba(0, 0, 0, 0.24);
     --card-hover-shadow: rgba(0, 0, 0, 0.45);
-    --card-hover-border: rgba(142, 182, 255, 0.45);
     --soft-border: #344051;
     --soft-blue: #172436;
     --soft-blue-ink: #c0d7ff;
@@ -369,14 +367,8 @@ body {
     outline-offset: 2px;
 }
 
-.theme-switch svg {
-    width: 17px;
-    height: 17px;
-    fill: none;
-    stroke: currentColor;
-    stroke-linecap: round;
-    stroke-linejoin: round;
-    stroke-width: 1.7;
+.theme-switch i {
+    font-size: 16px;
 }
 
 .hero {
@@ -476,7 +468,6 @@ body {
     z-index: 1;
     width: 180px;
     height: 180px;
-    border: 9px solid rgba(255, 255, 255, 0.94);
     border-radius: 50%;
     box-shadow: 0 20px 55px rgba(20, 32, 51, 0.16);
 }
@@ -575,11 +566,11 @@ body {
 .feature-card {
     min-height: 265px;
     padding: 24px 25px 22px;
-    border: 1px solid var(--line);
+    border: 0;
     border-radius: 9px;
     background: var(--surface);
     box-shadow: 0 4px 15px var(--card-shadow);
-    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+    transition: box-shadow 180ms ease, transform 180ms ease;
 }
 
 .feature-web {
@@ -634,7 +625,6 @@ body {
 
 .feature-card:hover {
     transform: translateY(-3px);
-    border-color: var(--card-hover-border);
     box-shadow: 0 14px 34px var(--card-hover-shadow);
 }
 

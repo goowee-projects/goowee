@@ -728,6 +728,10 @@ body {
     line-height: 1.55;
 }
 
+.check-list li:last-child {
+    grid-column: 1 / -1;
+}
+
 .check-list li::before {
     position: absolute;
     top: 0;

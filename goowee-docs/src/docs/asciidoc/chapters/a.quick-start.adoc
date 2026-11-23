@@ -1,7 +1,7 @@
 == Quick Start
 
 === Goals
-*With Goowee, you can develop business web applications by writing code in a single programming language: https://groovy-lang.org/[Apache Groovy,window=_blank]. There is no need to know HTML, CSS, or JavaScript.*
+*With Goowee, you can develop enterprise web applications by writing code in a single programming language: https://groovy-lang.org/[Apache Groovy,window=_blank]. There is no need to know HTML, CSS, or JavaScript.*
 
 With Goowee you can develop and maintain web applications with requirements such as:
 

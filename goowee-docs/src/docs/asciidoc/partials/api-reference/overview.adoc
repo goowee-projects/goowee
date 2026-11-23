@@ -1,6 +1,6 @@
 [#api-reference]
 == API Reference
-Goowee is an https://grails.org/[Apache Grails,window=_blank] plugin designed for developing business applications.
+Goowee is an https://grails.org/[Apache Grails,window=_blank] plugin designed for developing enterprise applications.
 
 === Create an application
 Use https://start.grails.org[Grails Forge,window=_blank] to generate a *Web Application* with, at least, *Java 25* (we do not support earlier versions of Java) then add the following repository and dependency to your newly created Grails application:

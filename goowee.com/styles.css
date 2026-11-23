@@ -1,0 +1,1011 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
+/* Ubuntu font family, Copyright 2011 Canonical Ltd., licensed under UFL 1.0 (see fonts/UFL.txt). */
+@font-face {
+    font-family: Ubuntu;
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url("fonts/ubuntu-300-normal-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: Ubuntu;
+    font-style: normal;
+    font-weight: 300;
+    font-display: swap;
+    src: url("fonts/ubuntu-300-normal-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: Ubuntu;
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("fonts/ubuntu-400-normal-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: Ubuntu;
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("fonts/ubuntu-400-normal-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: Ubuntu;
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url("fonts/ubuntu-500-normal-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: Ubuntu;
+    font-style: normal;
+    font-weight: 500;
+    font-display: swap;
+    src: url("fonts/ubuntu-500-normal-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: Ubuntu;
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("fonts/ubuntu-700-normal-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: Ubuntu;
+    font-style: normal;
+    font-weight: 700;
+    font-display: swap;
+    src: url("fonts/ubuntu-700-normal-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: Ubuntu;
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url("fonts/ubuntu-400-italic-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: Ubuntu;
+    font-style: italic;
+    font-weight: 400;
+    font-display: swap;
+    src: url("fonts/ubuntu-400-italic-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: Ubuntu;
+    font-style: italic;
+    font-weight: 500;
+    font-display: swap;
+    src: url("fonts/ubuntu-500-italic-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: Ubuntu;
+    font-style: italic;
+    font-weight: 500;
+    font-display: swap;
+    src: url("fonts/ubuntu-500-italic-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+    font-family: Ubuntu;
+    font-style: italic;
+    font-weight: 700;
+    font-display: swap;
+    src: url("fonts/ubuntu-700-italic-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: Ubuntu;
+    font-style: italic;
+    font-weight: 700;
+    font-display: swap;
+    src: url("fonts/ubuntu-700-italic-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+:root {
+    color-scheme: light;
+    --primary-background-color: #255aa8;
+    --ink: #142033;
+    --muted: #66748a;
+    --line: #e7ebf2;
+    --surface: #ffffff;
+    --page: #f7f9fc;
+    --nav-ink: #4c5a6f;
+    --control-border: #dfe6f1;
+    --code-bg: #eaf0f9;
+    --code-ink: #244e89;
+    --caption-border: rgba(231, 235, 242, 0.9);
+    --caption-bg: rgba(255, 255, 255, 0.92);
+    --caption-ink: #48566b;
+    --subtle-ink: #8591a2;
+    --divider: #cbd4e1;
+    --card-shadow: rgba(27, 44, 71, 0.025);
+    --card-hover-shadow: rgba(27, 44, 71, 0.075);
+    --card-hover-border: rgba(37, 90, 168, 0.35);
+    --soft-border: #dce7f5;
+    --soft-blue: #edf4ff;
+    --soft-blue-ink: #315487;
+    --soft-green-border: #d7ecdf;
+    --soft-green: #eef8f1;
+    --soft-green-ink: #38664b;
+    --soft-purple-border: #e4ddf5;
+    --soft-purple: #f4f0fb;
+    --soft-purple-ink: #604d87;
+    --soft-gold-border: #f0e2c9;
+    --soft-gold: #fff7e9;
+    --soft-gold-ink: #785a2c;
+    --icon-bg: #edf3fb;
+    --list-ink: #4e5d71;
+    --diagram-border: #e4eaf3;
+    --diagram-bg: #f8fafd;
+    --diagram-ink: #4d5b70;
+    --diagram-blue-border: rgba(37, 90, 168, 0.23);
+    --diagram-blue-bg: #f1f6fd;
+    --diagram-blue-ink: #244e89;
+    --diagram-line: #c9d6e8;
+    --footer-ink: #7a8798;
+    --switch-bg: #ffffff;
+    --switch-border: #dfe6f1;
+    --switch-selected-bg: #edf4ff;
+}
+
+html[data-theme="dark"] {
+    color-scheme: dark;
+    --primary-background-color: #8eb6ff;
+    --ink: #f0f3f8;
+    --muted: #b0bac8;
+    --line: #272c35;
+    --surface: #111318;
+    --page: #050608;
+    --nav-ink: #c5cbd5;
+    --control-border: #343a45;
+    --code-bg: #17253a;
+    --code-ink: #c3d8ff;
+    --caption-border: rgba(225, 234, 248, 0.14);
+    --caption-bg: rgba(15, 18, 24, 0.94);
+    --caption-ink: #e1e7f0;
+    --subtle-ink: #a4afbe;
+    --divider: #434b57;
+    --card-shadow: rgba(0, 0, 0, 0.24);
+    --card-hover-shadow: rgba(0, 0, 0, 0.45);
+    --card-hover-border: rgba(142, 182, 255, 0.45);
+    --soft-border: #344051;
+    --soft-blue: #172436;
+    --soft-blue-ink: #c0d7ff;
+    --soft-green-border: #354a3b;
+    --soft-green: #1b2b21;
+    --soft-green-ink: #b6dfc0;
+    --soft-purple-border: #44395b;
+    --soft-purple: #261f35;
+    --soft-purple-ink: #d0c0ef;
+    --soft-gold-border: #59482f;
+    --soft-gold: #302719;
+    --soft-gold-ink: #f0d7a8;
+    --icon-bg: #1b2635;
+    --list-ink: #c2cbd8;
+    --diagram-border: #303844;
+    --diagram-bg: #151920;
+    --diagram-ink: #c8d0dc;
+    --diagram-blue-border: #3d526e;
+    --diagram-blue-bg: #172538;
+    --diagram-blue-ink: #c0d7ff;
+    --diagram-line: #3b4655;
+    --footer-ink: #9ba6b7;
+    --switch-bg: #111318;
+    --switch-border: #343a45;
+    --switch-selected-bg: #1d2c43;
+}
+
+html {
+    min-width: 320px;
+    height: auto;
+    background: var(--page);
+    background-image: none;
+}
+
+body {
+    min-width: 320px;
+    margin: 0;
+    overflow-x: hidden;
+    background: var(--page);
+    color: var(--ink);
+    font-family: Ubuntu, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    box-shadow: none;
+}
+
+.goowee-site *,
+.goowee-site *::before,
+.goowee-site *::after {
+    box-sizing: border-box;
+}
+
+.goowee-site a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.goowee-site .site-header,
+.goowee-site .hero,
+.goowee-site .platform-section,
+.goowee-site .site-footer {
+    width: min(1160px, calc(100% - 64px));
+    margin-right: auto;
+    margin-left: auto;
+}
+
+.site-header {
+    display: flex;
+    height: 88px;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid var(--line);
+}
+
+.brand,
+.footer-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 19px;
+    font-weight: 750;
+    letter-spacing: -0.06em;
+}
+
+.brand-mark {
+    width: 35px;
+    height: 35px;
+    border-radius: 50%;
+}
+
+.site-header .brand {
+    font-size: 22px;
+}
+
+.site-nav {
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    color: var(--nav-ink);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.site-nav a:not(.nav-cta):hover,
+.site-footer > a:last-child:hover {
+    color: var(--primary-background-color);
+}
+
+.site-nav .nav-cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 17px;
+    padding: 12px 16px;
+    border: 1px solid var(--control-border);
+    border-radius: 7px;
+    background: var(--surface);
+    color: var(--ink);
+    transition: border-color 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.site-nav .nav-cta:hover {
+    transform: translateY(-1px);
+    border-color: var(--primary-background-color);
+    color: var(--primary-background-color);
+}
+
+.theme-switch {
+    display: inline-flex;
+    align-items: center;
+    gap: 3px;
+    padding: 4px;
+    border: 1px solid var(--switch-border);
+    border-radius: 8px;
+    background: var(--switch-bg);
+}
+
+.theme-switch button {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--nav-ink);
+    cursor: pointer;
+}
+
+.theme-switch button:hover,
+.theme-switch button[aria-pressed="true"] {
+    background: var(--switch-selected-bg);
+    color: var(--primary-background-color);
+}
+
+.theme-switch button:focus-visible {
+    outline: 2px solid var(--primary-background-color);
+    outline-offset: 2px;
+}
+
+.theme-switch svg {
+    width: 17px;
+    height: 17px;
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 1.7;
+}
+
+.hero {
+    position: relative;
+    display: grid;
+    min-height: 570px;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    padding: 52px 0 74px;
+}
+
+.hero-copy {
+    position: relative;
+    z-index: 1;
+    max-width: 610px;
+    padding-bottom: 12px;
+}
+
+.eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    margin: 0 0 21px;
+    color: var(--primary-background-color);
+    font-size: 12px;
+    font-weight: 750;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+}
+
+.eyebrow-dot,
+.status-pulse {
+    width: 7px;
+    height: 7px;
+    flex: 0 0 auto;
+    border-radius: 50%;
+    background: var(--primary-background-color);
+    box-shadow: 0 0 0 4px rgba(37, 90, 168, 0.1);
+}
+
+.hero h1 {
+    max-width: 650px;
+    margin: 0;
+    font-size: clamp(42px, 5.3vw, 68px);
+    font-weight: 720;
+    letter-spacing: -0.065em;
+    line-height: 1.06;
+}
+
+.hero h1 span,
+.section-heading h2 span {
+    color: var(--primary-background-color);
+}
+
+.hero-description {
+    max-width: 520px;
+    margin: 24px 0 12px;
+    color: var(--muted);
+    font-size: 18px;
+    line-height: 1.8;
+}
+
+.hero-description code {
+    padding: 2px 6px;
+    border-radius: 4px;
+    background: var(--code-bg);
+    color: var(--code-ink);
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 0.88em;
+}
+
+.hero-art {
+    position: relative;
+    display: grid;
+    overflow: hidden;
+    min-height: 390px;
+    place-items: center;
+    border: 1px solid rgba(37, 90, 168, 0.12);
+    border-radius: 12px;
+    background-color: #b7dff5;
+    background-image: linear-gradient(rgba(18, 68, 128, 0.08), rgba(18, 68, 128, 0.17)), url("images/brand/login-background.jpg");
+    background-position: center;
+    background-size: cover;
+    box-shadow: 0 18px 48px rgba(20, 32, 51, 0.1);
+}
+
+.hero-glow {
+    position: absolute;
+    width: min(350px, 78vw);
+    aspect-ratio: 1;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(37, 90, 168, 0.15), rgba(37, 90, 168, 0.055) 50%, rgba(37, 90, 168, 0) 72%);
+}
+
+.hero-avatar {
+    position: relative;
+    z-index: 1;
+    width: 180px;
+    height: 180px;
+    border: 9px solid rgba(255, 255, 255, 0.94);
+    border-radius: 50%;
+    box-shadow: 0 20px 55px rgba(20, 32, 51, 0.16);
+}
+
+.orbit {
+    position: absolute;
+    border: 1px solid rgba(37, 90, 168, 0.15);
+    border-radius: 50%;
+}
+
+.orbit-outer {
+    width: 340px;
+    height: 340px;
+}
+
+.orbit-inner {
+    width: 260px;
+    height: 260px;
+    border-style: dashed;
+    border-color: rgba(37, 90, 168, 0.2);
+}
+
+.hero-caption {
+    position: absolute;
+    right: 3%;
+    bottom: 43px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 15px;
+    border: 1px solid var(--caption-border);
+    border-radius: 7px;
+    background: var(--caption-bg);
+    color: var(--caption-ink);
+    font-size: 13px;
+    font-weight: 650;
+    box-shadow: 0 12px 30px rgba(20, 32, 51, 0.07);
+}
+
+.status-pulse {
+    width: 6px;
+    height: 6px;
+    background: #32a67a;
+    box-shadow: 0 0 0 4px rgba(50, 166, 122, 0.11);
+}
+
+.hero-index {
+    position: absolute;
+    bottom: 31px;
+    left: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--subtle-ink);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+}
+
+.hero-index span {
+    width: 42px;
+    height: 1px;
+    background: var(--divider);
+}
+
+.platform-section {
+    padding: 66px 0 88px;
+    border-top: 1px solid var(--line);
+}
+
+.section-heading {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 36px;
+    margin-bottom: 30px;
+}
+
+.section-heading .eyebrow {
+    margin-bottom: 14px;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-size: clamp(30px, 3.4vw, 42px);
+    font-weight: 700;
+    letter-spacing: -0.055em;
+    line-height: 1.13;
+}
+
+.feature-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.feature-card {
+    min-height: 265px;
+    padding: 24px 25px 22px;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    background: var(--surface);
+    box-shadow: 0 4px 15px var(--card-shadow);
+    transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+}
+
+.feature-web {
+    display: grid;
+    min-height: 220px;
+    grid-column: 1 / -1;
+    grid-template-columns: minmax(0, 1.35fr) minmax(250px, 0.65fr);
+    align-items: center;
+    gap: 34px;
+}
+
+.feature-web .card-topline {
+    margin-bottom: 12px;
+}
+
+.feature-web > .web-card-copy > p {
+    max-width: 700px;
+}
+
+.device-options {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 9px;
+    padding: 18px 0 18px 26px;
+    border-left: 1px solid var(--line);
+}
+
+.device-options span {
+    display: grid;
+    min-height: 42px;
+    place-items: center;
+    padding: 8px;
+    border: 1px solid var(--soft-border);
+    border-radius: 6px;
+    background: var(--soft-blue);
+    color: var(--soft-blue-ink);
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.device-options span:nth-child(3n + 2) {
+    border-color: var(--soft-green-border);
+    background: var(--soft-green);
+    color: var(--soft-green-ink);
+}
+
+.device-options span:nth-child(3n) {
+    border-color: var(--soft-purple-border);
+    background: var(--soft-purple);
+    color: var(--soft-purple-ink);
+}
+
+.feature-card:hover {
+    transform: translateY(-3px);
+    border-color: var(--card-hover-border);
+    box-shadow: 0 14px 34px var(--card-hover-shadow);
+}
+
+.card-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 18px;
+}
+
+.card-number {
+    color: var(--subtle-ink);
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+}
+
+.card-icon {
+    display: grid;
+    width: 33px;
+    height: 33px;
+    place-items: center;
+    border-radius: 7px;
+    background: var(--icon-bg);
+    color: var(--primary-background-color);
+    font-size: 16px;
+    font-weight: 650;
+}
+
+.feature-card h3 {
+    margin: 0 0 8px;
+    font-size: 23px;
+    font-weight: 700;
+    letter-spacing: -0.035em;
+}
+
+.feature-card > p {
+    max-width: 470px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+.tag-list,
+.check-list {
+    margin: 17px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+}
+
+.tag-list li {
+    padding: 7px 10px;
+    border: 1px solid var(--soft-border);
+    border-radius: 5px;
+    background: var(--soft-blue);
+    color: var(--soft-blue-ink);
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.tag-list li:nth-child(3n + 2) {
+    border-color: var(--soft-green-border);
+    background: var(--soft-green);
+    color: var(--soft-green-ink);
+}
+
+.tag-list li:nth-child(3n) {
+    border-color: var(--soft-gold-border);
+    background: var(--soft-gold);
+    color: var(--soft-gold-ink);
+}
+
+.check-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 16px;
+}
+
+.check-list li {
+    position: relative;
+    padding-left: 15px;
+    color: var(--list-ink);
+    font-size: 14px;
+    line-height: 1.55;
+}
+
+.check-list li::before {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: var(--primary-background-color);
+    content: "✓";
+    font-weight: 750;
+}
+
+.tenant-visual {
+    display: grid;
+    grid-template-columns: 1fr 26px 1fr;
+    grid-template-rows: repeat(3, 25px);
+    align-items: center;
+    gap: 6px 7px;
+    max-width: 350px;
+    margin-top: 17px;
+}
+
+.tenant-source,
+.tenant-db {
+    display: flex;
+    min-height: 25px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 9px;
+    border: 1px solid var(--diagram-border);
+    border-radius: 4px;
+    background: var(--diagram-bg);
+    color: var(--diagram-ink);
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.tenant-source {
+    grid-row: 1 / 4;
+    border-color: var(--diagram-blue-border);
+    background: var(--diagram-blue-bg);
+    color: var(--diagram-blue-ink);
+}
+
+.tenant-branch {
+    position: relative;
+    grid-row: 1 / 4;
+    height: 54px;
+    border-top: 1px solid var(--diagram-line);
+    border-right: 1px solid var(--diagram-line);
+    border-bottom: 1px solid var(--diagram-line);
+}
+
+.tenant-branch::after {
+    position: absolute;
+    top: 50%;
+    right: -1px;
+    width: 100%;
+    border-top: 1px solid var(--diagram-line);
+    content: "";
+}
+
+.tenant-db {
+    grid-column: 3;
+}
+
+.tenant-db i {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: #61ae8b;
+}
+
+.language-chips {
+    display: flex;
+    gap: 8px;
+    margin-top: 21px;
+}
+
+.language-chips span {
+    display: grid;
+    min-width: 37px;
+    height: 31px;
+    place-items: center;
+    padding: 0 8px;
+    border: 1px solid var(--soft-border);
+    border-radius: 5px;
+    background: var(--soft-blue);
+    color: var(--soft-blue-ink);
+    font-size: 14px;
+    font-weight: 650;
+}
+
+.language-chips span:nth-child(3n + 2) {
+    border-color: var(--soft-green-border);
+    background: var(--soft-green);
+    color: var(--soft-green-ink);
+}
+
+.language-chips span:nth-child(3n) {
+    border-color: var(--soft-purple-border);
+    background: var(--soft-purple);
+    color: var(--soft-purple-ink);
+}
+
+.site-footer {
+    display: flex;
+    min-height: 76px;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--line);
+    color: var(--footer-ink);
+    font-size: 13px;
+}
+
+.footer-brand {
+    gap: 8px;
+    color: var(--ink) !important;
+    font-size: 16px;
+}
+
+.footer-brand img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+
+@media (max-width: 760px) {
+    .goowee-site .site-header,
+    .goowee-site .hero,
+    .goowee-site .platform-section,
+    .goowee-site .site-footer {
+        width: min(100% - 40px, 560px);
+    }
+
+    .site-header {
+        height: auto;
+        min-height: 72px;
+        flex-wrap: wrap;
+        gap: 14px;
+        padding: 14px 0;
+    }
+
+    .site-nav {
+        width: 100%;
+        justify-content: space-between;
+        gap: 8px;
+        font-size: 13px;
+    }
+
+    .site-nav .nav-cta {
+        gap: 9px;
+        padding: 9px 11px;
+    }
+
+    .theme-switch {
+        margin-left: auto;
+    }
+
+    .hero {
+        min-height: 0;
+        grid-template-columns: 1fr;
+        padding: 66px 0 73px;
+    }
+
+    .hero h1 {
+        max-width: 570px;
+        font-size: clamp(42px, 10vw, 60px);
+    }
+
+    .hero-description {
+        max-width: 520px;
+        font-size: 16px;
+    }
+
+    .hero-art {
+        min-height: 300px;
+        margin-top: 24px;
+    }
+
+    .orbit-outer {
+        width: 270px;
+        height: 270px;
+    }
+
+    .orbit-inner {
+        width: 210px;
+        height: 210px;
+    }
+
+    .hero-avatar {
+        width: 145px;
+        height: 145px;
+    }
+
+    .hero-caption {
+        right: 2%;
+        bottom: 12px;
+    }
+
+    .hero-index {
+        bottom: 22px;
+    }
+
+    .platform-section {
+        padding: 51px 0 60px;
+    }
+
+    .section-heading {
+        display: block;
+    }
+
+    .feature-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-web {
+        grid-column: auto;
+        grid-template-columns: 1fr;
+        gap: 16px;
+    }
+
+    .device-options {
+        max-width: 400px;
+        padding: 16px 0 0;
+        border-top: 1px solid var(--line);
+        border-left: 0;
+    }
+
+    .feature-card {
+        min-height: 0;
+        padding: 22px;
+    }
+
+    .feature-auth {
+        min-height: 245px;
+    }
+
+    .site-footer {
+        gap: 12px;
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 390px) {
+    .goowee-site .site-header,
+    .goowee-site .hero,
+    .goowee-site .platform-section,
+    .goowee-site .site-footer {
+        width: calc(100% - 32px);
+    }
+
+    .brand {
+        font-size: 20px;
+    }
+
+    .site-nav {
+        gap: 5px;
+        font-size: 12px;
+    }
+
+    .site-nav .nav-cta {
+        gap: 6px;
+        padding: 8px 9px;
+        font-size: 11px;
+    }
+
+    .check-list {
+        grid-template-columns: 1fr;
+    }
+
+    .site-footer > span {
+        display: none;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+}

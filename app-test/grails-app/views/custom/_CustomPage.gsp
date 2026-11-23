@@ -3,8 +3,6 @@
 <head>
     <title>${c.message('app.name')}</title>
     <page:header component="${c}"/>
-    <asset:stylesheet src="stylesheets/custom.css" />
-    <page:colors component="${c}"/>
 </head>
 
 <body data-21-page="CustomPage">
@@ -19,8 +17,10 @@
     </div>
 </div>
 
+<%-- Footer --%>
 <page:footer component="${c}"/>
-<asset:javascript src="javascripts/custom.js" />
+
+<%-- Page Init --%>
 <page:initialize />
 
 </body>

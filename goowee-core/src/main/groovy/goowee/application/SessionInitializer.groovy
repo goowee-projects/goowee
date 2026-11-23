@@ -14,8 +14,7 @@
  */
 package goowee.application
 
-import goowee.tenant.TenantPropertyService
-import groovy.transform.CompileStatic
+import goowee.security.UserSessionService
 import jakarta.inject.Inject
 import jakarta.servlet.ServletContext
 import jakarta.servlet.ServletException
@@ -25,15 +24,13 @@ import org.springframework.boot.web.servlet.ServletContextInitializer
  * @author Gianluca Sartori
  */
 
-@CompileStatic
 class SessionInitializer implements ServletContextInitializer {
 
     @Inject
-    TenantPropertyService tenantPropertyService
+    UserSessionService userSessionService
 
     @Override
     void onStartup(ServletContext servletContext) throws ServletException {
-        String sessionName = tenantPropertyService.getString('SESSION_COOKIE_NAME')
-        servletContext.sessionCookieConfig.name = sessionName
+        userSessionService.configureServletContext(servletContext)
     }
 }

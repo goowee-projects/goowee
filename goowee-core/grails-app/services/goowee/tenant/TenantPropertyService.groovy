@@ -55,6 +55,7 @@ class TenantPropertyService extends PropertyService {
         // fa-solid, fa-regular, fa-light, fa-thin, fa-duotone, fa-brand
         // Other
         setNumber('FONT_SIZE', 14, 14)
+        setNumber('MOBILE_FONT_SIZE', 16, 16)
         setString('GUI_STYLE', GuiStyle.ROUNDED as String)
 
         // Colors
@@ -195,7 +196,7 @@ class TenantPropertyService extends PropertyService {
         inMemoryProperties[tenantId][name] = value
 
         if (onChangeRegistry[name]) {
-            log.info "'${tenantId}' tenant - Property changed '$name' = '$value'"
+            log.info "'${tenantId.toUpperCase()}' TENANT - Property changed '$name' = '$value'"
             onChangeRegistry[name].call(oldValue, value, defaultValue)
         }
 
@@ -248,6 +249,8 @@ class TenantPropertyService extends PropertyService {
     @Transactional
     void delete(Serializable id) {
         TTenantProperty obj = get(id)
-        obj.delete(flush: true)
+        if (obj) {
+            obj.delete(flush: true)
+        }
     }
 }

@@ -23,6 +23,10 @@ import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.Part
 
 /**
+ * This class is deprecated.
+ *
+ * @deprecated Use {@link goowee.commons.http.client.HttpClient} or {@link goowee.commons.http.server.HttpRequest} instead.
+ *
  * @author Gianluca Sartori
  */
 

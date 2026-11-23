@@ -70,7 +70,7 @@ dependencies {
     testImplementation "org.spockframework:spock-core"
 
     // GOOWEE
-    implementation "org.goowee:goowee-core:1.x-SNAPSHOT"
+    implementation "org.goowee:goowee-core:3.0.0-RC1"
 }
 
 compileJava.options.release = 17

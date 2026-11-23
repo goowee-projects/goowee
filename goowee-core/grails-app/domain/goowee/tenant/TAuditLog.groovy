@@ -14,7 +14,6 @@
  */
 package goowee.tenant
 
-
 import grails.compiler.GrailsCompileStatic
 import grails.gorm.MultiTenant
 import org.grails.datastore.gorm.GormEntity
@@ -57,6 +56,7 @@ class TAuditLog implements GormEntity, MultiTenant<TAuditLog> {
 
     static mapping = {
         table 'sys_audit_log'
+        autoTimestamp false
     }
 
 }

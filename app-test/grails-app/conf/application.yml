@@ -5,6 +5,33 @@ info:
     version: '@info.app.version@'
     grailsVersion: '@info.app.grailsVersion@'
 
+logging:
+  level:
+    root: ERROR
+    org.springframework.boot.SpringApplication: INFO
+    goowee: DEBUG
+    apptest: TRACE
+    # goowee.commons.utils.SqlUtils: TRACE
+    # goowee.ImportUtils: TRACE
+    # org.grails.datastore: DEBUG
+    # org.hibernate.SQL: DEBUG
+    # org.hibernate.type.descriptor.sql.BasicBinder: TRACE
+    # org.springframework.security: DEBUG
+    # grails.plugin.springsecurity.web.filter.DebugFilter: INFO
+    # sun.net.www.protocol.http.HttpURLConnection: ALL
+  file:
+    name: ${info.app.name}/logs/${info.app.name}.log
+  logback:
+    rollingpolicy:
+      file-name-pattern: ${info.app.name}/logs/archive/${info.app.name}.%d{yyyy-MM-dd}.%i.log.zip
+      clean-history-on-start: true
+      max-history: 10
+      max-file-size: 10MB
+      total-size-cap: 100GB
+  pattern:
+    # Use a balanced neutral gray for TRACE/DEBUG on light and dark console backgrounds; keep INFO default.
+    console: "\u001B[38;5;243m%d{HH:mm:ss.SSS}\u001B[39m %replace(%replace(%replace(%highlight(%-5level)){'\\u001B\\[31m','\u001B[33m'}){'\\u001B\\[(0;)?39m','\u001B[0;38;5;243m'}){'\\u001B\\[34m','\u001B[39m'} \u001B[38;5;243m[%thread]\u001B[39m \u001B[38;5;243m%-40.40logger{36}\u001B[39m \u001B[38;5;243m:\u001B[39m %replace(%replace(%replace(%highlight(%msg%n)){'\\u001B\\[31m','\u001B[33m'}){'\\u001B\\[(0;)?39m','\u001B[0;38;5;243m'}){'\\u001B\\[34m','\u001B[39m'}"
+    file: '%d{yyyy-MM-dd HH:mm:ss.SSS} [%thread] %-5level %-40.40logger{36} : %msg%n'
 
 # ===================================================
 # SSL CONSIGURATION
@@ -55,17 +82,11 @@ environments:
 
 ---
 
-# ===================================================
-# LDAP CONFIGURATION
-# ===================================================
 grails:
   plugin:
     springsecurity:
       providerNames:
-        - daoAuthenticationProvider
-        - physicalIdAuthenticationProvider
-#        - ldapAuthProvider
-        - rememberMeAuthenticationProvider
+        - runtimeAuthenticationProvider
 
 ---
 grails:
@@ -110,7 +131,7 @@ dataSource:
   jmxExport: true
   driverClassName: com.mysql.cj.jdbc.Driver
 
-  url: jdbc:mysql://localhost:3306/goowee?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+  url: jdbc:mysql://localhost:3306/g8_goowee?allowPublicKeyRetrieval=true&useSSL=false&createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
   username: root
   password: root
 

@@ -14,12 +14,11 @@
  */
 package apptest
 
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
 import goowee.elements.ElementsController
-import goowee.elements.components.Button
-import goowee.elements.components.ProgressBar
 import goowee.elements.components.Table
 import goowee.elements.components.TableRow
+import goowee.elements.controls.ProgressBar
 import goowee.elements.controls.Select
 import goowee.elements.controls.TextField
 import goowee.elements.style.TextAlign
@@ -29,18 +28,18 @@ import jakarta.annotation.PostConstruct
 
 class TableController implements ElementsController {
 
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
     PersonService personService
 
     @PostConstruct
     void init() {
-        applicationService.registerPrettyPrinter(TCompany, 'Dipendente in \'${it.name}\'')
-        applicationService.registerPrettyPrinter('NOME_FIGO', '${it} sei un figo!')
+        gooweeApplication.registerPrettyPrinter(TCompany, 'Dipendente in \'${it.name}\'')
+        gooweeApplication.registerPrettyPrinter('NOME_FIGO', '${it} sei un figo!')
 
-        applicationService.registerTransformer('MAIUSCOLO') { value ->
+        gooweeApplication.registerTransformer('MAIUSCOLO') { value ->
             return value.toString().toUpperCase()
         }
-        applicationService.registerTransformer('MULTIPLY') { value ->
+        gooweeApplication.registerTransformer('MULTIPLY') { value ->
             println 'BEFORE ' + value
             Object result = value ? value * 100 : new Money(1000)
             println 'AFTER ' + result
@@ -193,12 +192,16 @@ class TableController implements ElementsController {
                     class: TimeField,
                     id: 'TimeField1',
             ]*/
-            row.cells.address.component = [
+            row.cells.address.setComponent(
                 class: ProgressBar,
                 id   : 'progress1',
                 max  : 100,
-                now  : 20,
-            ]
+                value: 20,
+            )
+            row.cells.company.setComponent(
+                class: ProgressBar,
+                id   : 'progress2',
+            )
         }
 
         if (row.values.name == 'user1') {
@@ -207,10 +210,10 @@ class TableController implements ElementsController {
 
             row.actions.addSeparator()
             row.actions.addAction(action: 'rowAction')
-            row.cells.postcode.component = [
+            row.cells.postcode.setComponent(
                 class: TextField,
                 id   : 'TextField1',
-            ]
+            )
             row.cells.postcode.colspan = 2
         }
 
@@ -234,7 +237,7 @@ class TableController implements ElementsController {
 
             if (row.values.username == 'user2') {
                 // coloro riga
-                row.backgroundColor = '#cc0000'
+                row.backgroundColor = '#aa0000'
             }
         }
 

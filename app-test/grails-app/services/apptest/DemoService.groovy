@@ -14,7 +14,6 @@
  */
 package apptest
 
-
 import grails.gorm.DetachedCriteria
 import grails.gorm.multitenancy.CurrentTenant
 import grails.gorm.transactions.Transactional
@@ -95,6 +94,8 @@ class DemoService {
     @Transactional
     void delete(Serializable id) {
         TDemo obj = get(id)
-        obj.delete(flush: true)
+        if (obj) {
+            obj.delete(flush: true)
+        }
     }
 }

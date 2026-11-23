@@ -14,7 +14,7 @@
  */
 package apptest
 
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
 import goowee.commons.utils.DateUtils
 import goowee.elements.ElementsController
 import goowee.elements.components.*
@@ -36,7 +36,7 @@ class MyType {
 class SandboxController implements ElementsController {
 
     ServletContext servletContext
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
     QuantityService quantityService
     SecurityService securityService
     PersonService personService
@@ -49,16 +49,16 @@ class SandboxController implements ElementsController {
 
         println params
 
-        applicationService.registerTransformer('DB2UNIT') { value ->
+        gooweeApplication.registerTransformer('DB2UNIT') { value ->
             if (value == 'PZ') value = 'PCS'
             return value
         }
 
-        applicationService.registerTransformer('DB2QUANTITY') { List value ->
+        gooweeApplication.registerTransformer('DB2QUANTITY') { List value ->
             return new Quantity(value[0] as BigDecimal, value[1] as QuantityUnit)
         }
 
-        applicationService.registerTransformer('DB2DATE') { value ->
+        gooweeApplication.registerTransformer('DB2DATE') { value ->
             if (!value || value == 'null') return null
             return DateUtils.parseLocalDate(value, 'yyyyMMdd')
         }
@@ -246,6 +246,7 @@ class SandboxController implements ElementsController {
                 onChange: 'onIconChange',
                 highlight: true,
                 maxSize: 7,
+                displayMaxSize: true,
                 cols: 6,
             )
             addField(
@@ -463,13 +464,13 @@ Grails application running at http://localhost:9992/test in environment: develop
 
                 row.cells.postcode.tag = true
 
-                row.cells.input.component = [
+                row.cells.input.setComponent(
                     class    : NumberField,
                     id       : "number${values.id}",
                     min      : -2,
                     max      : 10,
                     textAlign: TextAlign.END,
-                ]
+                )
                 row.cells.input.component.addAction(
                     action: 'onDecrement',
                     submit: "tableTest-${row.index}",
@@ -595,7 +596,6 @@ Grails application running at http://localhost:9992/test in environment: develop
 ////                    id: 'transformerSelect',
 ////                    optionsFromList: quantityService.listUnit(),
 ////                    defaultValue: 'KM',
-////                    noSelection: true,
 ////                    transformer: 'DB2UNIT',
 ////                    textPrefix: 'quantity.unit',
 ////            )
@@ -655,10 +655,10 @@ Grails application running at http://localhost:9992/test in environment: develop
 //            )
 //        }
 
-//        form['select1'].value = 1
-//        form['transformerSelect'].value = 'PZ'
-//        form['transformQta'].value = [3, 'M']
-//        form['transformQta'].value = new Quantity(3, Unit.M)
+//        form.controls.select1.value = 1
+//        form.controls.transformerSelect.value = 'PZ'
+//        form.controls.transformQta.value = [3, 'M']
+//        form.controls.transformQta.value = new Quantity(3, Unit.M)
 
         c.addComponent(
             before: 'formFail',

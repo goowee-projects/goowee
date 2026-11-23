@@ -24,7 +24,7 @@ import groovy.util.logging.Slf4j
  * page load or refresh. It provides the common infrastructure shared by every page layout:
  * </p>
  * <ul>
- *     <li>A {@link KeyPress} component for global keyboard/barcode-scanner event handling.</li>
+ *     <li>A {@link PageKeyPress} component for global keyboard-hotkey and barcode-scanner handling.</li>
  *     <li>A {@link PageModal} for displaying modal dialogs.</li>
  *     <li>A {@link PageMessageBox} for displaying informational, error, and confirmation messages.</li>
  *     <li>A transient {@link PageContent} slot that holds the main body content injected by the
@@ -49,8 +49,8 @@ abstract class Page extends Component {
     /** The message box used to display info, error, and confirmation messages. */
     PageMessageBox messageBox
 
-    /** The global keyboard/barcode-scanner listener for this page. */
-    KeyPress keyPress
+    /** The global keyboard listener for this page. */
+    PageKeyPress keyPress
 
     /**
      * The main content area of the page. This is transient (not serialised to the session)
@@ -70,7 +70,7 @@ abstract class Page extends Component {
      * <ul>
      *     <li>{@code favicon} — browser tab icon path or URL</li>
      *     <li>{@code appicon} — application launcher icon path or URL</li>
-     *     <li>{@code keyPress} — a nested map of {@link KeyPress} constructor arguments</li>
+     *     <li>{@code keyPress} — a nested map of {@link PageKeyPress} constructor arguments</li>
      * </ul>
      *
      * @param args map of page properties
@@ -82,7 +82,7 @@ abstract class Page extends Component {
 
         modal = addComponent(PageModal, 'modal', args)
         messageBox = addComponent(PageMessageBox, 'messageBox', args)
-        keyPress = addComponent(KeyPress, 'keyPress', args.keyPress as Map)
+        keyPress = addComponent(PageKeyPress, 'keyPress', args.keyPress as Map)
 
         favicon = args.favicon
         appicon = args.appicon

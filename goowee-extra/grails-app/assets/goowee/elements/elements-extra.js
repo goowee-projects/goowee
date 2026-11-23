@@ -1,0 +1,5 @@
+//= require ../libs/libs.min
+
+//= require components/BarChart
+//= require components/PieChart
+

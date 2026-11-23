@@ -140,8 +140,8 @@ abstract class Component implements WebRequestAware, Serializable {
         this.@skipFocus = args.skipFocus
         this.@sticky = args.sticky
 
-        textColor = args.textColor ?: ''
-        backgroundColor = args.backgroundColor ?: ''
+        textColor = args.textColor
+        backgroundColor = args.backgroundColor
 
         mainTextColor = args.mainTextColor ?: '#333030'
         mainTextColorInt = Color.hexToIntColor(mainTextColor) ?: warnColorError(mainTextColor)
@@ -157,7 +157,7 @@ abstract class Component implements WebRequestAware, Serializable {
 
         primaryTextColor = args.primaryTextColor ?: '#ffffff'
         primaryTextColorInt = Color.hexToIntColor(primaryTextColor) ?: warnColorError(primaryTextColor)
-        primaryBackgroundColor = args.primaryBackgroundColor ?: '#cc0000'
+        primaryBackgroundColor = args.primaryBackgroundColor ?: '#aa0000'
         primaryBackgroundColorInt = Color.hexToIntColor(primaryBackgroundColor) ?: warnColorError(primaryBackgroundColor)
         primaryBackgroundColorAlpha = (Double) (args.primaryBackgroundColorAlpha == null ? 0.15d : args.primaryBackgroundColorAlpha)
 
@@ -166,7 +166,7 @@ abstract class Component implements WebRequestAware, Serializable {
         secondaryBackgroundColor = args.secondaryBackgroundColor ?: '#504545'
         secondaryBackgroundColorInt = Color.hexToIntColor(secondaryBackgroundColor) ?: warnColorError(secondaryBackgroundColor)
 
-        requiredTextColor = args.requiredTextColor ?: '#cc0000'
+        requiredTextColor = args.requiredTextColor ?: '#aa0000'
         errorTextColorInt = Color.hexToIntColor(requiredTextColor) ?: warnColorError(requiredTextColor)
 
         cssClass = args.cssClass ?: ''
@@ -289,7 +289,7 @@ abstract class Component implements WebRequestAware, Serializable {
      *
      * @return An instance of the specified component class
      */
-    @Requires({ args.class && args.id })
+    @Requires({ args.id })
     public <T> T createComponent(Map args) {
         Class<T> clazz = args.class as Class<T>
         String id = args.id
@@ -345,7 +345,12 @@ abstract class Component implements WebRequestAware, Serializable {
 
     private void initializeComponent(Map args) {
         args.textColor = args.textColor ?: this.textColor
-        args.backgroundColor = args.backgroundColor ?: this.backgroundColor
+        // Keep explicit null as an override; only propagate a non-empty parent background.
+        if (!args.containsKey('backgroundColor') && backgroundColor) {
+            args.backgroundColor = backgroundColor
+        } else if (args.backgroundColor == '') {
+            args.backgroundColor = backgroundColor
+        }
 
         args.mainTextColor = this.mainTextColor
         args.mainForegroundColor = this.mainForegroundColor
@@ -532,7 +537,7 @@ abstract class Component implements WebRequestAware, Serializable {
      *
      * @return An instance of the specified control class
      */
-    @Requires({ args.class && args.id })
+    @Requires({ args.id && args.class })
     protected <T> T createControl(Map args) {
         Class<T> clazz = args.class as Class<T>
         String id = args.id
@@ -750,3 +755,5 @@ abstract class Component implements WebRequestAware, Serializable {
     }
 
 }
+
+

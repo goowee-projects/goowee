@@ -1,3 +1,17 @@
 .component-image {
-    border-radius: var(--bs-border-radius-sm);
+    border-radius: var(--bs-border-radius);
+}
+
+.component-form-field .component-image {
+    height: 100%;
+    object-fit: contain;
+}
+
+.component-form-field .component-image.image-stretch {
+    object-fit: fill;
+}
+
+.component-form-field .component-image.image-fit-width {
+    height: auto;
+    align-self: flex-start;
 }

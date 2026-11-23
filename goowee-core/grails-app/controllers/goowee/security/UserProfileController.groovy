@@ -14,7 +14,7 @@
  */
 package goowee.security
 
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
 import goowee.elements.ElementsController
 import goowee.elements.components.Separator
 import goowee.elements.contents.ContentForm
@@ -22,7 +22,7 @@ import goowee.elements.controls.*
 import goowee.elements.core.PrettyPrinterDecimalFormat
 import goowee.elements.style.GuiStyle
 import goowee.elements.style.TextDefault
-import goowee.tenant.TenantPropertyService
+import goowee.utils.EnvUtils
 import grails.plugin.springsecurity.annotation.Secured
 
 /**
@@ -33,12 +33,45 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured(['isAuthenticated()'])
 class UserProfileController implements ElementsController {
 
-    ApplicationService applicationService
-    TenantPropertyService tenantPropertyService
+    GooweeApplication gooweeApplication
     SecurityService securityService
 
-    private buildSensitiveDataForm(ContentForm c) {
+    def index() {
+        def c = createContent(ContentForm)
+        c.header.with {
+            nextButton.action = 'onSave'
+            nextButton.text = TextDefault.SAVE
+            removeBackButton()
+        }
+
+        def isDevelopment = EnvUtils.isDevelopment()
+
         c.form.with {
+            if (devDisplayHints) {
+                addField(
+                    class: Textarea,
+                    id: 'authorities',
+                    text: '',
+                    readonly: true,
+                    cols: 12,
+                )
+            }
+            addField(
+                class: TextField,
+                id: 'username',
+                readonly: true,
+                icon: 'fa-user',
+                cols: isDevelopment ? 6 : 12,
+            )
+            if (isDevelopment) {
+                addField(
+                    class: TextField,
+                    id: 'tenant.tenantId',
+                    icon: 'fa-house-user',
+                    readonly: true,
+                    cols: 6,
+                )
+            }
             addField(
                 class: TextField,
                 id: 'firstname',
@@ -48,6 +81,11 @@ class UserProfileController implements ElementsController {
                 class: TextField,
                 id: 'lastname',
                 cols: 6,
+            )
+            addField(
+                class: Separator,
+                id: 'notifications',
+                icon: 'fa-comment',
             )
             addField(
                 class: EmailField,
@@ -60,6 +98,40 @@ class UserProfileController implements ElementsController {
                 cols: 6,
             )
         }
+
+        buildPreferencesForm(c)
+
+        def obj = securityService.getCurrentUser(true)
+        if (obj?.canChangePassword) {
+            c.form.with {
+                addField(
+                    class: Separator,
+                    id: 'change.password',
+                    icon: 'fa-key',
+                )
+                addField(
+                    class: PasswordField,
+                    id: 'newPassword',
+                    cols: 6,
+                )
+                addField(
+                    class: PasswordField,
+                    id: 'confirmNewPassword',
+                    cols: 6,
+                )
+            }
+
+        }
+
+        if (obj) {
+            c.form.values = obj
+        }
+
+        if (devDisplayHints) {
+            c.form.controls.authorities.value = securityService.getCurrentUserAuthorities().join(',\n') + '.'
+        }
+
+        display content: c, modal: true
     }
 
     private buildPreferencesForm(ContentForm c) {
@@ -72,9 +144,9 @@ class UserProfileController implements ElementsController {
             addField(
                 class: Select,
                 id: 'language',
-                optionsFromList: applicationService.languages,
+                optionsFromList: gooweeApplication.languages,
                 textPrefix: 'default.language',
-                search: false,
+                search: true,
                 cols: 6,
             )
             addField(
@@ -149,7 +221,16 @@ class UserProfileController implements ElementsController {
                 optionsFromList: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
                 defaultValue: 14,
                 renderTextPrefix: false,
-                cols: 4,
+                cols: 3,
+                colsSmall: 6,
+            )
+            addField(
+                class: Select,
+                id: 'mobileFontSize',
+                optionsFromList: [14, 15, 16, 17, 18, 19, 20, 21],
+                defaultValue: 16,
+                renderTextPrefix: false,
+                cols: 3,
                 colsSmall: 6,
             )
             addField(
@@ -157,93 +238,35 @@ class UserProfileController implements ElementsController {
                 id: 'guiStyle',
                 optionsFromEnum: GuiStyle,
                 textPrefix: 'default',
-                cols: 4,
-                colsSmall: 6,
+                cols: 6,
             )
             addField(
                 class: Checkbox,
                 id: 'animations',
-                cols: 4,
             )
         }
-    }
-
-    def index() {
-        def c = createContent(ContentForm)
-        c.header.with {
-            nextButton.action = 'onSave'
-            nextButton.text = TextDefault.SAVE
-            removeBackButton()
-        }
-
-        c.form.with {
-            if (devDisplayHints) {
-                addField(
-                    class: Textarea,
-                    id: 'authorities',
-                    text: '',
-                    readonly: true,
-                    cols: 12,
-                )
-            }
-            addField(
-                class: TextField,
-                id: 'username',
-                readonly: true,
-                icon: 'fa-user',
-                help: 'userProfile.edit.username.help',
-                cols: 12,
-            )
-        }
-
-        buildSensitiveDataForm(c)
-
-        buildPreferencesForm(c)
-
-        def canChangePassword = tenantPropertyService.getBoolean('USER_CAN_CHANGE_PASSWORD')
-        if (canChangePassword) {
-            c.form.with {
-                addField(
-                    class: Separator,
-                    id: 'change.password',
-                    icon: 'fa-key',
-                )
-                addField(
-                    class: PasswordField,
-                    id: 'newPassword',
-                    cols: 6,
-                )
-                addField(
-                    class: PasswordField,
-                    id: 'confirmNewPassword',
-                    cols: 6,
-                )
-            }
-
-        }
-
-        def obj = securityService.getCurrentUser(true)
-        if (obj) {
-            c.form.values = obj
-        }
-
-        if (devDisplayHints) {
-            c.form['authorities'].value = securityService.getCurrentUserAuthorities().join(',\n') + '.'
-        }
-
-        display content: c, modal: true
     }
 
     def onSave(UserProfileValidator val) {
+        TUser user = securityService.getCurrentUser(true)
+        if ((params.newPassword || params.confirmNewPassword || params.password) && !user?.canChangePassword) {
+            val.errors.rejectValue('newPassword', 'userProfile.passwordChange.disabled')
+            display errors: val
+            return
+        }
+
         if (val.hasErrors()) {
             display errors: val
             return
         }
 
-        if (params.newPassword) {
+        if (user?.canChangePassword && params.newPassword) {
             params.password = params.newPassword
+        } else {
+            params.remove('password')
         }
 
+        params.remove('canChangePassword')
         securityService.updateUser(params)
         securityService.getCurrentUser(true) // We reload the 'currentUser'
 
@@ -256,10 +279,10 @@ class UserProfileController implements ElementsController {
         twelveHours = (params.twelveHours == 'false') ? false : true
         firstDaySunday = (params.firstDaySunday == 'false') ? false : true
         fontSize = params.fontSize as Integer
+        mobileFontSize = params.mobileFontSize as Integer
         guiStyle = params.guiStyle as String
         animations = params.animations as Boolean
 
         display controller: securityService.userLandingPage ?: 'shell', direct: true
     }
 }
-

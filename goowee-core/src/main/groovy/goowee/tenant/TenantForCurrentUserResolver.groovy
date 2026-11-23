@@ -15,11 +15,15 @@
 package goowee.tenant
 
 import goowee.elements.WebRequestAware
+import goowee.security.SecurityService
 import goowee.security.TUser
+import goowee.security.UserSessionService
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+import jakarta.inject.Inject
 import org.grails.datastore.mapping.multitenancy.TenantResolver
 import org.grails.datastore.mapping.multitenancy.exceptions.TenantNotFoundException
+import org.springframework.context.annotation.Lazy
 import org.springframework.stereotype.Component
 
 /**
@@ -31,6 +35,14 @@ import org.springframework.stereotype.Component
 @CompileStatic
 class TenantForCurrentUserResolver implements TenantResolver, WebRequestAware {
 
+    @Lazy
+    @Inject
+    TenantService tenantService
+
+    @Lazy
+    @Inject
+    UserSessionService userSessionService
+
     @Override
     Serializable resolveTenantIdentifier() throws TenantNotFoundException {
         if (!hasRequest()) {
@@ -38,11 +50,17 @@ class TenantForCurrentUserResolver implements TenantResolver, WebRequestAware {
         }
 
         try {
-            TUser user = session['_21CurrentUser'] as TUser
-            if (user) {
-                return user.tenant.tenantId
-            } else {
+            TUser user = userSessionService.getCurrentUser()
+
+            if (!user) {
+                return tenantService.getTenantIdByRequest(request) ?: TenantService.defaultTenantId
+            }
+
+            if (SecurityService.USERNAME_SUPERADMIN.equalsIgnoreCase(user.username)) {
                 return TenantService.defaultTenantId
+
+            } else {
+                return user.tenant.tenantId
             }
 
         } catch (Exception ignore) {

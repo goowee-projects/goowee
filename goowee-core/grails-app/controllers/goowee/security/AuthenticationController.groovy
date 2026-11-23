@@ -14,11 +14,15 @@
  */
 package goowee.security
 
-
 import goowee.elements.ElementsController
+import goowee.elements.components.Form
+import goowee.elements.components.Label
 import goowee.elements.pages.Login
+import goowee.elements.pages.PageBlank
+import goowee.elements.style.Color
 import goowee.tenant.TenantPropertyService
 import goowee.tenant.TenantService
+import goowee.utils.EnvUtils
 import grails.converters.JSON
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -31,9 +35,27 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured(['permitAll'])
 class AuthenticationController implements ElementsController {
 
-    TenantService tenantService
     SecurityService securityService
+    TenantService tenantService
     TenantPropertyService tenantPropertyService
+    AuthenticationProviderService authenticationProviderService
+
+    def error() {
+        def p = createPage(PageBlank)
+
+        def form = p.content.addComponent(Form)
+        form.addField(
+            class: Label,
+            id: 'message',
+            text: params.message,
+            html: controllerSession.oidcAuthenticationErrorHtml,
+            textColor: Color.DANGER_TEXT,
+            backgroundColor: Color.DANGER_BACKGROUND,
+            displayLabel: false,
+        )
+
+        display page: p
+    }
 
     def login() {
         if (securityService.isLoggedIn()) {
@@ -41,36 +63,59 @@ class AuthenticationController implements ElementsController {
             return
         }
 
-        def hostTenant = tenantService.getByHost(request.getHeader('host'))
-        def tenantId = hostTenant?.tenantId ?: tenantService.defaultTenantId
+        def tenantId = tenantService.getTenantIdByRequest(request)
+            ?: tenantService.defaultTenantId
+        List<TAuthenticationProvider> authenticationProviders = authenticationProviderService.list()
+        List<Map> oidcProviders = authenticationProviders
+            .findAll { it.enabled && it.providerType.isOidcProvider() }
+            .collect { provider ->
+                [
+                    providerType: provider.providerType,
+                    name        : message(code: "authenticationProvider.loginWith.${provider.providerType.name()}"),
+                    url         : link("/authentication/oidc/${provider.providerType}/start"),
+                ]
+            } as List<Map>
+
+        def phisicalIdEnabled = authenticationProviders.find {
+            it.providerType == AuthenticationProviderType.PHYSICAL
+        }?.enabled ?: false
+        def rememberMeEnabled = authenticationProviders.find {
+            it.providerType == AuthenticationProviderType.REMEMBERME
+        }?.enabled ?: false
 
         tenantService.withTenant(tenantId) {
+            securityService.initializeRememberMe()
+
             def loginArgs = [
                 backgroundImage    : tenantPropertyService.getString('LOGIN_BACKGROUND_IMAGE', true),
                 logoImage          : tenantPropertyService.getString('LOGIN_LOGO', true),
-                autocomplete       : tenantPropertyService.getBoolean('LOGIN_AUTOCOMPLETE', true),
+                logoTag            : tenantPropertyService.getString('LOGIN_LOGO_TAG', true),
                 copy               : tenantPropertyService.getString('LOGIN_COPY', true),
                 registerUrl        : tenantPropertyService.getString('LOGIN_REGISTRATION_URL', true),
                 passwordRecoveryUrl: tenantPropertyService.getString('LOGIN_PASSWORD_RECOVERY_URL', true),
+                oidcProviders      : oidcProviders,
+                phisicalIdEnabled  : phisicalIdEnabled,
+                rememberMeEnabled  : rememberMeEnabled,
             ]
+
+            if (EnvUtils.isDevelopment()) {
+                loginArgs += [tenantId: tenantId.toUpperCase()]
+            }
+
             display page: createPage(Login, loginArgs)
         }
     }
 
     @Secured(['ROLE_USER'])
     def afterLogin() {
-        securityService.executeAfterLogin()
-        if (securityService.isLoginDenied()) {
-            forward action: 'logout'
-            return
-        }
-
         ///////////////////////////////////////
         // IF YOU'RE HERE THE USER LOGGED IN //
         ///////////////////////////////////////
 
-        // Getting the user preferences
+        // Loads the user and sets up the current tenant
         TUser user = securityService.currentUser
+
+        // Loading user setting
         decimalFormat = user.decimalFormat
         prefixedUnit = user.prefixedUnit
         symbolicCurrency = user.symbolicCurrency
@@ -79,7 +124,15 @@ class AuthenticationController implements ElementsController {
         twelveHours = user.twelveHours
         firstDaySunday = user.firstDaySunday
         fontSize = user.fontSize
+        mobileFontSize = user.mobileFontSize
         animations = user.animations
+
+        // Executing custom after login code & check if we need to log the user out
+        securityService.executeAfterLogin()
+        if (securityService.isLoginDenied()) {
+            forward action: 'logout'
+            return
+        }
 
         // We redirect the user to the configured location
         if (params.ajax) { // Default login
@@ -101,10 +154,10 @@ class AuthenticationController implements ElementsController {
     }
 
     def afterLogout() {
-        // Serve a gestire il DENY_AUTHORIZATION_MESSAGE ovvero l'avviso da mostrare nel caso l'utente non sia autorizzato
-        // ad accedere per motivi legati all'applicazione
-        if (session[SecurityService.DENY_AUTHORIZATION_MESSAGE]) {
-            def message = [customError: session[SecurityService.DENY_AUTHORIZATION_MESSAGE]]
+        // Display the notice explaining why the user is not authorized to access the application.
+        String deniedMessage = securityService.loginDeniedMessage
+        if (deniedMessage) {
+            def message = [customError: deniedMessage]
             render message as JSON
 
         } else {
@@ -118,7 +171,7 @@ class AuthenticationController implements ElementsController {
                 render status: 403
             }
             '*' {
-                render view: '/goowee/authentication/403'
+                render view: '/goowee/elements/authentication/403'
             }
         }
     }

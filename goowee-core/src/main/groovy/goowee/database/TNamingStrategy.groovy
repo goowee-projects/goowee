@@ -18,7 +18,7 @@ import groovy.transform.CompileStatic
 import org.hibernate.cfg.ImprovedNamingStrategy
 
 /**
- * Table names start with "t_" to avoid conflicting with database keywords
+ * Remove "t" prefix from table names if the domain class name starts with "T"
  *
  * @author Gianluca Sartori
  */
@@ -26,12 +26,12 @@ import org.hibernate.cfg.ImprovedNamingStrategy
 @CompileStatic
 class TNamingStrategy extends ImprovedNamingStrategy {
 
-    String classToTableName(String className) {
-        String domainName = className.startsWith('T')
-            ? className.drop(1)
-            : className
-        String tableName = super.classToTableName(domainName)
-        return tableName
+    String classToTableName(String className){
+        String tableName = className.startsWith('T')
+                ? className.drop(1)
+                : className
+
+        return super.classToTableName(tableName)
     }
 
 }

@@ -23,9 +23,13 @@ import goowee.elements.core.Elements
 import goowee.types.Type
 import goowee.types.Types
 import grails.gorm.validation.ConstrainedProperty
+import grails.util.Holders
 import grails.validation.Validateable
 import groovy.contracts.Requires
 import groovy.transform.CompileStatic
+import org.grails.datastore.mapping.model.MappingContext
+import org.grails.datastore.mapping.model.PersistentEntity
+import org.grails.datastore.mapping.model.PersistentProperty
 
 import java.lang.reflect.Field
 
@@ -49,6 +53,8 @@ import java.lang.reflect.Field
  */
 @CompileStatic
 class Form extends Component {
+
+    private static final Integer DEFAULT_STRING_COLUMN_SIZE = 255
 
     /** Hidden {@link FormField} instances that carry primary-key or surrogate-key values. */
     List keyFields
@@ -82,6 +88,15 @@ class Form extends Component {
 
         autocomplete = (args.autocomplete == null) ? false : args.autocomplete
         autofocus = (args.autofocus == null) ? true : args.autofocus
+    }
+
+    /**
+     * Returns a Map of all the fields of this form ({@link FormField} instances).
+     *
+     * @return a Map of {@link FormField} children
+     */
+    Map<String, FormField> getFields() {
+        return getComponents().collectEntries { [(it.id): it] }
     }
 
     /**
@@ -127,13 +142,13 @@ class Form extends Component {
         if (args.nullable == null) {
             args.nullable = fieldConstraints.nullable == null ? true : fieldConstraints.nullable
         }
-        // Auto assign 'maxSize'
+        // Use the validation constraint first, then the mapped database column size.
         if (args.maxSize == null) {
-            args.maxSize = fieldConstraints.maxSize ?: 255 // GORM default value for strings
+            args.maxSize = fieldConstraints.maxSize ?: getDatabaseMaxSize(validate, id)
         }
 
         // Auto squeeze if first component
-        if (args.sqeeze == null && !components.size()) {
+        if (args.squeeze == null && !fields.size()) {
             args.squeeze = true
         }
 
@@ -144,7 +159,7 @@ class Form extends Component {
         if (!args.primaryBackgroundColor) args.primaryBackgroundColor = primaryBackgroundColor
 
         // Add control/component. We add them to the components to be able to address
-        // them directly instead of passing through the FormField (Eg. form['controlName'])
+        // them directly instead of passing through the FormField (Eg. form.controls.controlName)
         Component component
         if (clazz in Control) {
             component = addControl(args)
@@ -256,6 +271,43 @@ class Form extends Component {
     }
 
     /**
+     * Returns the mapped database size for a String property. When no explicit size is
+     * configured, the default String column size is used.
+     *
+     * @param domainClass the GORM domain class
+     * @param fieldName the field name or dot-separated path
+     * @return the mapped maximum size, or {@code null} when the property is not a mapped String
+     */
+    private Integer getDatabaseMaxSize(Class domainClass, String fieldName) {
+        if (!domainClass || !fieldName) {
+            return null
+        }
+
+        MappingContext mappingContext = Holders.grailsApplication?.mappingContext
+        String[] fieldParts = fieldName.split('\\.')
+        PersistentEntity entity = mappingContext?.getPersistentEntity(domainClass.name)
+        PersistentProperty property
+
+        for (int i = 0; i < fieldParts.length; i++) {
+            property = entity?.getPropertyByName(fieldParts[i])
+            if (!property) {
+                return null
+            }
+
+            if (i < fieldParts.length - 1) {
+                entity = mappingContext?.getPersistentEntity(property.type.name)
+            }
+        }
+
+        if (property.type != String) {
+            return null
+        }
+
+        Number mappedMaxSize = property.mapping?.mappedForm?.maxSize
+        return mappedMaxSize == null ? DEFAULT_STRING_COLUMN_SIZE : mappedMaxSize.intValue()
+    }
+
+    /**
      * Adds a hidden key field whose type is inferred automatically from the given value.
      *
      * @param id the field identifier (maps to the corresponding parameter name on submission)
@@ -331,8 +383,9 @@ class Form extends Component {
     @Override
     void setReadonly(Boolean isReadonly) {
         super.setReadonly(isReadonly)
-        for (field in components) {
-            (field as FormField).component.readonly = isReadonly
+        for (field in fields) {
+            FormField formField = field.value
+            formField.component.readonly = isReadonly
         }
     }
 

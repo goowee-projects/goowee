@@ -2,13 +2,14 @@
 spring.h2.console.enabled = true
 
 // Uses custom table naming
-hibernate.physicalNamingStrategy = goowee.database.TNamingStrategy
+hibernate.naming_strategy = goowee.database.TNamingStrategy
 
 // Tenants are stored in separate database schemas
 grails.gorm.multiTenancy.mode = 'DATABASE'
 
 // Spring Security Core plugin setup example
 grails.plugin.springsecurity.userLookup.userDomainClassName = 'goowee.security.TUser'
+grails.plugin.springsecurity.userDetailsServiceBeanClass = 'goowee.security.TenantUserDetailsService'
 grails.plugin.springsecurity.userLookup.authorityJoinClassName = 'goowee.security.TUserRoleGroup'
 grails.plugin.springsecurity.authority.className = 'goowee.security.TRole'
 grails.plugin.springsecurity.authority.groupAuthorityNameField = 'authorities'
@@ -19,6 +20,7 @@ grails.plugin.springsecurity.apf.filterProcessesUrl = '/authentication/authentic
 grails.plugin.springsecurity.successHandler.alwaysUseDefault = true
 grails.plugin.springsecurity.successHandler.defaultTargetUrl = '/authentication/afterLogin'
 grails.plugin.springsecurity.successHandler.ajaxSuccessUrl = '/authentication/afterLogin?ajax=true'
+grails.plugin.springsecurity.authenticationSuccessHandlerBeanClass = 'goowee.security.ElementsAuthenticationSuccessHandler'
 grails.plugin.springsecurity.failureHandler.defaultFailureUrl = '/authentication/login?login_error=1'
 grails.plugin.springsecurity.logout.postOnly = false
 grails.plugin.springsecurity.logout.invalidateHttpSession = false
@@ -26,13 +28,13 @@ grails.plugin.springsecurity.logout.afterLogoutUrl = '/authentication/afterLogou
 grails.plugin.springsecurity.logout.filterProcessesUrl = '/springSecurityLogout'
 grails.plugin.springsecurity.adh.errorPage = '/authentication/denied'
 grails.plugin.springsecurity.physicalId.filterProcessesUrl = '/api/auth/physical'
-grails.plugin.springsecurity.physicalId.propertyName = 'physicalId'
 
 // Prevent Session Fixation attacks
 grails.plugin.springsecurity.useSessionFixationPrevention = true
 
 grails.plugin.springsecurity.controllerAnnotations.staticRules = [
         [pattern: '/**/authentication/login', access: ['permitAll']],
+        [pattern: '/**/authentication/oidc/**', access: ['permitAll']],
         [pattern: '/**/login', access: ['permitAll']],
         [pattern: '/**/authentication/logout', access: ['permitAll']],
         [pattern: '/**/logout', access: ['permitAll']],
@@ -62,63 +64,10 @@ grails.plugin.springsecurity.filterChain.chainMap = [
         [pattern: '/**/images/**', filters: 'none'],
         [pattern: '/**/favicon.png', filters: 'none'],
         [pattern: '/**/appicon.png', filters: 'none'],
-        [pattern: grails.plugin.springsecurity.physicalId.filterProcessesUrl, filters: 'physicalIdAuthenticationFilter'],
-        [pattern: '/**', filters: 'JOINED_FILTERS,-physicalIdAuthenticationFilter']
+        [pattern: grails.plugin.springsecurity.physicalId.filterProcessesUrl, filters: 'physicalAuthenticationFilter'],
+        [pattern: '/**', filters: 'JOINED_FILTERS,-physicalAuthenticationFilter']
 ]
-
-///////////////////////////////////////////////////////////////////////////////
-//                                                                           //
-// LDAP CONFIGURATION                                                        //
-//                                                                           //
-///////////////////////////////////////////////////////////////////////////////
 
 grails.plugin.springsecurity.providerNames = [
-        // Must be the first one
-        'daoAuthenticationProvider',
-
-        // All other providers
-        'physicalIdAuthenticationProvider',
-
-        // Must be the last one
-        'rememberMeAuthenticationProvider',
+        'runtimeAuthenticationProvider',
 ]
-
-// Configure the server connection using the variables you find below
-// Test the conneciton logging in with the managerDn credentials
-
-// CONFIGURATION
-//
-//grails.plugin.springsecurity.ldap.context.managerDn = 'testuser'
-//grails.plugin.springsecurity.ldap.context.managerPassword = 'testpass'
-//grails.plugin.springsecurity.ldap.context.server = 'ldap://0.0.0.0:389/'
-//grails.plugin.springsecurity.ldap.search.base = 'DC=COMPANY,DC=LOCAL'
-
-//
-// Do not modify the lines below unless you know what you are doing
-//
-grails.plugin.springsecurity.ldap.auth.hideUserNotFoundExceptions = false
-
-// You need this for Active Directory
-grails.plugin.springsecurity.ldap.search.filter = 'sAMAccountName={0}'
-grails.plugin.springsecurity.ldap.search.searchSubtree = true
-grails.plugin.springsecurity.ldap.authorities.ignorePartialResultException = true
-
-// extra attributes you want returned
-grails.plugin.springsecurity.ldap.search.attributesToReturn = ['mail', 'displayName']
-
-// role-specific LDAP config
-grails.plugin.springsecurity.ldap.authorities.retrieveGroupRoles = true
-grails.plugin.springsecurity.ldap.authorities.defaultRole = 'ROLE_USER'
-//grails.plugin.springsecurity.ldap.authorities.groupSearchBase = 'dc=company,dc=group'
-//grails.plugin.springsecurity.ldap.authorities.groupSearchFilter = 'member={0}'
-grails.plugin.springsecurity.ldap.authorities.retrieveDatabaseRoles = true
-
-
-grails.plugin.springsecurity.ldap.useRememberMe = false
-//grails.plugin.springsecurity.ldap.rememberMe.detailsManager.groupMemberAttributeName = 'member'
-//grails.plugin.springsecurity.ldap.rememberMe.detailsManager.groupRoleAttribute = 'CN'
-//grails.plugin.springsecurity.ldap.rememberMe.detailsManager.groupSearchBase = 'DC=COMPANY,DC=NET'
-//grails.plugin.springsecurity.ldap.rememberMe.detailsManager.passwordAttributeName = 'userPassword'
-//grails.plugin.springsecurity.ldap.rememberMe.usernameMapper.userDnBase = 'DC=COMPANY,DC=NET'
-//grails.plugin.springsecurity.ldap.rememberMe.usernameMapper.usernameAttribute = 'CN'
-//grails.plugin.springsecurity.ldap.rememberMe.detailsManager.attributesToRetrieve = null

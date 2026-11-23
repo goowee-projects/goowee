@@ -14,7 +14,7 @@
  */
 package goowee.database
 
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
 import goowee.application.TConnectionSource
 import grails.gorm.DetachedCriteria
 import grails.gorm.transactions.Transactional
@@ -40,10 +40,10 @@ import java.sql.DriverManager
 class ConnectionSourceService {
 
     HibernateDatastore hibernateDatastore
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
 
     void installOrConnect() {
-        applicationService.registerPrettyPrinter(TConnectionSource, '${it.tenant ? "TENANT " : "DATASOURCE "}"${it.name}" (${it.driverClassName})')
+        gooweeApplication.registerPrettyPrinter(TConnectionSource, '${it.tenant ? "TENANT " : "DATASOURCE "}"${it.name}" (${it.driverClassName})')
 
         if (!connectionSourceAlreadyInstalled()) {
             for (connectionSource in listDatastoreConnectionSource()) {
@@ -201,6 +201,8 @@ class ConnectionSourceService {
 
     void delete(Serializable id) {
         TConnectionSource obj = get(id)
-        obj.delete(flush: true)
+        if (obj) {
+            obj.delete(flush: true)
+        }
     }
 }

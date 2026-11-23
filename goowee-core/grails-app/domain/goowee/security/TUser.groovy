@@ -19,12 +19,14 @@ import grails.compiler.GrailsCompileStatic
 import groovy.transform.EqualsAndHashCode
 import org.grails.datastore.gorm.GormEntity
 
+import java.time.LocalDateTime
+
 /**
  * @author Gianluca Sartori
  */
 
 @GrailsCompileStatic
-@EqualsAndHashCode(includes = 'username')
+@EqualsAndHashCode(includes = ['tenant', 'username'])
 class TUser implements GormEntity, Serializable {
 
     private static final long serialVersionUID = 1
@@ -35,31 +37,41 @@ class TUser implements GormEntity, Serializable {
     String username
     String password
 
+    // System fields
     Boolean enabled
     Boolean accountExpired
     Boolean accountLocked
     Boolean passwordExpired
-
-    String apiKey
-    String physicalId
-
-    // System fields
     Boolean deletable
     TRoleGroup defaultGroup
-    String note
+
+    // Integration
+    String physicalId
+    LocalDateTime physicalIdLastAccess
+    String ldapUid
+    LocalDateTime ldapLastAccess
+    String ibmUid
+    LocalDateTime ibmLastAccess
+    String apiKey
+    LocalDateTime apiKeyLastAccess
 
     // User data
     String firstname
     String lastname
-    String language
+    String note
+
+    // Notification
     String email
     String telephone
 
     // Session data
     Integer sessionDuration
     Integer rememberMeDuration
+    Boolean closeOtherSessions
+    Boolean canChangePassword
 
     // Localization preferences
+    String language
     String decimalFormat // 'ISO_COM' (# ###,#) or 'ISO_DOT' (# ###.#)
     Boolean prefixedUnit
     Boolean symbolicCurrency
@@ -70,22 +82,28 @@ class TUser implements GormEntity, Serializable {
 
     // UI preferences
     Integer fontSize
+    Integer mobileFontSize
     String guiStyle // 'ROUNDED' or 'SQUARED'
     Boolean animations
 
+    Set<TUserAuthenticationIdentity> authenticationIdentities
+    static hasMany = [
+        authenticationIdentities: TUserAuthenticationIdentity,
+    ]
+
     static constraints = {
         tenant nullable: false
-        username nullable: false, blank: false, unique: true
+        username nullable: false, blank: false, unique: ['tenant']
         password nullable: false, blank: false, password: true
-        apiKey unique: true
         physicalId unique: true
-        email email: true
-        note maxSize: 1000
+        apiKey unique: true
+        note maxSize: 500
 
         sessionDuration nullable: false
         rememberMeDuration nullable: false
 
         fontSize nullable: false
+        mobileFontSize nullable: false
         guiStyle nullable: false
     }
 

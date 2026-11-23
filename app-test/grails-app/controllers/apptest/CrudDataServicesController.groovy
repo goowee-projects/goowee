@@ -20,10 +20,12 @@ import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentTable
 import goowee.elements.controls.*
+import grails.gorm.multitenancy.CurrentTenant
 import goowee.types.Type
 
 import java.time.LocalDate
 
+@CurrentTenant
 class CrudDataServicesController implements ElementsController {
 
     PersonDataService personDataService

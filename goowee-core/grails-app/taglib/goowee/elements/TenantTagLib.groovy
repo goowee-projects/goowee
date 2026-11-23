@@ -19,14 +19,14 @@ import goowee.tenant.TenantService
 /**
  * @author Gianluca Sartori
  */
-class TenantTagLib {
+class TenantTagLib implements WebRequestAware {
 
     static namespace = "tenant"
 
     TenantService tenantService
 
     def current(Map attrs) {
-        out << tenantService.currentTenantId
+        out << (tenantService.currentTenantId ?: tenantService.defaultTenantId)
     }
 
 }

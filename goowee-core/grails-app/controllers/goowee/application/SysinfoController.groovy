@@ -14,7 +14,6 @@
  */
 package goowee.application
 
-
 import goowee.elements.ElementsController
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentTable

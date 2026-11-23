@@ -215,7 +215,7 @@ class HttpClient {
         }
 
         try {
-            return client.execute(httpRequest) { response ->
+            return client.execute(httpRequest) { ClassicHttpResponse response ->
                 switch (responseType) {
                     case HttpResponseType.RAW: return handleRawResponse(response)
                     case HttpResponseType.JSON: return handleJsonResponse(response)

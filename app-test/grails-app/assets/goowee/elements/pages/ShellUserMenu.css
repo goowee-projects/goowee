@@ -12,6 +12,7 @@
 }
 
 #shell-user-menu .offcanvas-header {
+    justify-content: space-between;
     height: 3.3rem;
     padding-right: .75rem;
 }
@@ -52,6 +53,8 @@
 #shell-user-menu button {
     border: 0;
     padding: var(--elements-spacing-y) var(--elements-spacing-x);
+    padding-right: 0;
+    padding-top: .35rem;
     background: none;
     color: rgb(var(--elements-main-text));
 }

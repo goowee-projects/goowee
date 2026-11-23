@@ -1,0 +1,84 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package goowee.security
+
+import goowee.elements.ElementsController
+import goowee.elements.components.TableRow
+import goowee.elements.contents.ContentTable
+import grails.plugin.springsecurity.annotation.Secured
+import groovy.util.logging.Slf4j
+
+@Slf4j
+@Secured(['ROLE_ADMIN', 'ROLE_SUPERADMIN'])
+class AuthenticationProviderIdentityController implements ElementsController {
+
+    AuthenticationIdentityService authenticationIdentityService
+    SecurityService securityService
+
+    def index() {
+        Boolean isSuperAdmin = securityService.isSuperAdmin()
+        TAuthenticationProvider provider = authenticationIdentityService.getProvider(params.providerId, isSuperAdmin)
+        if (!provider) {
+            display controller: 'authenticationProvider', action: 'index'
+            return
+        }
+
+        def c = createContent(ContentTable)
+        c.header.removeNextButton()
+        c.table.with {
+            keys = [
+                'id',
+                'providerId',
+            ]
+            columns = [
+                'user',
+                'lastAccess',
+                'provider.providerType',
+                'subject',
+            ]
+            prettyPrinterProperties = [
+                lastAccess: [
+                    renderSeconds: true,
+                ],
+            ]
+
+            sortable = [
+                issuer : 'asc',
+                subject: 'asc',
+            ]
+            actions.removeDefaultAction()
+            body.eachRow { TableRow row, Map values ->
+                values.providerId = provider.id
+                row.cells.'provider.providerType'.tag = true
+            }
+        }
+
+        Map filters = c.table.filterParams
+        c.table.body = authenticationIdentityService.listByProvider(provider.id, filters, c.table.fetchParams)
+        c.table.paginate = authenticationIdentityService.countByProvider(provider.id, filters)
+
+        display content: c, modal: true, large: true
+    }
+
+    def onDelete() {
+        authenticationIdentityService.delete(params.id)
+        display action: 'index', params: [providerId: params.providerId]
+    }
+
+}

@@ -25,6 +25,7 @@
             twelveHours: ${c.twelveHours},
             firstDaySunday: ${c.firstDaySunday},
             fontSize: ${c.fontSize},
+            mobileFontSize: ${c.mobileFontSize},
             animations: ${c.animations},
         },
         </g:if>
@@ -52,6 +53,6 @@
 </asset:assetPathExists>
 
 <%-- Application Specific Javascript --%>
-<asset:assetPathExists src="application.js">
-    <asset:javascript src="application.js"/>
+<asset:assetPathExists src="goowee.js">
+    <asset:javascript src="goowee.js"/>
 </asset:assetPathExists>

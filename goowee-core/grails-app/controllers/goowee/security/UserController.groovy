@@ -15,7 +15,8 @@
 package goowee.security
 
 import goowee.application.ApplicationPropertyService
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
+import goowee.commons.utils.LogUtils
 import goowee.elements.ElementsController
 import goowee.elements.components.Separator
 import goowee.elements.components.TableRow
@@ -27,7 +28,6 @@ import goowee.elements.controls.*
 import goowee.elements.core.PrettyPrinterDecimalFormat
 import goowee.elements.style.GuiStyle
 import goowee.elements.style.TextDefault
-import goowee.tenant.TenantPropertyService
 import goowee.tenant.TenantService
 import grails.plugin.springsecurity.annotation.Secured
 
@@ -39,11 +39,16 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured(['ROLE_SECURITY'])
 class UserController implements ElementsController {
 
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
+    AuthenticationProviderService authenticationProviderService
     SecurityService securityService
     TenantService tenantService
     ApplicationPropertyService applicationPropertyService
-    TenantPropertyService tenantPropertyService
+
+    def handleException(Exception e) {
+        log.error LogUtils.logStackTrace(e)
+        display exception: e
+    }
 
     def index() {
         Boolean isSuperAdmin = securityService.isSuperAdmin()
@@ -52,7 +57,8 @@ class UserController implements ElementsController {
         cols += [
             'adminIcon',
             'username',
-            'fullname',
+            'firstname',
+            'lastname',
             'defaultGroup',
             'apiKey',
             'physicalId',
@@ -60,40 +66,63 @@ class UserController implements ElementsController {
         ]
 
         def c = createContent(ContentTable)
-
+        c.header.nextButton.submit = ['table.filters.tenantId']
         c.header.removeBackButton()
+
+        c.table.actionbar.addAction(
+            controller: 'userSession',
+            action: 'index',
+            text: 'shell.security.userSession.index',
+            icon: 'fa-users',
+        )
 
         c.table.with {
             filters.with {
-                fold = false
                 if (isSuperAdmin) {
                     addField(
                         class: Select,
-                        id: 'tenant',
+                        id: 'tenantId',
                         optionsFromRecordset: tenantService.list(),
+                        keys: ['tenantId'],
+                        cols: 2,
+                    )
+                } else {
+                    addField(
+                        class: TextField,
+                        id: 'tenantNoFilter',
+                        value: tenantService.currentTenantId,
+                        label: 'user.tenant',
+                        icon: 'fa-house-user',
+                        readonly: true,
                         cols: 2,
                     )
                 }
                 addField(
+                    class: Select,
+                    id: 'groups',
+                    optionsFromRecordset: securityService.listAllGroup(tenantId: isSuperAdmin ? getFilter('tenantId') : tenantService.currentTenantId),
+                    label: 'user.groups',
+                    multiple: true,
+                    cols: 4,
+                )
+                addField(
                     class: TextField,
                     id: 'find',
                     label: TextDefault.FIND,
-                    cols: isSuperAdmin ? 8 : 10,
+                    cols: 3,
                 )
                 addField(
                     class: Select,
                     id: 'enabled',
                     options: [true: 'enabled', false: 'disabled'],
-                    noSelection: true,
                     search: false,
-                    cols: 2,
+                    cols: 3,
                 )
             }
             sortable = [
                 tenant  : 'asc',
                 username: 'asc',
             ]
-            keys = ['username']
             columns = cols
             labels = [
                 systemIcon: '',
@@ -118,6 +147,17 @@ class UserController implements ElementsController {
 
                 }
 
+                if (values.authenticationIdentities) {
+                    row.actions.tailAction.text = TextDefault.HARD_DELETE
+                    row.actions.addTailAction(
+                        controller: 'userIdentity',
+                        icon: 'fa-users',
+                        text: '',
+                        tooltip: 'authenticationProvider.identities',
+                    )
+                    row.actions.addParams(userId: values.id)
+                }
+
                 if (isSuperAdmin) {
                     row.cells.tenant.tag = true
                 }
@@ -128,6 +168,8 @@ class UserController implements ElementsController {
         }
 
         def filters = c.table.filterParams
+        if (filters.tenantNoFilter) filters.tenantId = tenantService.currentTenantId
+
         c.table.body = securityService.listAllUser(filters, params)
         c.table.paginate = securityService.countAllUser(filters)
 
@@ -148,29 +190,65 @@ class UserController implements ElementsController {
             )
         }
 
-        def isCreatingNewUser = !obj
         def isSuperAdmin = securityService.isSuperAdmin()
-        def isEditingUserButNotSuperAdmin = obj && obj.username != securityService.USERNAME_SUPERADMIN
-        def isTenantAdmin = obj && securityService.isAdmin(obj) && !obj.deletable
+        def isSuperAdminUser = obj && securityService.isSuperAdmin(obj)
+        def isAdminUser = obj && securityService.isAdmin(obj) && !obj.deletable
+        def isCreating = !obj
+        def isEditingAndIsNotSuperAdmin = obj && obj.username != securityService.USERNAME_SUPERADMIN
 
         c.form.with {
             validate = TUser
 
-            if (isSuperAdmin && (isCreatingNewUser || isEditingUserButNotSuperAdmin)) {
-                addField(
-                    class: Select,
-                    id: 'tenant',
-                    optionsFromRecordset: tenantService.list(),
-                    defaultValue: tenantService.defaultTenant.id,
-                    search: false,
-                    noSelection: false,
-                    onLoad: 'onTenantChange',
-                    onChange: 'onTenantChange',
-                    submit: ['form'],
-                    readonly: isTenantAdmin,
-                )
-            }
+            addField(
+                class: TextField,
+                id: 'firstname',
+                cols: 6,
+            )
+            addField(
+                class: TextField,
+                id: 'lastname',
+                cols: 6,
+            )
+            addField(
+                class: Textarea,
+                id: 'note',
+                rows: 2,
+            )
 
+            addField(
+                class: Separator,
+                id: 'notifications',
+                icon: 'fa-comment',
+            )
+            addField(
+                class: EmailField,
+                id: 'email',
+                cols: 6,
+            )
+            addField(
+                class: TelephoneField,
+                id: 'telephone',
+                cols: 6,
+            )
+
+            addField(
+                class: Separator,
+                id: 'login',
+                icon: 'fa-right-to-bracket',
+            )
+            addField(
+                class: Select,
+                id: 'tenant.tenantId',
+                optionsFromRecordset: tenantService.list(),
+                keys: ['tenantId'],
+                defaultValue: params.'table.filters.tenantId' ?: tenantService.currentTenantId,
+                search: false,
+                allowClear: false,
+                onLoad: 'onChangeTenant',
+                onChange: 'onChangeTenant',
+                submit: ['form'],
+                readonly: obj || !isSuperAdmin,
+            )
             addField(
                 class: TextField,
                 id: 'username',
@@ -184,12 +262,46 @@ class UserController implements ElementsController {
                 cols: 6,
             ).component
             password.addAction(action: 'onGeneratePassword', submit: ['form'], tooltip: 'user.generatePassword', text: '', icon: 'fa-key')
+            addField(
+                class: NumberField,
+                id: 'sessionDuration',
+                prefix: 'min',
+                decimals: 0,
+                defaultValue: getSessionDurationDefault(params.tenantId as String),
+                cols: 6,
+            )
+            addField(
+                class: NumberField,
+                id: 'rememberMeDuration',
+                prefix: 'min',
+                decimals: 0,
+                defaultValue: getRememberMeDurationDefault(params.tenantId as String),
+                cols: 6,
+            )
+            addField(
+                class: Checkbox,
+                id: 'canChangePassword',
+                defaultValue: getCanChangePasswordDefault(params.'tenant.tenantId' as String ?: params.tenantId as String),
+                readonly: isAdminUser || isSuperAdminUser,
+                cols: 6,
+            )
+            addField(
+                class: Checkbox,
+                id: 'closeOtherSessions',
+                defaultValue: false,
+                readonly: isAdminUser || isSuperAdminUser,
+                cols: 6,
+            )
+            addField(
+                class: Checkbox,
+                id: 'enabled',
+                defaultValue: true,
+                readonly: isAdminUser || isSuperAdminUser,
+            )
 
         }
 
-        buildSensitiveDataForm(c)
-
-        if (isCreatingNewUser || isEditingUserButNotSuperAdmin) {
+        if (isCreating || isEditingAndIsNotSuperAdmin) {
             c.form.with {
                 addField(
                     class: Separator,
@@ -199,100 +311,94 @@ class UserController implements ElementsController {
                 addField(
                     class: Select,
                     id: 'groups',
-                    optionsFromRecordset: securityService.listAllGroup(hideUsers: true),
                     search: false,
                     multiple: true,
                 )
                 addField(
                     class: Select,
                     id: 'defaultGroup',
-                    optionsFromRecordset: securityService.listAllGroup(),
                     search: false,
-                )
-                addField(
-                    class: NumberField,
-                    id: 'sessionDuration',
-                    prefix: 'min',
-                    decimals: 0,
-                    defaultValue: tenantPropertyService.getNumber('SESSION_DEFAULT_DURATION'),
-                    cols: 6,
-                )
-                addField(
-                    class: NumberField,
-                    id: 'rememberMeDuration',
-                    prefix: 'min',
-                    decimals: 0,
-                    defaultValue: tenantPropertyService.getNumber('REMEMBER_ME_DEFAULT_DURATION'),
                     cols: 6,
                 )
                 addField(
                     class: Checkbox,
                     id: 'admin',
+                    readonly: isAdminUser || isSuperAdminUser,
                     cols: 6,
                 )
-                addField(
-                    class: Checkbox,
-                    id: 'enabled',
-                    defaultValue: true,
-                    nullable: true,
-                    cols: 6,
-                )
+
                 addField(
                     class: Separator,
                     id: 'integration',
                     icon: 'fa-plug',
                 )
-                TextField apiKey = addField(
+                addField(
                     class: TextField,
-                    id: 'apiKey',
-                    icon: 'fa-globe',
-                    readonly: !securityService.isDeveloper() && !securityService.isAdmin(),
-                ).component
-                apiKey.addAction(action: 'onGenerateApiKey', submit: ['form'], text: 'user.generateApiKey', icon: 'fa-key')
+                    id: 'ldapUid',
+                    icon: 'fa-user',
+                    readonly: true,
+                    cols: 8,
+                )
+                addField(
+                    class: DateTimeField,
+                    id: 'ldapLastAccess',
+                    icon: 'fa-time',
+                    readonly: true,
+                    renderSeconds: true,
+                    cols: 4,
+                )
+                addField(
+                    class: TextField,
+                    id: 'ibmUid',
+                    icon: 'fa-user',
+                    readonly: true,
+                    cols: 8,
+                )
+                addField(
+                    class: DateTimeField,
+                    id: 'ibmLastAccess',
+                    icon: 'fa-time',
+                    readonly: true,
+                    renderSeconds: true,
+                    cols: 4,
+                )
                 addField(
                     class: TextField,
                     id: 'physicalId',
                     icon: 'fa-barcode',
+                    cols: 8,
+                )
+                addField(
+                    class: DateTimeField,
+                    id: 'physicalIdLastAccess',
+                    icon: 'fa-time',
+                    readonly: true,
+                    renderSeconds: true,
+                    cols: 4,
+                )
+                TextField apiKey = addField(
+                    class: TextField,
+                    id: 'apiKey',
+                    icon: 'fa-cloud',
+                    cols: 8,
+                ).component
+                apiKey.addAction(action: 'onGenerateApiKey', submit: ['form'], text: '', tooltip: 'user.generateApiKey', icon: 'fa-key')
+                addField(
+                    class: DateTimeField,
+                    id: 'apiKeyLastAccess',
+                    icon: 'fa-time',
+                    readonly: true,
+                    renderSeconds: true,
+                    cols: 4,
                 )
             }
         }
 
         buildPreferencesForm(c)
 
-        c.form['language'].defaultValue = applicationPropertyService.getString('DEFAULT_LANGUAGE')
+        c.form.controls.language.defaultValue = applicationPropertyService.getString('DEFAULT_LANGUAGE')
 
         return c
-    }
-
-    private buildSensitiveDataForm(ContentForm c) {
-        c.form.with {
-            addField(
-                class: TextField,
-                id: 'firstname',
-                cols: 6,
-            )
-            addField(
-                class: TextField,
-                id: 'lastname',
-                cols: 6,
-            )
-            addField(
-                class: EmailField,
-                id: 'email',
-                cols: 6,
-            )
-            addField(
-                class: TelephoneField,
-                id: 'telephone',
-                cols: 6,
-            )
-            addField(
-                class: Textarea,
-                id: 'note',
-                maxSize: 2000,
-                rows: 2,
-            )
-        }
     }
 
     private buildPreferencesForm(ContentForm c) {
@@ -305,9 +411,9 @@ class UserController implements ElementsController {
             addField(
                 class: Select,
                 id: 'language',
-                optionsFromList: applicationService.languages,
+                optionsFromList: gooweeApplication.languages,
                 textPrefix: 'default.language',
-                search: false,
+                search: true,
                 cols: 6,
             )
             addField(
@@ -372,38 +478,31 @@ class UserController implements ElementsController {
                 id: 'appearance',
                 icon: 'fa-circle-half-stroke',
             )
-            if (securityService.isDeveloper()) {
-                addField(
-                    class: NumberField,
-                    id: 'fontSize',
-                    defaultValue: 14,
-                    cols: 4,
-                    colsSmall: 6,
-                )
-            } else {
-                addField(
-                    class: Select,
-                    id: 'fontSize',
-                    optionsFromList: [12, 13, 14, 15, 16, 17, 18, 19, 20, 21],
-                    defaultValue: 14,
-                    renderTextPrefix: false,
-                    cols: 4,
-                    colsSmall: 6,
-                )
-            }
+            addField(
+                class: NumberField,
+                id: 'fontSize',
+                defaultValue: 14,
+                cols: 3,
+                colsSmall: 6,
+            )
+            addField(
+                class: NumberField,
+                id: 'mobileFontSize',
+                defaultValue: 16,
+                cols: 3,
+                colsSmall: 6,
+            )
             addField(
                 class: Select,
                 id: 'guiStyle',
                 optionsFromEnum: GuiStyle,
                 textPrefix: 'default',
-                cols: 4,
-                colsSmall: 6,
+                cols: 6,
             )
             addField(
                 class: Checkbox,
                 id: 'animations',
                 defaultValue: true,
-                cols: 4,
             )
         }
     }
@@ -423,13 +522,13 @@ class UserController implements ElementsController {
         display transition: t
     }
 
-    def onTenantChange() {
-        def rs = securityService.listAllGroup(tenant: params.tenant, hideUsers: true)
+    def onChangeTenant() {
+        def rs = securityService.listAllGroup(tenantId: params.'tenant.tenantId')
         def tenantGroups = Select.optionsFromRecordset(recordset: rs)
 
         def t = createTransition()
         t.set('defaultGroup', 'options', tenantGroups)
-        t.set('groups', 'options', tenantGroups)
+        t.set('groups', 'options', tenantGroups.findAll { it.label != 'USERS' })
 
         def user = securityService.getUserByUsername(params.username)
         if (user) {
@@ -437,15 +536,10 @@ class UserController implements ElementsController {
             t.setValue('groups', user.authorities*.id)
 
         } else {
-            def tenant = tenantService.get(params.tenant)
-            if (tenant) {
-                tenantService.withTenant(tenant.tenantId) {
-                    def sessionDuration = tenantPropertyService.getNumber('SESSION_DEFAULT_DURATION')
-                    def rememberMeDuration = tenantPropertyService.getNumber('REMEMBER_ME_DEFAULT_DURATION')
-                    t.setValue('sessionDuration', sessionDuration)
-                    t.setValue('rememberMeDuration', rememberMeDuration)
-                }
-            }
+            def tenant = tenantService.getByTenantId(params.'tenant.tenantId')
+            t.setValue('sessionDuration', getSessionDurationDefault(tenant.tenantId))
+            t.setValue('rememberMeDuration', getRememberMeDurationDefault(tenant.tenantId))
+            t.setValue('canChangePassword', getCanChangePasswordDefault(tenant.tenantId))
         }
 
         display transition: t
@@ -468,8 +562,23 @@ class UserController implements ElementsController {
         display content: c, modal: true, closeButton: !mustRefresh
     }
 
+    private Integer getSessionDurationDefault(String tenantId) {
+        def resolvedTenantId = tenantId ?: tenantService.currentTenantId ?: tenantService.defaultTenantId
+        return authenticationProviderService.getByTenantIdAndProviderType(resolvedTenantId, AuthenticationProviderType.LOCAL)?.sessionDuration
+    }
+
+    private Integer getRememberMeDurationDefault(String tenantId) {
+        def resolvedTenantId = tenantId ?: tenantService.currentTenantId ?: tenantService.defaultTenantId
+        return authenticationProviderService.getByTenantIdAndProviderType(resolvedTenantId, AuthenticationProviderType.REMEMBERME)?.rememberMeDuration
+    }
+
+    private Boolean getCanChangePasswordDefault(String tenantId) {
+        def resolvedTenantId = tenantId ?: tenantService.currentTenantId ?: tenantService.defaultTenantId
+        return authenticationProviderService.getByTenantIdAndProviderType(resolvedTenantId, AuthenticationProviderType.LOCAL)?.canChangePassword
+    }
+
     private normalizeInput(Map params) {
-        params.tenant = tenantService.get(params.tenant) ?: tenantService.currentTenant
+        params.tenantId = params.'tenant.tenantId' ?: tenantService.currentTenantId
 
         List groups = []
         for (groupId in params.groups) {
@@ -506,27 +615,26 @@ class UserController implements ElementsController {
     }
 
     def edit() {
-        def user = securityService.getUserByUsername(params.username)
+        def user = securityService.getUser(params.id)
         def c = buildForm(user)
 
         def isNotSuperAdmin = !securityService.isSuperAdmin()
         def isEditingSuperAdminUser = user.username == securityService.USERNAME_SUPERADMIN
         if (isNotSuperAdmin || isEditingSuperAdminUser) {
-            c.form['username'].readonly = true
-            c.form['usernameField'].help = 'user.edit.username.help'
+            c.form.controls.username.readonly = true
+            c.form.fields.usernameField.help = 'user.edit.username.help'
+            c.form.fields.usernameField.helpCollapsed = true
         }
 
         c.form.values = user
-        c.form['password'].value = null
+        c.form.controls.password.value = null
 
         if (!isEditingSuperAdminUser) {
-            c.form['admin'].value = (user.authorities.find { it.name == SecurityService.GROUP_ADMINS } != null)
-            c.form['admin'].readonly = !user.deletable
-            c.form['enabled'].readonly = !user.deletable
-            c.form['groups'].value = user.authorities.collect { it.id }
+            c.form.controls.admin.value = (user.authorities.find { it.name == SecurityService.GROUP_ADMINS } != null)
+            c.form.controls.groups.value = user.authorities.collect { it.id }
         }
 
-        display content: c, modal: true
+        display content: c, modal: true, focus: 'note'
     }
 
     def onEdit() {
@@ -543,7 +651,7 @@ class UserController implements ElementsController {
 
     def onDelete() {
         try {
-            securityService.deleteUser(params.username)
+            securityService.deleteUser(params.id)
             display action: 'index'
 
         } catch (e) {

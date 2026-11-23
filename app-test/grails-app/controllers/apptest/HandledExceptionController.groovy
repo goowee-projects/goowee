@@ -29,7 +29,7 @@ class HandledExceptionController implements ElementsController {
         display exception: e
     }
 
-    def handleGooweeException(ElementsException e) {
+    def handleElementsException(ElementsException e) {
         display exception: e
     }
 

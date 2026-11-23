@@ -14,6 +14,7 @@
  */
 package goowee.elements.core
 
+
 import groovy.transform.CompileStatic
 
 /**
@@ -26,7 +27,7 @@ import groovy.transform.CompileStatic
  */
 
 @CompileStatic
-class Feature extends LinkDefinition {
+class Feature extends InvocationDefinition {
 
     private static Integer idCounter = 0
     private Integer id

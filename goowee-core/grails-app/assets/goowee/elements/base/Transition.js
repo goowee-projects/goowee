@@ -13,12 +13,12 @@ class Transition {
     static wsOnConnect(frame) {
         let wsClient = this;
         let username = frame.headers['user-name'];
-        Transition.wsSubscribe(wsClient, "/queue/username/" + username);
+        Transition.wsSubscribe(wsClient, "/queue/tenant/" + _21_.app.tenant + "/username/" + username);
 
-        $.ajax({url: _21_.app.url + "transition/channels"})
+        $.ajax({cache: false, url: _21_.app.url + "transition/channels"})
             .done(function(channels) {
                 for (let channel of channels) {
-                    Transition.wsSubscribe(wsClient, "/queue/channel/" + channel);
+                    Transition.wsSubscribe(wsClient, "/queue/tenant/" + _21_.app.tenant + "/channel/" + channel);
                 }
             });
     }
@@ -69,8 +69,8 @@ class Transition {
     }
 
     static async executeCommand(transition, command, componentEvent) {
-        let $element = Transition.getTargetElement(command.component);
-        let component = Elements.getByElement($element);
+        let $element = Elements.getElement(command.component);
+        let component = Elements.getComponent($element);
         let componentId = command.component;
         let method = command.method;
         let property = command.property;
@@ -93,6 +93,10 @@ class Transition {
 
             case TransitionCommand.DELAY:
                 await TransitionCommand.delay(valueMap.value);
+                break;
+
+            case TransitionCommand.SCROLL:
+                TransitionCommand.scrollTo(valueMap.value);
                 break;
 
             case TransitionCommand.APPEND:
@@ -123,59 +127,6 @@ class Transition {
                 log.error('Invalid transition command "' + command.method + '"');
                 log.error(JSON.stringify(command));
         }
-    }
-
-    static getTargetElement(componentId) {
-        if (!componentId) {
-            return $();
-        }
-
-        const roots = {
-            page: Page.$self,
-            messagebox: PageMessageBox.$self,
-            modal: PageModal.$self,
-            content: $.merge(PageContent.$self, PageStickyBox.$self),
-        };
-
-        const parts = componentId.split('.');
-
-        let $root;
-
-        // A recognized root is handled separately.
-        if (roots[parts[0]]) {
-            $root = roots[parts.shift()];
-
-            // The component ID is exactly the root.
-            if (parts.length === 0) {
-                return $root;
-            }
-
-        } else {
-            $root = PageModal.isActive
-                ? PageModal.$self
-                : $.merge(PageContent.$self, PageStickyBox.$self);
-        }
-
-        for (let i = 0; i < parts.length; i++) {
-            const id = parts.slice(i).join('.');
-
-            // First try the complete remaining ID.
-            const $component = $root.find('[data-21-id="' + CSS.escape(id) + '"]');
-
-            if ($component.length) {
-                return $component;
-            }
-
-            // Move into the first component and continue searching.
-            $root = $root.find('[data-21-id="' + CSS.escape(parts[i]) + '"]');
-
-            if (!$root.length) {
-                break;
-            }
-        }
-
-        log.error(`Cannot find component "${componentId}"`);
-        return $();
     }
 
     static triggerEvent($element, eventName, async = true) {
@@ -238,7 +189,8 @@ class Transition {
 
     static build21Params(componentEvent) {
         let _21Params = {};
-        let components = {};  // Component controls value
+        let components = {};  // Component values
+        let controls = {};    // Control values
         let params = {};      // Strings, Numbers, Boolean or eg. {type: 'ID', value: 1}
 
         if (componentEvent) {
@@ -246,13 +198,12 @@ class Transition {
             if (componentEvent['submit']) {
                 let componentIds = componentEvent['submit'];
                 for (let componentId of componentIds) {
-                    let $component = Transition.getTargetElement(componentId);
+                    let $component = Elements.getElement(componentId);
                     let control = Control.getByElement($component)
                     let component = Component.getByElement($component);
 
                     if (control) {
-                        components[componentId] = { [componentId]: control.getValue($component) };
-                        components[componentId]._21SubmittedName = componentId;
+                        controls[componentId] = control.getValue($component);
 
                     } else if (component) {
                         components[componentId] = component.getValues($component);
@@ -271,16 +222,20 @@ class Transition {
 
             // Whether to display the whole page or the transition
             if (!componentEvent['direct']) {
-                params['_21IsMobileDevice'] = Elements.isMobileDevice;
                 params['_21Transition'] = true;
                 params['_21Event'] = componentEvent['event'];
             }
         }
 
         _21Params.components = components;
+        _21Params.controls = controls;
         _21Params.params = params;
 
-        return {_21Params: JSON.stringify(_21Params)};
+        return {
+            _21Params: JSON.stringify(_21Params),
+            // Spring Security filters need this before the transition payload is unpacked.
+            _21IsMobileDevice: Elements.isMobileDevice,
+        };
     }
 
     static call(url, values, componentEvent, async, silentFail) {
@@ -295,6 +250,7 @@ class Transition {
     static ajaxCall(url, values, componentEvent, async, silentFail) {
         let call = {
             type: 'POST',
+            cache: false,
             url: url,
             data: values,
             async: async,

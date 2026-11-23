@@ -14,7 +14,7 @@
  */
 package goowee.elements.pages
 
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
 import goowee.elements.ElementsController
 import goowee.elements.components.Label
 import goowee.elements.contents.ContentForm
@@ -32,7 +32,7 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured(['isAuthenticated()'])
 class ShellController implements ElementsController {
 
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
     TenantPropertyService tenantPropertyService
     ShellService shellService
     SecurityService securityService
@@ -66,7 +66,7 @@ class ShellController implements ElementsController {
             )
 
             Integer i = 0
-            for (item in applicationService.credits) {
+            for (item in gooweeApplication.credits) {
                 addField(
                     class: Label,
                     id: "credits${i}",

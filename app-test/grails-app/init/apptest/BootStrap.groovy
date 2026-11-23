@@ -15,7 +15,7 @@
 package apptest
 
 import goowee.application.ApplicationPropertyService
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
 import goowee.database.ConnectionSourceService
 import goowee.commons.utils.FileUtils
 import goowee.elements.TransitionService
@@ -24,6 +24,7 @@ import goowee.security.SecurityService
 import goowee.tenant.TenantPropertyService
 import goowee.tenant.TenantService
 import goowee.types.QuantityService
+import goowee.utils.EnvUtils
 import grails.web.servlet.mvc.GrailsHttpSession
 import jakarta.servlet.ServletContext
 
@@ -34,8 +35,8 @@ import java.time.LocalTime
 class BootStrap {
 
     ServletContext servletContext
-    ApplicationService applicationService
-    ApptestService apptestService
+    GooweeApplication gooweeApplication
+    TestService testService
     QuantityService quantityService
     ApplicationPropertyService applicationPropertyService
     TenantPropertyService tenantPropertyService
@@ -47,23 +48,23 @@ class BootStrap {
 
     def init = {
 
-        applicationService.onUpdate('2021-10-03') { String tenantId ->
-            println "'${tenantId}' tenant - UPDATE N.2"
+        gooweeApplication.onUpdate('2021-10-03') { String tenantId ->
+            println "'${tenantId}' UPDATE N.2"
         }
 
-        applicationService.onUpdate('2021-10-02') { String tenantId ->
-            println "'${tenantId}' tenant - UPDATE N.1"
+        gooweeApplication.onUpdate('2021-10-02') { String tenantId ->
+            println "'${tenantId}' UPDATE N.1"
         }
 
-        applicationService.onUpdate('2021-10-05') { String tenantId ->
-            println "'${tenantId}' tenant - UPDATE N.4"
+        gooweeApplication.onUpdate('2021-10-05') { String tenantId ->
+            println "'${tenantId}' UPDATE N.4"
         }
 
-        applicationService.onUpdate('2021-10-04') { String tenantId ->
-            println "'${tenantId}' tenant - UPDATE N.3"
+        gooweeApplication.onUpdate('2021-10-04') { String tenantId ->
+            println "'${tenantId}' UPDATE N.3"
         }
 
-        applicationService.onInstall {
+        gooweeApplication.onInstall {
             applicationPropertyService.setBoolean('DISPLAY_MENU', true)
             applicationPropertyService.setString('DEFAULT_LANGUAGE', 'it')
             applicationPropertyService.setString('EXCLUDED_LANGUAGES', 'de,pi')
@@ -85,38 +86,39 @@ class BootStrap {
                 failOnError: true,
                 connectionSource: [
                     driverClassName: 'com.mysql.cj.jdbc.Driver',
-                    url            : 'jdbc:mysql://localhost:3306/goowee_test?useSSL=false&createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC',
+                    url            : 'jdbc:mysql://localhost:3306/g8_goowee_test?useSSL=false&createDatabaseIfNotExist=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Europe/Rome',
                     username       : 'root',
                     password       : 'root',
                 ]
             )
         }
 
-        applicationService.onTenantInstall { String tenantId ->
+        gooweeApplication.onTenantInstall { String tenantId ->
             tenantPropertyService.setNumber('TEST_NUMBER', 5 * 60)
             tenantPropertyService.setString('TEST_STRING', 'This is a string', 'This is its default value')
+            tenantPropertyService.setString('LOGO_TAG', tenantId.toUpperCase())
+            tenantPropertyService.setString('LOGIN_LOGO_TAG', tenantId.toUpperCase())
             tenantPropertyService.setDateTime('TEST_DATE_TIME', LocalDateTime.now())
             tenantPropertyService.setDate('TEST_DATE', LocalDate.now())
             tenantPropertyService.setTime('TEST_TIME', LocalTime.now())
             tenantPropertyService.setBoolean('TEST_BOOLEAN', true)
             tenantPropertyService.setDirectory('TEST_DIRECTORY', '', '/pippo/pluto')
             tenantPropertyService.setFilename('TEST_FILENAME', '', '\\pippo\\pluto\\config.txt')
-            tenantPropertyService.setUrl('TEST_URL', 'http://www.goowee.org', 'http://www.google.com/search')
+            tenantPropertyService.setUrl('TEST_URL', 'http://www.goowee.com', 'http://www.google.com/search')
             tenantPropertyService.setDirectory('TEST_WRONG_DIRECTORY', '\\this\\directory\\doesnt\\exist', '')
             tenantPropertyService.setFilename('TEST_WRONG_FILENAME', '\\this\\file\\doesnt\\exist.txt', '')
             tenantPropertyService.setUrl('TEST_WRONG_URL', 'htp://www.wrong.url', '')
             tenantPropertyService.setString('TEST_ON_CHANGE', 'Change me and check the console!', '')
             tenantPropertyService.setPassword('TEST_PASSWORD', "${tenantId}Password")
 
+            String appLink = servletContext.contextPath
             tenantPropertyService.setString('SHELL_URL_MAPPING', '/admin')
             tenantPropertyService.setString('LOGIN_LANDING_URL', '/')
-            tenantPropertyService.setString('LOGIN_REGISTRATION_URL', 'crud/register')
-            tenantPropertyService.setString('LOGIN_PASSWORD_RECOVERY_URL', 'crud/passwordRecovery')
-
-            String appLink = servletContext.contextPath
+            tenantPropertyService.setString('LOGIN_REGISTRATION_URL', appLink + '/crud/register')
+            tenantPropertyService.setString('LOGIN_PASSWORD_RECOVERY_URL', appLink + '/crud/passwordRecovery')
             tenantPropertyService.setString(
                 'LOGIN_COPY',
-                'Copyright &copy; Goowee. <br/>All rights reserved.<br/><br/><a href="' + appLink + '">&lt;&lt; Back to website</a>'
+                'Copyright &copy; Goowee.<br/>All rights reserved.<br/><br/><a href="' + appLink + '">&lt;&lt; Back to website</a>'
             )
 
             securityService.updateGroup(
@@ -135,7 +137,7 @@ class BootStrap {
                 failOnError: true,
                 tenantId: tenantId,
                 firstname: "Developer",
-                username: tenantId == tenantService.defaultTenantId ? 'dev' : "${tenantId}/dev",
+                username: 'dev',
                 password: 'dev',
                 groups: ['DEVELOPERS', 'PROJECT MANAGER'],
             )
@@ -147,11 +149,11 @@ class BootStrap {
             // Creating a new tenant from the GUI gives an error here, to solve it you need to
             // remove the 'spring-dev-tools' dependency in build.gradle
             // See: https://github.com/spring-projects/spring-data-jpa/issues/2552
-            apptestService.install()
+            testService.installDemo()
         }
 
-        applicationService.onDevInstall { String tenantId ->
-            println "'${tenantId}' tenant - INSTALLING STUFF ONLY WHEN IN DEVELOPMENT ENVIRONMENT"
+        gooweeApplication.onDevInstall { String tenantId ->
+            println "'${tenantId}' INSTALLING STUFF ONLY WHEN IN DEVELOPMENT ENVIRONMENT"
 
             applicationPropertyService.setBoolean('TEST_DENY_LOGIN', false)
 
@@ -163,7 +165,7 @@ class BootStrap {
             applicationPropertyService.setBoolean('TEST_BOOLEAN', true)
             applicationPropertyService.setDirectory('TEST_DIRECTORY', '', '/pippo/pluto')
             applicationPropertyService.setFilename('TEST_FILENAME', '', '\\pippo\\pluto\\config.txt')
-            applicationPropertyService.setUrl('TEST_URL', 'http://www.goowee.org', 'http://www.google.com/search')
+            applicationPropertyService.setUrl('TEST_URL', 'http://www.goowee.com', 'http://www.google.com/search')
             applicationPropertyService.setDirectory('TEST_WRONG_DIRECTORY', '\\this\\directory\\doesnt\\exist', '')
             applicationPropertyService.setFilename('TEST_WRONG_FILENAME', '\\this\\file\\doesnt\\exist.txt', '')
             applicationPropertyService.setUrl('TEST_WRONG_URL', 'htp://www.wrong.url', '')
@@ -191,37 +193,31 @@ class BootStrap {
 
             securityService.createUser(
                 tenantId: tenantId,
-                username: tenantId == tenantService.defaultTenantId ? 'user1' : "${tenantId}/user1",
+                username: 'user1',
                 password: 'user1',
                 groups: ['GROUP_1'],
-                email: 'user@company.it',
+                email: "user1@${tenantId}.it",
                 firstname: 'User',
                 lastname: 'ONE',
                 physicalId: tenantId == tenantService.defaultTenantId ? 'FB78E50B' : null,
             )
             securityService.createUser(
                 tenantId: tenantId,
-                username: tenantId == tenantService.defaultTenantId ? 'user2' : "${tenantId}/user2",
+                username: 'user2',
                 password: 'user2',
                 groups: ['GROUP_2', 'GROUP_1'],
-                email: 'user@company.it',
+                email: "user2@${tenantId}.it",
                 firstname: 'User',
                 lastname: 'ONE TWO',
             )
             securityService.createUser(
                 tenantId: tenantId,
-                username: tenantId == tenantService.defaultTenantId ? 'user3' : "${tenantId}/user3",
+                username: 'user3',
                 password: 'user3',
                 groups: ['GROUP_3'],
-                email: 'user@company.it',
+                email: "user3@${tenantId}.it",
                 firstname: 'User',
                 lastname: 'THREE',
-            )
-
-            securityService.createSystemUser(
-                username: '*',
-                firstname: 'Nessun',
-                lastname: 'Utente',
             )
         }
 
@@ -236,14 +232,20 @@ class BootStrap {
             println "${tenantId}: Arrivederci ${securityService.currentUsername}!"
         }
 
-        applicationService.onTenantInit { String tenantId ->
+        gooweeApplication.onTenantInit { String tenantId ->
             println "INITIALIZING ${tenantId} Tenant"
         }
 
-        applicationService.onInit {
-            applicationService.registerPrettyPrinter(TPerson, '${it.name}')
-            applicationService.registerPrettyPrinter(TCompany, '${it.name}')
-            applicationService.registerPrettyPrinter('customCompanyPrinter', '${it.name} (${it.dateCreated})')
+        gooweeApplication.onInit {
+            log.trace "This is a TRACE log."
+            log.debug "This is a DEBUG log."
+            log.info "This is an INFO log."
+            log.warn "This is a WARN log."
+            log.error "This is an ERROR log."
+
+            registerPrettyPrinter(TPerson, '${it.name}')
+            registerPrettyPrinter(TCompany, '${it.name}')
+            registerPrettyPrinter('customCompanyPrinter', '${it.name} (${it.dateCreated})')
 
             transitionService.subscribe('macchina-1')
             transitionService.subscribe('macchina-2')
@@ -258,174 +260,173 @@ class BootStrap {
 
             // APPLICATION CONFIGURATION
             //
-            applicationService.registerCredits('Created by', 'Gianluca Sartori', 'Francesco Piceghello')
-            applicationService.registerCredits('Tested by', 'Gianluca Sartori', 'Francesco Piceghello')
-            applicationService.registerCredits('Sponsored by', 'Gianluca Sartori', 'Francesco Piceghello')
-            applicationService.registerCredits('Dreamed by', 'Gianluca Sartori', 'Francesco Piceghello')
+            registerCredits('Created by', 'Gianluca Sartori', 'Francesco Piceghello')
+            registerCredits('Tested by', 'Gianluca Sartori', 'Francesco Piceghello')
+            registerCredits('Sponsored by', 'Gianluca Sartori', 'Francesco Piceghello')
+            registerCredits('Dreamed by', 'Gianluca Sartori', 'Francesco Piceghello')
 
             //
             // FEATURES
             //
 
-            applicationService.registerUserFeature(
+            registerUserFeature(
                 controller: 'sandbox',
                 icon: 'fa-book',
                 text: 'Manual...',
             )
 
-            applicationService.registerFeature(
+            registerFeature(
                 controller: 'crud',
                 icon: 'fa-file',
                 favourite: true,
             )
-            applicationService.registerFeature(
+            registerFeature(
                 controller: 'crudCustom',
                 icon: 'fa-regular fa-file',
             )
-            applicationService.registerFeature(
+            registerFeature(
                 controller: 'crudDataServices',
                 icon: 'fa-file-circle-check',
             )
-            applicationService.registerFeature(
+            registerFeature(
                 controller: 'crudSql',
                 icon: 'fa-database',
             )
-//            applicationService.registerFeature(
+//            registerFeature(
 //                    controller: 'crudRest',
 //                    icon: 'fa-cloud',
 //                    authorities: ['ROLE_USER']
 //            )
 
-            applicationService.registerFeature(
+            registerFeature(
                 controller: 'elements',
                 favourite: true,
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'elements',
                 controller: 'sandbox',
                 icon: 'fa-umbrella-beach',
                 favourite: true,
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'elements',
                 controller: 'table',
                 icon: 'fa-table',
                 favourite: true,
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'elements',
                 controller: 'tableStressTest',
                 icon: 'fa-table',
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'elements',
                 controller: 'form',
                 icon: 'fa-check-square',
                 favourite: true,
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'elements',
                 controller: 'select',
                 icon: 'fa-table-list',
                 favourite: true,
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'elements',
                 controller: 'grid',
                 icon: 'fa-border-none',
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'elements',
                 controller: 'tabs',
                 icon: 'fa-ellipsis-h',
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'elements',
                 controller: 'timer',
                 icon: 'fa-hourglass',
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'elements',
                 controller: 'transitions',
                 icon: 'fa-wand-sparkles',
-                modal: true,
                 favourite: true,
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'elements',
                 controller: 'websocket',
                 icon: 'fa-envelope',
                 favourite: true,
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'elements',
                 controller: 'charts',
                 icon: 'fa-chart-pie',
                 favourite: true,
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'elements',
                 controller: 'upload',
                 icon: 'fa-upload',
                 favourite: true,
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'elements',
                 controller: 'staticResources',
                 icon: 'fa-images',
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'elements',
                 controller: 'customPage',
                 icon: 'fa-palette',
                 direct: true,
             )
 
-            applicationService.registerFeature(
+            registerFeature(
                 controller: 'errorMessages',
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'errorMessages',
                 controller: 'handledException',
                 icon: 'fa-regular fa-comment',
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'errorMessages',
                 controller: 'denied',
                 icon: 'fa-user-lock',
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'errorMessages',
                 controller: 'notFound',
                 icon: 'fa-search-location',
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'errorMessages',
                 controller: 'exception',
                 icon: 'fa-solid fa-bug',
             )
 
-            applicationService.registerFeature(
+            registerFeature(
                 controller: 'authDemo',
                 icon: 'fa-group',
                 favourite: true,
                 authorities: ['ROLE_1', 'ROLE_2', 'ROLE_3']
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'authDemo',
                 controller: 'user1',
                 icon: 'fa-users',
                 favourite: true,
                 authorities: ['ROLE_1']
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'authDemo',
                 controller: 'user2',
                 icon: 'fa-users',
                 favourite: true,
                 authorities: ['ROLE_2']
             )
-            applicationService.registerFeature(
+            registerFeature(
                 parent: 'authDemo',
                 controller: 'user3',
                 icon: 'fa-users',

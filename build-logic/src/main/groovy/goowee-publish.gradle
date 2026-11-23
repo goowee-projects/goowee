@@ -27,7 +27,7 @@ publishing {
             pom {
                 name = project.name
                 description = project.name
-                url = "https://goowee.org"
+                url = "https://goowee.com"
                 licenses {
                     license {
                         name = "The Apache License, Version 2.0"
@@ -47,7 +47,7 @@ publishing {
                     }
                 }
                 scm {
-                    connection = 'scm:https://github.com/goowee-projects/goowee.git'
+                    connection = 'scm:https://github.com/goowee-projects/goowee-elements.git'
                     url = 'https://github.com/goowee-projects'
                 }
             }

@@ -90,10 +90,11 @@ class SystemInfoService implements WebRequestAware {
     }
 
     String getGooweeVersion() {
-        return (grailsPluginManager.allPlugins.find { it.name == 'goowee' })?.version
+        return (grailsPluginManager.allPlugins.find { it.name == "goowee" })?.version
     }
 
     Long ramToGb(Long ram) {
         return Math.ceil(ram / Math.pow(1024, 3) as Double) as Long
     }
+
 }

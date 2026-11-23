@@ -14,7 +14,6 @@
  */
 package goowee.database
 
-
 import goowee.elements.ElementsController
 import goowee.elements.components.Button
 import goowee.elements.components.Form

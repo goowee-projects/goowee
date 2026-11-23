@@ -1,0 +1,178 @@
+////
+Licensed to the Apache Software Foundation (ASF) under one or more
+contributor license agreements. See the NOTICE file distributed with
+this work for additional information regarding copyright ownership.
+The ASF licenses this file to you under the Apache License, Version 2.0.
+You may obtain a copy of the License at
+
+    https://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+////
+
+[[custom-css]]
+== Custom CSS
+
+Application-specific stylesheets can be added to the application's asset
+pipeline under `grails-app/assets/stylesheets`. The recommended approach is to
+create a separate file for each functional area and include it from the
+`goowee.css` manifest.
+
+.Create `~/demo/grails-app/assets/stylesheets/orders.css`
+[source,css,subs="attributes+"]
+----
+.orders-summary {
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+}
+----
+
+.Edit `~/demo/grails-app/assets/stylesheets/goowee.css`
+[source,css,subs="attributes+"]
+----
+/*
+ *= require orders
+ *= require_self
+ */
+----
+
+The asset pipeline resolves `orders` to `orders.css`, compiles it together
+with the other application stylesheets and serves the resulting asset with
+the appropriate cache-busting URL. The Goowee page includes `goowee.css`
+automatically when the file exists, so no extra HTML is needed for a global
+stylesheet.
+
+Use the CSS class from a component or control by passing it as `cssClass`:
+
+[source,groovy]
+----
+panel(
+    cssClass: 'orders-summary',
+    content: 'Order summary',
+)
+----
+
+For a stylesheet that belongs only to a custom GSP view or component, it can
+also be loaded directly:
+
+[source,gsp]
+----
+<asset:stylesheet src="orders.css"/>
+----
+
+Files in subdirectories can be referenced using their relative asset path, for
+example `stylesheets/orders/summary.css` is loaded with
+`src="orders/summary.css"`.
+
+[[custom-js]]
+== Custom JavaScript
+
+Custom JavaScript files are placed under
+`grails-app/assets/javascripts`. As with CSS, application-wide code should be
+kept in separate files and added to the `goowee.js` manifest.
+
+.Create `~/demo/grails-app/assets/javascripts/orders.js`
+[source,javascript,subs="attributes+"]
+----
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.orders-summary').forEach((element) => {
+        element.addEventListener('click', () => {
+            element.classList.toggle('is-expanded');
+        });
+    });
+});
+----
+
+.Edit `~/demo/grails-app/assets/javascripts/goowee.js`
+[source,javascript,subs="attributes+"]
+----
+// Any JavaScript file within this directory can be referenced here.
+//= require orders
+//= require_self
+----
+
+The asset pipeline resolves `orders` to `orders.js`, compiles it into the
+application bundle and handles the cache-busting URL. Goowee includes
+`goowee.js` automatically when the file exists, so application-wide
+JavaScript does not need to be added to a layout manually.
+
+For JavaScript used by only one custom GSP view or component, load the file
+directly instead:
+
+[source,gsp]
+----
+<asset:javascript src="orders.js"/>
+----
+
+JavaScript files in subdirectories use the same relative path convention, for
+example `javascripts/orders/table.js` is loaded with
+`src="orders/table.js"`.
+
+=== Loading order
+
+Goowee loads assets in this order:
+
+* CSS: `includes.css`, registered component stylesheets, optional `plugin.css`,
+  optional `goowee.css`, then the framework's `main.css` and inline theme values.
+* JavaScript: `includes.js` (shared libraries, utilities and built-in components),
+  registered component scripts, optional `plugin.js`, optional `goowee.js`, then
+  `main.js`, which runs `Elements.main()` through `<page:initialize/>`.
+
+The `goowee.js` and `goowee.css` manifests are optional. The Asset Pipeline handles
+fingerprinted production URLs; reference the logical names in GSPs.
+Since the framework's `main.css` follows `goowee.css`, normal CSS specificity
+and source order still determine which styles win.
+
+=== Guidelines
+
+* Put stylesheets in `grails-app/assets/stylesheets` and JavaScript in
+  `grails-app/assets/javascripts`.
+* Use the manifests for application-wide assets and direct asset tags for
+  view-specific assets.
+* Keep the `require` order intentional: a script that depends on another
+  script must be included after it, and CSS overrides must be included after
+  the styles they override.
+* Do not reference files through `file:` URLs or hard-code the generated asset
+  URL. The asset pipeline adds the correct path and cache-busting information.
+* Static branding and tenant files deployed under
+  `src/main/resources/deploy/public` are a separate mechanism; use the asset
+  pipeline for CSS, JavaScript and other web assets that belong to the
+  application bundle.
+
+=== Shared libraries and generated Grails assets
+
+Goowee loads jQuery and Bootstrap from WebJars using the versions managed by the Grails BOM.
+They are runtime dependencies of `goowee-core`, so they are also available when compiling production assets.
+Goowee adds its jQuery helpers to `$.fn`. For example, use `$element.exists()`
+and `$element.removeClassesStartingWith('fa-')`.
+Goowee sets `cache: false` on its AJAX requests explicitly, without changing
+jQuery's global AJAX defaults.
+General helpers live in `Utils`, including `Utils.getQueryParameters()` and
+`Utils.getUriString()`, which do not depend on jQuery.
+
+Do not import jQuery or Bootstrap again in `goowee.js` or `goowee.css`,
+including indirectly through `require_tree` or another manifest.
+Reloading jQuery replaces the instance containing Goowee's extensions and
+creates separate event and data stores. Reloading Bootstrap can duplicate
+event handlers.
+
+The generated Grails welcome page can keep `application.js` and
+`application.css`, including their jQuery and Bootstrap imports, in its own
+`grails-app/views/layouts/main.gsp`. Goowee pages do not load these manifests
+automatically. Keep `grails.css` in the Grails layout too, so its styles do not
+affect Goowee pages. Put custom code and styles for Goowee pages in `goowee.js`
+and `goowee.css`.
+
+A custom GSP layout can explicitly include `goowee.js` and `goowee.css` when
+it needs the same application assets, as the `app-test` layout does. Code in
+these manifests that uses Goowee classes also requires the Goowee libraries
+to be loaded by that layout.
+
+Popper remains a separate asset because the date/time picker requires the global `Popper` object; Bootstrap's bundle contains a private copy.
+
+Run the WebJar browser regression tests with `./gradlew :goowee-core:javascriptWebjarTest`.
+This task extracts the resolved WebJars for the browser tests; set `CHROME_BIN` if Chrome is installed at a nonstandard path.

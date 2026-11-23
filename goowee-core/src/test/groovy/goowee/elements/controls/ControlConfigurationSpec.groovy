@@ -53,6 +53,56 @@ class ControlConfigurationSpec extends Specification {
         applicationContext.close()
     }
 
+    void 'retains multiple select values and allows clearing the selection'() {
+        given:
+        Select select = new Select(id: 'groups', multiple: true)
+
+        when:
+        select.value = selection
+
+        then:
+        select.value == expected
+
+        when:
+        select.value = []
+
+        then:
+        select.value == []
+
+        where:
+        selection                | expected
+        ['6']                    | ['6']
+        ['6', '7']               | ['6', '7']
+        [6L, 7L]                 | [6L, 7L]
+        [[id: 6L], [id: 7L]]     | [6L, 7L]
+        []                       | []
+    }
+
+    void 'multiple selection allows clearing by default'() {
+        expect:
+        new Select(id: 'fromList', multiple: true, optionsFromList: ['admin', 'user']).allowClear
+        new Select(id: 'fromOptions', multiple: true, options: [admin: 'Admin', user: 'User']).allowClear
+        !new Select(id: 'single', optionsFromList: ['admin', 'user']).allowClear
+    }
+
+    void 'multiple selection preserves the configured clear button'() {
+        given:
+        Select select = new Select(id: 'groups', multiple: true, allowClear: clearable)
+
+        expect:
+        select.allowClear == clearable
+
+        when:
+        select.multiple = false
+        select.multiple = true
+
+        then:
+        select.allowClear == clearable
+
+        where:
+        clearable << [true, false]
+    }
+
     void configuresDerivedPropertiesAfterConstruction() {
         given:
         DateTimeField dateTimeField = new DateTimeField(id: 'dateTime')

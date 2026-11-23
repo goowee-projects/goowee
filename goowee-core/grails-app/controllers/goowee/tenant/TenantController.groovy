@@ -51,7 +51,7 @@ class TenantController implements ElementsController {
                 'tenantId',
                 'description',
                 'host',
-                'connectionSource.url',
+                'connectionSource.driverClassName',
             ]
             labels = [
                 'connectionSource.url': 'tenant.connection.info',
@@ -79,30 +79,30 @@ class TenantController implements ElementsController {
             : createContent(ContentCreate)
 
         def isReadonly = obj?.tenantId == tenantService.defaultTenantId
+
         c.form.with {
             validate = TTenant
-            if (!obj && EnvUtils.isDevelopment()) {
-                addField(
-                    class: Label,
-                    id: 'info',
-                    html: 'tenant.info',
-                    color: Color.WARNING_TEXT,
-                    backgroundColor: Color.WARNING_BACKGROUND,
-                    displayLabel: false,
-                    tag: true,
-                )
-            }
+//            if (!obj && EnvUtils.isDevelopment()) {
+//                addField(
+//                    class: Label,
+//                    id: 'info',
+//                    html: 'tenant.info',
+//                    color: Color.WARNING_TEXT,
+//                    backgroundColor: Color.WARNING_BACKGROUND,
+//                    displayLabel: false,
+//                    tag: true,
+//                )
+//            }
             addField(
                 class: TextField,
                 id: 'tenantId',
-                textTransform: TextTransform.UPPERCASE,
                 invalidChars: ' ',
                 cols: 6,
             )
             addField(
                 class: TextField,
                 id: 'host',
-                readonly: false,
+                placeholder: 'my.domain.com:8080',
                 cols: 6,
             )
             addField(
@@ -145,10 +145,8 @@ class TenantController implements ElementsController {
 
         if (obj) {
             c.form.values = obj
-            if (isReadonly) {
-                c.form.readonly = true
-                c.form['host'].readonly = false
-            }
+            c.form.readonly = isReadonly
+            c.form.controls.host.readonly = false
         }
 
         return c

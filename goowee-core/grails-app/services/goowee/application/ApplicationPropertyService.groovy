@@ -32,11 +32,11 @@ import jakarta.annotation.PostConstruct
 @CompileStatic
 class ApplicationPropertyService extends PropertyService {
 
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
 
     void install() {
         // System
-        String root = "${FileUtils.workingDirectory}${applicationService.applicationName}/"
+        String root = "${FileUtils.workingDirectory}${gooweeApplication.applicationName}/"
         setDirectory('APPLICATION_HOME_DIR', root)
         setDirectory('NEW_TENANT_DIR', "${root}tenants")
 
@@ -54,7 +54,7 @@ class ApplicationPropertyService extends PropertyService {
 
     @PostConstruct
     void init() {
-        inMemoryProperties['APPLICATION'] = [:] as Map
+        inMemoryProperties['SYSTEM'] = [:] as Map
     }
 
     @CompileDynamic
@@ -162,7 +162,7 @@ class ApplicationPropertyService extends PropertyService {
             create(newProperty)
         }
 
-        inMemoryProperties['APPLICATION'][name] = value
+        inMemoryProperties['SYSTEM'][name] = value
         if (onChangeRegistry[name]) {
             log.info "APPLICATION - Property changed '$name' = '$value'"
             onChangeRegistry[name].call(oldValue, value, defaultValue)
@@ -173,8 +173,8 @@ class ApplicationPropertyService extends PropertyService {
 
     @Override
     Object getValue(PropertyType type, String name, Boolean reload = false) {
-        if (inMemoryProperties['APPLICATION'].containsKey(name) && !reload) {
-            return inMemoryProperties['APPLICATION'][name]
+        if (inMemoryProperties['SYSTEM'].containsKey(name) && !reload) {
+            return inMemoryProperties['SYSTEM'][name]
         }
 
         String typeName = StringUtils.screamingSnakeToCamel(type as String)
@@ -186,7 +186,7 @@ class ApplicationPropertyService extends PropertyService {
 
         Object value = property[typeName]
 
-        inMemoryProperties['APPLICATION'][name] = value
+        inMemoryProperties['SYSTEM'][name] = value
         return value
     }
 
@@ -215,6 +215,8 @@ class ApplicationPropertyService extends PropertyService {
     @Transactional
     void delete(Serializable id) {
         TApplicationProperty obj = get(id)
-        obj.delete(flush: true)
+        if (obj) {
+            obj.delete(flush: true)
+        }
     }
 }

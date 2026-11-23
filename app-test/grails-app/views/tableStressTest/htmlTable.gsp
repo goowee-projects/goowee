@@ -7,7 +7,7 @@
 <body>
 
 <p>
-    <a href="index">Goowee Table</a>
+    <a href="index">Elements Table</a>
 </p>
 
 <table class="table">

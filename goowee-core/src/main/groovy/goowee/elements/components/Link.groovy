@@ -14,23 +14,25 @@
  */
 package goowee.elements.components
 
-import goowee.elements.core.ComponentEvent
-import goowee.elements.core.LinkDefinition
+import goowee.elements.core.Hotkey
+import goowee.elements.core.InvocationDefinition
 import groovy.transform.CompileStatic
 
 /**
  * A {@link Label}-based component that renders a navigable link.
  * <p>
- * {@code Link} wraps a {@link LinkDefinition} and registers a client-side
+ * {@code Link} wraps a {@link InvocationDefinition} and registers a client-side
  * event (default: {@code "click"}) that triggers the configured server-side action.
  * All navigation properties ({@code controller}, {@code action}, {@code url}, etc.)
- * are delegated to the underlying {@code linkDefinition}; changing any of them
- * automatically re-registers the click event via {@link #onTrigger(String)}.
+ * are delegated to the underlying {@code invocationDefinition}; changing any of them
+ * automatically re-registers the click event via {@link #setOnEvent(String)}.
+ * A hotkey can be set with {@code hotkey} using a
+ * {@link Hotkey} value, for example {@code Hotkey.F1}.
  * </p>
  * <p>
  * Additional render options (modal display, animations, scroll behaviour, etc.) are
  * stored in {@link goowee.elements.core.PageRenderProperties} accessible through
- * {@code linkDefinition}.
+ * the {@code invocationDefinition} property.
  * </p>
  *
  * @author Gianluca Sartori
@@ -39,27 +41,29 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class Link extends Label {
 
-    /** The underlying link definition holding all navigation and render properties. */
-    LinkDefinition linkDefinition
+    /** The invocation definition holding all navigation and render properties. */
+    InvocationDefinition invocationDefinition
 
-    /** The event that triggers the link. Defaults to 'click' */
-    String triggerEvent
+    /** The DOM event name that triggers the navigation action. Defaults to {@code "click"}. */
+    String eventName
+
+    /** Hotkey that triggers this link. */
+    Hotkey hotkey
 
     /**
      * Creates a {@code Link} component from the given argument map.
-     * All {@link Label} arguments are supported, plus all {@link LinkDefinition}
-     * properties. If no {@code action} is provided it defaults to {@code "index"}.
+     * All {@link Label} arguments are supported, plus all {@link InvocationDefinition}
+     * properties and an optional {@code hotkey} from {@link Hotkey}.
+     * If no {@code action} is provided it defaults to {@code "index"}.
      * An optional {@code onClick} key may specify an action name override for the click event.
      *
-     * @param args a map of configuration options. Supports all {@link Label} arguments plus:
-     * {@code linkDefinition}, {@code tag}, {@code html}, {@code triggerEvent}, {@code onClick}
+     * @param args map of link and label properties
      */
     Link(Map args = [:]) {
         super(args)
 
-        linkDefinition = args.linkDefinition
-            ? args.linkDefinition as LinkDefinition
-            : new LinkDefinition(args)
+        eventName = 'click'
+        invocationDefinition = new InvocationDefinition(args)
 
         tag = args.tag == null ? false : args.tag
 
@@ -67,32 +71,34 @@ class Link extends Label {
         containerSpecs.label = ''
         containerSpecs.help = ''
 
-        triggerEvent = args.triggerEvent ?: 'click'
-        onTrigger(args.onClick as String)
+        setHotkey(args.hotkey as Hotkey)
+        setEvent(args.onClick as String)
     }
 
     /**
-     * Registers the link's trigger event with the underlying event system.
-     * Merges the link definition properties with the resolved action, info message,
-     * and confirm message.
+     * Registers (or re-registers) the client-side event that triggers this link's action.
+     * Uses the current {@code invocationDefinition} properties, resolved i18n messages for
+     * {@code infoMessage} and {@code confirmMessage}, and the optional {@code onEvent}
+     * action override.
      *
-     * @param action an optional action override; if {@code null}, the action from
-     * {@link #linkDefinition} is used
+     * @param onEvent optional action name to use instead of {@link InvocationDefinition#action};
+     *                when {@code null} the definition's controller action is used
      */
-    void onTrigger(String action = null) {
-        Map event = linkDefinition.properties
-        Map eventOverride = [
-                event         : triggerEvent,
-                action        : action ?: linkDefinition.action,
-                infoMessage   : message(linkDefinition.infoMessage, linkDefinition.infoMessageArgs),
-                confirmMessage: message(linkDefinition.confirmMessage, linkDefinition.confirmMessageArgs),
+    void setEvent(String onEvent = null) {
+        Map invocationDefinitionProperties = this.invocationDefinition.properties
+        Map eventOverrides = [
+                event: eventName,
+                action: onEvent ?: this.invocationDefinition.action,
+                infoMessage: message(this.invocationDefinition.infoMessage, this.invocationDefinition.infoMessageArgs),
+                confirmMessage: message(this.invocationDefinition.confirmMessage, this.invocationDefinition.confirmMessageArgs),
         ] as Map
-        on(event + eventOverride)
+        on(invocationDefinitionProperties + eventOverrides)
     }
 
     /**
-     * Returns a JSON string of this link's client-side properties, adding the
-     * {@code loading} flag on top of the inherited {@link Label} properties.
+     * Returns a JSON string of this link's client-side properties, adding its
+     * {@code loading} flag and client-side {@code hotkey} on top of the inherited
+     * {@link Label} properties.
      *
      * @param properties additional properties to merge
      * @return a JSON representation of all component properties
@@ -101,8 +107,28 @@ class Link extends Label {
     String getPropertiesAsJSON(Map properties = [:]) {
         Map thisProperties = [
             loading: loading,
+            hotkey: hotkey?.key,
         ]
         return super.getPropertiesAsJSON(thisProperties + properties)
+    }
+
+    /** Returns the hotkey that triggers this link. */
+    Hotkey getHotkey() { return hotkey }
+
+    /**
+     * Sets the hotkey that triggers this link. Supported values are
+     * {@link Hotkey#F1} through {@link Hotkey#F24} and
+     * {@link Hotkey#ENTER}. Every hotkey requires
+     * {@code Command} on macOS or {@code AltGr} on Windows and Linux.
+     * Shift + F1–F12 activates F13–F24. On Windows and Linux, {@code Ctrl}
+     * or {@code Alt} alone does not activate hotkeys. The {@code Fn} key alone
+     * does not activate hotkeys.
+     * {@code null} clears the hotkey.
+     *
+     * @param value the hotkey to register
+     */
+    void setHotkey(Hotkey value) {
+        hotkey = value
     }
 
     /**
@@ -111,9 +137,9 @@ class Link extends Label {
      * @return a string in the form {@code "Link: /namespace/controller/action?key=value&..."}
      */
     String toString() {
-        String ns = linkDefinition.namespace ?: ''
-        String path = "${ns}/${linkDefinition.controller}/${linkDefinition.action}"
-        String queryParams = linkDefinition.params.collect { "${it.key}=${it.value}" }.join('&')
+        String ns = invocationDefinition.namespace ?: ''
+        String path = "${ns}/${invocationDefinition.controller}/${invocationDefinition.action}"
+        String queryParams = invocationDefinition.params.collect { "${it.key}=${it.value}" }.join('&')
         String queryString = queryParams ? "?${queryParams}" : ''
         return "Link: ${path}${queryString}"
     }
@@ -127,83 +153,81 @@ class Link extends Label {
      */
     String getDevUrl() {
         if (url) return url
-        if (controller && this.action) return "/${controller}/${this.action}"
+        if (controller && action) return "/${controller}/${action}"
         return null
     }
 
-    /**
-     * Sets a new {@link LinkDefinition} and re-registers the trigger event accordingly.
-     *
-     * @param link the new link definition to apply
-     */
-    void setLinkDefinition(LinkDefinition link) {
-        linkDefinition = link
-        onTrigger()
-    }
+    /** @see InvocationDefinition#target */
+    String getTarget() { return invocationDefinition.target }
+    /** @see InvocationDefinition#target */
+    void setTarget(String value) { invocationDefinition.target = value }
 
-    /** @see LinkDefinition#target */
-    String getTarget() { return linkDefinition.target }
-    /** @see LinkDefinition#target */
-    void setTarget(String value) { linkDefinition.target = value }
-
-    /** @see LinkDefinition#namespace */
-    String getNamespace() { return linkDefinition.namespace }
+    /** @see InvocationDefinition#namespace */
+    String getNamespace() { return invocationDefinition.namespace }
     /** Sets the controller namespace and re-registers the click event. */
     void setNamespace(String value) {
-        linkDefinition.namespace = value
-        onTrigger()
+        invocationDefinition.namespace = value
+        setEvent()
     }
 
-    /** @see LinkDefinition#controller */
-    String getController() { return linkDefinition.controller }
+    /** @see InvocationDefinition#controller */
+    String getController() { return invocationDefinition.controller }
     /** Sets the controller name and re-registers the click event. */
     void setController(String value) {
-        linkDefinition.controller = value
-        onTrigger()
+        invocationDefinition.controller = value
+        setEvent()
     }
 
-    /** @see LinkDefinition#action */
-    String getAction() { return linkDefinition.action }
+    /** @see InvocationDefinition#action */
+    String getAction() { return invocationDefinition.action }
     /** Sets the action name and re-registers the click event. */
     void setAction(String value) {
-        linkDefinition.action = value
-        onTrigger()
+        invocationDefinition.action = value
+        setEvent()
     }
 
-    /** @see LinkDefinition#params */
-    Map getParams() { return linkDefinition.params }
+    /** @see InvocationDefinition#call */
+    String getCall() { return invocationDefinition.call }
+    /** Sets the client-side function name and re-registers the click event. */
+    void setCall(String value) {
+        invocationDefinition.call = value
+        setEvent()
+    }
+
+    /** @see InvocationDefinition#params */
+    Map getParams() { return invocationDefinition.params }
     /** Sets the request parameters and re-registers the click event. */
     void setParams(Map value) {
-        linkDefinition.params = value
-        onTrigger()
+        invocationDefinition.params = value
+        setEvent()
     }
 
-    /** @see LinkDefinition#fragment */
-    String getFragment() { return linkDefinition.fragment }
+    /** @see InvocationDefinition#fragment */
+    String getFragment() { return invocationDefinition.fragment }
     /** Sets the URL fragment and re-registers the click event. */
     void setFragment(String value) {
-        linkDefinition.fragment = value
-        onTrigger()
+        invocationDefinition.fragment = value
+        setEvent()
     }
 
-    /** @see LinkDefinition#path */
-    String getPath() { return linkDefinition.path }
+    /** @see InvocationDefinition#path */
+    String getPath() { return invocationDefinition.path }
     /** Sets the path and re-registers the click event. */
     void setPath(String value) {
-        linkDefinition.path = value
-        onTrigger()
+        invocationDefinition.path = value
+        setEvent()
     }
 
-    /** @see LinkDefinition#url */
-    String getUrl() { return linkDefinition.url }
+    /** @see InvocationDefinition#url */
+    String getUrl() { return invocationDefinition.url }
     /** Sets the explicit URL and re-registers the click event. */
     void setUrl(String value) {
-        linkDefinition.url = value
-        onTrigger()
+        invocationDefinition.url = value
+        setEvent()
     }
 
-    /** @see LinkDefinition#submit */
-    List<String> getSubmit() { return linkDefinition.submit }
+    /** @see InvocationDefinition#submit */
+    List<String> getSubmit() { return invocationDefinition.submit }
 
     /**
      * Convenience overload that wraps a single component name in a list before delegating
@@ -215,112 +239,112 @@ class Link extends Label {
 
     /** Sets the submit component list and re-registers the click event. */
     void setSubmit(List<String> value) {
-        linkDefinition.submit = value
-        onTrigger()
+        invocationDefinition.submit = value
+        setEvent()
     }
 
-    /** @see LinkDefinition#direct */
-    Boolean getDirect() { return linkDefinition.direct }
-    /** @see LinkDefinition#direct */
-    void setDirect(Boolean value) { linkDefinition.direct = value }
+    /** @see InvocationDefinition#direct */
+    Boolean getDirect() { return invocationDefinition.direct }
+    /** @see InvocationDefinition#direct */
+    void setDirect(Boolean value) { invocationDefinition.direct = value }
 
     /** Whether this link opens its target in a modal dialog. */
-    Boolean getModal() { return linkDefinition.renderProperties.modal }
+    Boolean getModal() { return invocationDefinition.renderProperties.modal }
     /** Sets whether this link opens its target in a modal dialog and re-registers the click event. */
     void setModal(Boolean value) {
-        linkDefinition.renderProperties.modal = value
-        onTrigger()
+        invocationDefinition.renderProperties.modal = value
+        setEvent()
     }
 
     /** Whether this link renders in a small (compact) style. */
-    Boolean getSmall() { return linkDefinition.renderProperties.small }
+    Boolean getSmall() { return invocationDefinition.renderProperties.small }
     /** Sets the small (compact) rendering style and re-registers the click event. */
     void setSmall(Boolean value) {
-        linkDefinition.renderProperties.small = value
-        onTrigger()
+        invocationDefinition.renderProperties.small = value
+        setEvent()
     }
 
     /** Whether this link renders in a large style. */
-    Boolean getLarge() { return linkDefinition.renderProperties.large }
+    Boolean getLarge() { return invocationDefinition.renderProperties.large }
     /** Sets the large rendering style and re-registers the click event. */
     void setLarge(Boolean value) {
-        linkDefinition.renderProperties.large = value
-        onTrigger()
+        invocationDefinition.renderProperties.large = value
+        setEvent()
     }
 
     /** The CSS animation name applied when navigating via this link. */
-    String getAnimate() { return linkDefinition.renderProperties.animate }
+    String getAnimate() { return invocationDefinition.renderProperties.animate }
     /** Sets the CSS animation for navigation and re-registers the click event. */
     void setAnimate(String value) {
-        linkDefinition.renderProperties.animate = value
-        onTrigger()
+        invocationDefinition.renderProperties.animate = value
+        setEvent()
     }
 
     /** Whether a close button is shown when the target is displayed in a modal. */
-    Boolean getCloseButton() { return linkDefinition.renderProperties.closeButton }
+    Boolean getCloseButton() { return invocationDefinition.renderProperties.closeButton }
     /** Sets whether a close button is shown in the modal and re-registers the click event. */
     void setCloseButton(Boolean value) {
-        linkDefinition.renderProperties.closeButton = value
-        onTrigger()
+        invocationDefinition.renderProperties.closeButton = value
+        setEvent()
     }
 
     /** The scroll behaviour applied when navigating via this link (e.g. {@code "reset"}). */
-    String getScroll() { return linkDefinition.renderProperties.scroll }
+    String getScroll() { return invocationDefinition.renderProperties.scroll }
     /** Sets the scroll behaviour and re-registers the click event. */
     void setScroll(String value) {
-        linkDefinition.renderProperties.scroll = value
-        onTrigger()
+        invocationDefinition.renderProperties.scroll = value
+        setEvent()
     }
 
-    /** @see LinkDefinition#getTargetNew() */
-    Boolean getTargetNew() { return linkDefinition.targetNew }
+    /** @see InvocationDefinition#getTargetNew() */
+    Boolean getTargetNew() { return invocationDefinition.targetNew }
     /** Sets whether the link opens in a new tab and re-registers the click event. */
     void setTargetNew(Boolean value) {
-        linkDefinition.targetNew = value
-        onTrigger()
+        invocationDefinition.targetNew = value
+        setEvent()
     }
 
-    /** @see LinkDefinition#loading */
-    Boolean getLoading() { return linkDefinition.loading }
+    /** @see InvocationDefinition#loading */
+    Boolean getLoading() { return invocationDefinition.loading }
     /** Sets the loading indicator flag and re-registers the click event. */
     void setLoading(Boolean value) {
-        linkDefinition.loading = value
-        onTrigger()
+        invocationDefinition.loading = value
+        setEvent()
     }
 
-    /** @see LinkDefinition#infoMessage */
-    String getInfoMessage() { return linkDefinition.infoMessage }
+    /** @see InvocationDefinition#infoMessage */
+    String getInfoMessage() { return invocationDefinition.infoMessage }
     /** Sets the info message and re-registers the click event. */
     void setInfoMessage(String value) {
-        linkDefinition.infoMessage = value
-        onTrigger()
+        invocationDefinition.infoMessage = value
+        setEvent()
     }
     /** Sets the info message interpolation arguments and re-registers the click event. */
     void setInfoMessageArgs(List value) {
-        linkDefinition.infoMessageArgs = value
-        onTrigger()
+        invocationDefinition.infoMessageArgs = value
+        setEvent()
     }
 
-    /** @see LinkDefinition#confirmMessage */
-    String getConfirmMessage() { return linkDefinition.confirmMessage }
+    /** @see InvocationDefinition#confirmMessage */
+    String getConfirmMessage() { return invocationDefinition.confirmMessage }
     /** Sets the confirmation dialog message and re-registers the click event. */
     void setConfirmMessage(String value) {
-        linkDefinition.confirmMessage = value
-        onTrigger()
+        invocationDefinition.confirmMessage = value
+        setEvent()
     }
     /** Sets the confirmation message interpolation arguments and re-registers the click event. */
     void setConfirmMessageArgs(List value) {
-        linkDefinition.confirmMessageArgs = value
-        onTrigger()
+        invocationDefinition.confirmMessageArgs = value
+        setEvent()
     }
     /**
-     * Sets the {@link ComponentEvent} to invoke when the user confirms the confirmation dialog,
+     * Sets the {@link InvocationDefinition} to invoke when the user confirms the confirmation dialog,
      * and re-registers the click event.
      *
-     * @param value the event to fire on confirmation
+     * @param value the invocation to run on confirmation
      */
-    void setConfirmMessageOnConfirm(ComponentEvent value) {
-        linkDefinition.confirmMessageOnConfirm = value.asMap()
-        onTrigger()
+    void setConfirmMessageOnConfirm(InvocationDefinition value) {
+        invocationDefinition.confirmMessageOnConfirm = value
+        setEvent()
     }
 }

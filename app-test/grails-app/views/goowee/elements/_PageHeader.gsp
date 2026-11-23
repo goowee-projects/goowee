@@ -10,7 +10,7 @@
 <meta name="apple-mobile-web-app-title" content="${c.message('app.name')}">
 
 <title>${c.message('app.name')}</title>
-<link rel="manifest" href="${createLink(uri: '/pwa/manifest.json')}">
+<link rel="manifest" href="${g.createLink(uri: '/pwa/manifest.json')}">
 
 <%-- Elements --%>
 <asset:stylesheet src="includes.css" media="screen"/>
@@ -24,8 +24,8 @@
 </asset:assetPathExists>
 
 <%-- Application Specific Stylesheet --%>
-<asset:assetPathExists src="application.css">
-    <asset:stylesheet src="application.css"/>
+<asset:assetPathExists src="goowee.css">
+    <asset:stylesheet src="goowee.css"/>
 </asset:assetPathExists>
 
 <%-- Main --%>

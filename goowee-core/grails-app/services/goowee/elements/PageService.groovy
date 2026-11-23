@@ -45,17 +45,14 @@ class PageService implements WebRequestAware, LinkGeneratorAware {
         tenantPropertyService.setString('APPICON', linkPublicResource(tenantId, 'brand/appicon.png', false))
 
         tenantPropertyService.setString('KEYPRESS_TRIGGER_KEY', 'Enter')
-        tenantPropertyService.setNumber('KEYPRESS_READING_SPEED', 20)
-        tenantPropertyService.setNumber('KEYPRESS_BUFFER_CLEANUP_TIMEOUT', 500)
-        tenantPropertyService.setBoolean('KEYPRESS_KEEP_CLEAN', false)
     }
 
     Page getMainPage() {
-        return session['_main_page_'] as Page
+        return session['_21MainPage'] as Page
     }
 
     void setMainPage(Page page) {
-        session['_main_page_'] = page
+        session['_21MainPage'] = page
     }
 
     /**
@@ -67,6 +64,7 @@ class PageService implements WebRequestAware, LinkGeneratorAware {
     public <T> T createPage(Class<T> clazz, Map args = [:]) {
         if (!securityService.isLoggedIn()) {
             fontSize = tenantPropertyService.getNumber('FONT_SIZE', true) as Integer
+            mobileFontSize = tenantPropertyService.getNumber('MOBILE_FONT_SIZE', true) as Integer
             guiStyle = tenantPropertyService.getString('GUI_STYLE', true)
         }
         return Component.createInstance(clazz, clazz.simpleName.uncapitalize(), initialize(args))
@@ -90,28 +88,25 @@ class PageService implements WebRequestAware, LinkGeneratorAware {
          *
          * See https://fontawesome.com/how-to-use/on-the-web/referencing-icons/basic-use
          */
-        args.iconStyle = tenantPropertyService.getString('ICON_STYLE')
-        args.favicon = tenantPropertyService.getString('FAVICON')
-        args.appicon = tenantPropertyService.getString('APPICON')
+        args.iconStyle = tenantPropertyService.getString('ICON_STYLE', true)
+        args.favicon = tenantPropertyService.getString('FAVICON', true)
+        args.appicon = tenantPropertyService.getString('APPICON', true)
 
         /** Colors */
-        args.mainTextColor = tenantPropertyService.getString('MAIN_TEXT_COLOR')
-        args.mainBackgroundColor = tenantPropertyService.getString('MAIN_BACKGROUND_COLOR')
-        args.mainForegroundColor = tenantPropertyService.getString('MAIN_FOREGROUND_COLOR')
-        args.frameTextColor = tenantPropertyService.getString('FRAME_TEXT_COLOR')
-        args.frameBackgroundColor = tenantPropertyService.getString('FRAME_BACKGROUND_COLOR')
-        args.primaryTextColor = tenantPropertyService.getString('PRIMARY_TEXT_COLOR')
-        args.primaryBackgroundColor = tenantPropertyService.getString('PRIMARY_BACKGROUND_COLOR')
-        args.primaryBackgroundColorAlpha = (Double) tenantPropertyService.getNumber('PRIMARY_BACKGROUND_COLOR_ALPHA')
-        args.secondaryTextColor = tenantPropertyService.getString('SECONDARY_TEXT_COLOR')
-        args.secondaryBackgroundColor = tenantPropertyService.getString('SECONDARY_BACKGROUND_COLOR')
-        args.requiredTextColor = tenantPropertyService.getString('REQUIRED_TEXT_COLOR')
+        args.mainTextColor = tenantPropertyService.getString('MAIN_TEXT_COLOR', true)
+        args.mainBackgroundColor = tenantPropertyService.getString('MAIN_BACKGROUND_COLOR', true)
+        args.mainForegroundColor = tenantPropertyService.getString('MAIN_FOREGROUND_COLOR', true)
+        args.frameTextColor = tenantPropertyService.getString('FRAME_TEXT_COLOR', true)
+        args.frameBackgroundColor = tenantPropertyService.getString('FRAME_BACKGROUND_COLOR', true)
+        args.primaryTextColor = tenantPropertyService.getString('PRIMARY_TEXT_COLOR', true)
+        args.primaryBackgroundColor = tenantPropertyService.getString('PRIMARY_BACKGROUND_COLOR', true)
+        args.primaryBackgroundColorAlpha = (Double) tenantPropertyService.getNumber('PRIMARY_BACKGROUND_COLOR_ALPHA', true)
+        args.secondaryTextColor = tenantPropertyService.getString('SECONDARY_TEXT_COLOR', true)
+        args.secondaryBackgroundColor = tenantPropertyService.getString('SECONDARY_BACKGROUND_COLOR', true)
+        args.requiredTextColor = tenantPropertyService.getString('REQUIRED_TEXT_COLOR', true)
 
         args.keyPress = [
-            triggerKey          : tenantPropertyService.getString('KEYPRESS_TRIGGER_KEY'),
-            readingSpeed        : tenantPropertyService.getNumber('KEYPRESS_READING_SPEED'),
-            bufferCleanupTimeout: tenantPropertyService.getNumber('KEYPRESS_BUFFER_CLEANUP_TIMEOUT'),
-            keepClean           : tenantPropertyService.getBoolean('KEYPRESS_KEEP_CLEAN'),
+            triggerKey: tenantPropertyService.getString('KEYPRESS_TRIGGER_KEY'),
         ]
 
         return args

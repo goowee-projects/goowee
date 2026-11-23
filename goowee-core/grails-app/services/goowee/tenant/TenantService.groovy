@@ -16,7 +16,7 @@ package goowee.tenant
 
 import goowee.GooweeGrailsPlugin
 import goowee.application.ApplicationPropertyService
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
 import goowee.database.ConnectionSourceService
 import goowee.application.TApplicationInstall
 import goowee.commons.utils.FileUtils
@@ -33,7 +33,9 @@ import groovy.contracts.Requires
 import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
+import jakarta.servlet.http.HttpServletRequest
 import org.grails.datastore.mapping.core.connections.ConnectionSource
+import org.grails.datastore.mapping.multitenancy.exceptions.TenantException
 
 /**
  * @author Gianluca Sartori
@@ -43,7 +45,7 @@ import org.grails.datastore.mapping.core.connections.ConnectionSource
 @CompileStatic
 class TenantService {
 
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
     ConnectionSourceService connectionSourceService
     ApplicationPropertyService applicationPropertyService
 
@@ -87,8 +89,16 @@ class TenantService {
     }
 
     void withTenant(String tenantId, Closure closure) {
-        Tenants.withId(tenantId) {
-            closure.call(tenantId)
+        try {
+            Tenants.withId(tenantId) {
+                closure.call(tenantId)
+            }
+
+        } catch (TenantException e) {
+            log.warn "Cannot determine the tenant to execute for, executing for '${defaultTenantId}'."
+            Tenants.withId(defaultTenantId) {
+                closure.call(defaultTenantId)
+            }
         }
     }
 
@@ -133,13 +143,28 @@ class TenantService {
     }
 
     @CompileDynamic
+    @WithoutTenant
     TTenant getByTenantId(String tenantId) {
         return TTenant.findByTenantId(tenantId)
     }
 
     @CompileDynamic
+    @WithoutTenant
     TTenant getByHost(String host) {
         return TTenant.findByHost(host)
+    }
+
+    @CompileDynamic
+    @WithoutTenant
+    String getTenantIdByRequest(HttpServletRequest request) {
+        return getByRequest(request)?.tenantId
+    }
+
+    @CompileDynamic
+    @WithoutTenant
+    TTenant getByRequest(HttpServletRequest request) {
+        String host = request?.getHeader('host')
+        return host ? getByHost(host) : null
     }
 
     @CompileDynamic
@@ -204,7 +229,7 @@ class TenantService {
             )
 
             if (obj.tenantId != defaultTenantId) { // Default tenant gets its 'dataSource' from application.yml
-                log.info "'${obj.tenantId}' tenant - Connecting to database..."
+                log.info "'${obj.tenantId.toUpperCase()}' TENANT - Connecting to database..."
                 connectionSourceService.connect(obj.connectionSource)
             }
         }
@@ -228,14 +253,14 @@ class TenantService {
 
     @Transactional
     private void provisionTenant(String tenantId) {
-        applicationService.executeOnPluginTenantInstall(tenantId)
-        applicationService.executeOnTenantInstall(tenantId)
+        gooweeApplication.executeOnPluginTenantInstall(tenantId)
+        gooweeApplication.executeOnTenantInstall(tenantId)
     }
 
     @Transactional
     void updateAllTenants() {
         eachTenant { String tenantId ->
-            applicationService.executeOnUpdate(tenantId)
+            gooweeApplication.executeOnUpdate(tenantId)
         }
     }
 

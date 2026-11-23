@@ -66,7 +66,6 @@ class TenantPropertyController implements ElementsController {
 
         c.table.with {
             filters.with {
-                fold = false
                 addField(
                     class: TextField,
                     id: 'find',
@@ -77,7 +76,6 @@ class TenantPropertyController implements ElementsController {
                     class: Select,
                     id: 'type',
                     optionsFromEnum: PropertyType,
-                    noSelection: true,
                     cols: 2,
                 )
                 addField(
@@ -85,7 +83,6 @@ class TenantPropertyController implements ElementsController {
                     id: 'validation',
                     optionsFromList: ['error'],
                     search: false,
-                    noSelection: true,
                     cols: 2,
                 )
             }
@@ -117,7 +114,7 @@ class TenantPropertyController implements ElementsController {
                 row.cells.type.tag = true
 
                 if (values.validation) {
-                    row.textColor = '#cc0000'
+                    row.textColor = '#aa0000'
                     row.cells.issues.icon = 'fa-circle-exclamation'
                     row.cells.issues.tooltip = values.validation
                 }
@@ -172,7 +169,7 @@ class TenantPropertyController implements ElementsController {
                 id: 'name',
                 textStyle: TextStyle.MONOSPACE,
                 textTransform: TextTransform.UPPERCASE,
-                readonly: obj.name && !securityService.isDeveloper(),
+                readonly: obj.name,
                 cols: 9,
             )
             addField(
@@ -343,12 +340,12 @@ class TenantPropertyController implements ElementsController {
             }
         }
 
-        if (obj) {
+        if (obj.id) {
             c.form.values = obj
             if (obj.type == PropertyType.PASSWORD) {
-                c.form['value'].value = tenantPropertyService.getPassword(obj.name, true)
+                c.form.controls.value.value = tenantPropertyService.getPassword(obj.name, true)
             } else {
-                c.form['value'].value = tenantPropertyService.getValue(obj.type, obj.name, true)
+                c.form.controls.value.value = tenantPropertyService.getValue(obj.type, obj.name, true)
             }
         }
 

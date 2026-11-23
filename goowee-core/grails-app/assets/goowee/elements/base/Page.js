@@ -59,6 +59,7 @@ class Page {
         Page.finalizeControls($root, reinitialize);
         Page.finalizeComponents($root, reinitialize);
         PageContent.finalize();
+        PageKeyPress.initializeKeyboardEvents();
     }
 
     static reinitializeContent($root, reinitialize = false, deactivate = false) {
@@ -69,7 +70,8 @@ class Page {
 
     static initializePage() {
         if (Elements.isMobileDevice) {
-            $(':root').css('--elements-font-size', '16px');
+            let mobileFontSize = (_21_.user && _21_.user.mobileFontSize) || 16;
+            $(':root').css('--elements-font-size', mobileFontSize + 'px');
         }
 
         PageMessageBox.initialize();
@@ -116,7 +118,7 @@ class Page {
         let $elements = Page.$self.find('[data-21-component][deactivate],[data-21-control][deactivate]');
         for (let element of $elements) {
             let $element = $(element);
-            let component = Elements.getByElement($element);
+            let component = Elements.getComponent($element);
 
             try {
                 if (Elements.hasMethod(component, 'deactivate')) {

@@ -14,7 +14,7 @@
  */
 package goowee.database
 
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
 import goowee.application.TConnectionSource
 import goowee.elements.ElementsController
 import goowee.elements.components.Label
@@ -23,7 +23,6 @@ import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentTable
 import goowee.elements.controls.Checkbox
-import goowee.elements.controls.PasswordField
 import goowee.elements.controls.Select
 import goowee.elements.controls.TextField
 import goowee.elements.style.Color
@@ -37,11 +36,11 @@ import java.sql.Driver
 @Secured(['ROLE_DEVELOPER'])
 class ConnectionSourceController implements ElementsController {
 
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
     ConnectionSourceService connectionSourceService
 
     def index() {
-        applicationService.registerPrettyPrinter(Driver, '${it.class.name}')
+        gooweeApplication.registerPrettyPrinter(Driver, '${it.class.name}')
 
         def c = createContent(ContentTable)
         c.table.with {
@@ -135,7 +134,7 @@ class ConnectionSourceController implements ElementsController {
                 cols: 6,
             )
             addField(
-                class: PasswordField,
+                class: TextField,
                 id: 'password',
                 cols: 6,
             )

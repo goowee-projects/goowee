@@ -10,6 +10,7 @@ import goowee.elements.components.Timer
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.NumberField
 import goowee.elements.controls.TextField
+import goowee.elements.core.Transition
 import goowee.elements.style.TextDefault
 import grails.plugin.springsecurity.annotation.Secured
 import groovy.util.logging.Slf4j
@@ -197,9 +198,8 @@ class TimerController implements ElementsController {
         display transition: t
     }
 
-
     def onConfirm() {
-        def t = createTransition()
+        Transition t = createTransition()
         t.loading(false)
         t.setValue('f1', 'A')
         t.addCssClass('f6', 'invisible')

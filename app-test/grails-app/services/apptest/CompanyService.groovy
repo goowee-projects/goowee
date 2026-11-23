@@ -14,7 +14,6 @@
  */
 package apptest
 
-
 import grails.gorm.DetachedCriteria
 import grails.gorm.multitenancy.CurrentTenant
 import grails.gorm.transactions.Transactional
@@ -23,6 +22,7 @@ import groovy.transform.CompileDynamic
 import groovy.transform.CompileStatic
 
 @CurrentTenant
+@Transactional
 @CompileStatic
 class CompanyService {
 
@@ -72,7 +72,6 @@ class CompanyService {
         return query.count()
     }
 
-    @Transactional
     TCompany create(Map args = [:]) {
         if (args.failOnError == null) args.failOnError = false
 
@@ -81,7 +80,6 @@ class CompanyService {
         return obj
     }
 
-    @Transactional
     @CompileDynamic
     @Requires({ args.id })
     TCompany update(Map args = [:]) {
@@ -93,9 +91,10 @@ class CompanyService {
         return obj
     }
 
-    @Transactional
     void delete(Serializable id) {
         TCompany obj = get(id)
-        obj.delete(flush: true)
+        if (obj) {
+            obj.delete(flush: true)
+        }
     }
 }

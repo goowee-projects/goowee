@@ -1,7 +1,7 @@
 == Quick Start
 
 === Goals
-*With Goowee you can develop back-office web applications writing code in a single programming language: https://groovy-lang.org/[Apache Groovy,window=_blank]. No need to know HTML, CSS o Javascript.*
+*With Goowee, you can develop business web applications by writing code in a single programming language: https://groovy-lang.org/[Apache Groovy,window=_blank]. There is no need to know HTML, CSS, or JavaScript.*
 
 With Goowee you can develop and maintain web applications with requirements such as:
 
@@ -13,7 +13,7 @@ With Goowee you can develop and maintain web applications with requirements such
 . Develop multi-device applications. Each application will automatically work on a desktop pc with a mouse as well as on a mobile device with a finger.
 . Develop multi-tenant applications. The same application can serve different clients with separate databases.
 
-NOTE: The main purpose of Goowee is to decouple the business logic from the _User Interface (GUI)_. This lowers the costs of maintaining the application: just one language instead of 5 (HTML, CSS, JavaScript, Java, SQL), less skilled people can join the team and no need to upgrade the GUI when new web technologies/standards gets available.
+NOTE: The main purpose of Goowee is to decouple business logic from the _User Interface (GUI)_. This lowers application maintenance costs: the team uses just one language instead of five (HTML, CSS, JavaScript, Java, and SQL), developers need fewer specialized skills, and the GUI does not need to be upgraded whenever new web technologies or standards become available.
 
 === Non-Goals
 *Goowee is NOT a solution for:*
@@ -41,12 +41,12 @@ You should see something like this:
 [source,bash,background-color="black"]
 ----
 >                                                                            <
->                      ____                                                  <
->                     / ___| ___   _____      _____  ___                     <
->                    | |  _ / _ \ / _ \ \ /\ / / _ \/ _ \                    <
->                    | |_| | (_) | (_) \ V  V /  __/  __/                    <
->                     \____|\___/ \___/ \_/\_/ \___|\___|                    <
->                             https://goowee.org                             <
+>                         _                                                  <
+>                        | |   https://goowee.com                            <
+>                      __| |_   _  ___ _   _ _ __   ___                      <
+>                     / _` | | | |/ _ \ | | | '_ \ / _ \                     <
+>                    | (_| | |_| |  __/ |_| | | | | (_) |                    <
+>                     \__,_|\__,_|\___|\__,_|_| |_|\___/                     <
 >                                                                            <
 
 Grails application running at http://localhost:8080 in environment: development
@@ -56,7 +56,7 @@ Point your web browser to https://localhost:8080[https://localhost:8080] to disp
 
 image::images/quick-start/user-guide-login.png[Application Login]
 
-NOTE: Login with `admin/admin` to manage the default tenant or with `super/super` to manage the whole application.
+NOTE: Log in with `admin/admin` to manage the default tenant or with `super/super` to manage the whole application.
 
 ==== Apache Groovy & Grails
 Goowee applications are Grails applications so you need to get confident with the https://grails.org/[Apache Grails,window=_blank] framework and the https://groovy-lang.org/[Apache Groovy,window=_blank] programming language.
@@ -100,7 +100,7 @@ image::images/quick-start/basics-content.png[Content]
 
 Contents can be displayed as modals. A modal content is rendered inside a dialog window. This lets the user focus on a specific part of the Feature to accomplish subtasks like editing a specific object.
 
-Modals can be displayed in three sizes: `normal` (default), `wide` and `fullscreen`.
+Modals can be displayed in three sizes: `normal` (default), `small`, `large` and `fullscreen`.
 
 image::images/quick-start/basics-content-modal.png[Modal Content]
 
@@ -189,12 +189,11 @@ To configure the application Features we register them in the `BootStrap.groovy`
 ----
 class BootStrap {
 
-    ServletContext servletContext
-    ApplicationService applicationService // <1>
+    GooweeApplication gooweeApplication // <1>
 
     def init = {
 
-        applicationService.onInit { // <2>
+        gooweeApplication.onInit { // <2>
             registerFeature( // <3>
                     controller: 'person',
                     icon: 'fa-user',
@@ -204,9 +203,9 @@ class BootStrap {
     }
 }
 ----
-<1> `ApplicationService` is the object in charge of the application setup
+<1> `GooweeApplication` is the object in charge of the application setup
 <2> The `init = { ... }` Grails closure is executed each time the application starts up
-<3> Within the `applicationService.onInit { ... }` closure you can call any of the `applicationService` methods. In this case the method `<<registerFeature>>`
+<3> Within the `gooweeApplication.onInit { ... }` closure, you can call any `gooweeApplication` method. In this case, the method is xref:z.api-reference.adoc#registerFeature[`registerFeature()`].
 
 === Controllers
 
@@ -256,6 +255,7 @@ For example the following Service implements the method `sayHello()`.
 ----
 @Slf4j
 @CurrentTenant
+@CompileStatic
 class PersonService {
 
     String sayHello() {
@@ -321,13 +321,12 @@ Each application has a `DEFAULT` database connection defined in the `grails-app/
 ----
 class BootStrap {
 
-    ServletContext servletContext
-    ApplicationService applicationService // <1>
+    GooweeApplication gooweeApplication // <1>
     ConnectionSourceService connectionSourceService // <2>
 
     def init = {
 
-        applicationService.onTenantInstall { String tenantId -> // <3>
+        gooweeApplication.onTenantInstall { String tenantId -> // <3>
             connectionSourceService.create( // <4>
                     name: 'runtimeDatasource',
                     driverClassName: 'org.h2.Driver',
@@ -341,9 +340,9 @@ class BootStrap {
 
 }
 ----
-<1> `ApplicationService` is the object in charge of the application setup
+<1> `GooweeApplication` is the object in charge of the application setup
 <2> `ConnectionSourceService` service injection
-<3> The `onTenantInstall { ... }` closure is called only the first time the application runs for the DEFAULT Tenant and each time a new Tenant is created
+<3> The `onInstall { ... }` closure is called only the first time the application runs for the DEFAULT Tenant and each time a new Tenant is created
 <4> The `create()` method creates a new connection and connects to it. Once created the application will automatically connect to it each time it boots up. Connection details can be changed via GUI accessing as `super` from the menu `System Configuration -> Connection Sources`
 
 === Tenants
@@ -373,19 +372,18 @@ image::images/quick-start/basics-groups-details.png[Group Details]
 == CRUD Applications
 One of the most useful GUI pattern is the CRUD (Create, Read, Update, and Delete). It is based on the four basic operations available to work with persistent data and databases.
 
-Applications are made of features, we register one to work with movies (See <<features>>).
+Applications are made of features. We register one to work with movies (see xref:z.api-reference.adoc#features[Features]).
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]
 ----
 class BootStrap {
 
-    ServletContext servletContext
-    ApplicationService applicationService // <1>
+    GooweeApplication gooweeApplication // <1>
 
     def init = {
 
-        applicationService.onInit {
+        gooweeApplication.onInit {
             registerFeature( // <2>
                     controller: 'movie',
                     icon: 'fa-film',
@@ -396,8 +394,8 @@ class BootStrap {
     }
 }
 ----
-<1> See <<application>>
-<2> See <<registerFeature>>
+<1> See xref:z.api-reference.adoc#application[Application].
+<2> See xref:z.api-reference.adoc#registerFeature[`registerFeature()`].
 
 We are going to implement a simple database with https://gorm.grails.org/[GORM for Hibernate,window=_blank] on top of which we can build our GUI.
 
@@ -468,7 +466,7 @@ class MovieController implements ElementsController { // <2>
 <2> Implementing `ElementsController` the Goowee API will become available
 <3> As a convention, all actions building and displaying a GUI are named after a verb or a name while all actions that execute a business logic are identified by a name starting with `on`.
 
-We are going to use the `ContentTable` content to list the records, the `ContentCreate` and `ContentEdit` contents to create a new record and edit an existing one (See <<contents>>).
+We are going to use `ContentTable` to list records, and `ContentCreate` and `ContentEdit` to create and edit them (see xref:z.api-reference.adoc#contents[Contents]).
 
 .grails-app/controllers/BookController.groovy
 [source,groovy]
@@ -625,7 +623,7 @@ class MovieService {
         return query.list(fetchParams)
     }
 
-    Number count(Map filterParams = [:]) {
+    Integer count(Map filterParams = [:]) {
         def query = buildQuery(filterParams)
         return query.count()
     }
@@ -664,5 +662,9 @@ class MovieService {
 Run the application with gradle `bootRun`, you should be able to create, list, edit and delete movies.
 
 === What's next?
-Read the xref:goowee-book[The Goowee Book] or the xref:api-reference[Goowee API]
-
+ifeval::["{docname}" == "index"]
+Read xref:goowee-elements-book[The Goowee Book] or xref:api-reference[Goowee API Reference].
+endif::[]
+ifeval::["{docname}" != "index"]
+Read xref:chapter-1.adoc[The Goowee Book] or xref:z.api-reference.adoc[Goowee API Reference].
+endif::[]

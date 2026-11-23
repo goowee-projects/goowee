@@ -28,4 +28,7 @@ class ShellConfigFeatures implements Serializable {
 
     /** User features displayed in the top right user menu */
     Feature user
+
+    /** Display this page after login */
+    String landingPage
 }

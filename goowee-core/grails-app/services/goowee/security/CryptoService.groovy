@@ -14,9 +14,10 @@
  */
 package goowee.security
 
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
 import goowee.commons.utils.CryptoUtils
 import goowee.tenant.TenantService
+import grails.gorm.multitenancy.CurrentTenant
 import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
@@ -28,37 +29,44 @@ import groovy.util.logging.Slf4j
 @CompileStatic
 class CryptoService {
 
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
     TenantService tenantService
 
+    @CurrentTenant
     void tenantInstall() {
+        String tenantId = tenantService.currentTenantId
         byte[] password = CryptoUtils.generateAESKey()
         CryptoUtils.saveAESKey(password, tenantAESKeyPathname)
-        applicationService.setAttribute(tenantAESKeyAttributeName, password)
+        gooweeApplication.setAttribute(getTenantAESKeyAttributeName(tenantId), password)
     }
 
+    @CurrentTenant
     void tenantInit() {
+        String tenantId = tenantService.currentTenantId
         byte[] password = CryptoUtils.loadAESKey(tenantAESKeyPathname)
-        applicationService.setAttribute(tenantAESKeyAttributeName, password)
+        gooweeApplication.setAttribute(getTenantAESKeyAttributeName(tenantId), password)
     }
 
+    @CurrentTenant
     String encrypt(String value) {
-        return CryptoUtils.encrypt(value, tenantAESKey)
+        return CryptoUtils.encrypt(value, getTenantAESKey())
     }
 
+    @CurrentTenant
     String decrypt(String encryptedValue) {
-        return CryptoUtils.decrypt(encryptedValue, tenantAESKey)
+        return CryptoUtils.decrypt(encryptedValue, getTenantAESKey())
     }
 
+    @CurrentTenant
     byte[] getTenantAESKey() {
-        return applicationService.getAttribute(tenantAESKeyAttributeName) as byte[]
+        return gooweeApplication.getAttribute(getTenantAESKeyAttributeName(tenantService.currentTenantId)) as byte[]
     }
 
     private String getTenantAESKeyPathname() {
-        return tenantService.privateDir + applicationService.applicationName + '.key'
+        return tenantService.privateDir + gooweeApplication.applicationName + '.key'
     }
 
-    private String getTenantAESKeyAttributeName() {
-        return tenantService.currentTenantId + '_TENANT_AES_KEY'
+    private String getTenantAESKeyAttributeName(String tenantId) {
+        return tenantId.toUpperCase() + '_TENANT_AES_KEY'
     }
 }

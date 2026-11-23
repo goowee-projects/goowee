@@ -15,7 +15,8 @@
 package goowee.elements.components
 
 import goowee.elements.core.Component
-import goowee.elements.core.ComponentEvent
+import goowee.elements.core.Hotkey
+import goowee.elements.core.InvocationDefinition
 import goowee.elements.core.Menu
 import goowee.elements.style.TextWrap
 import groovy.transform.CompileStatic
@@ -36,7 +37,8 @@ import groovy.transform.Synchronized
  * <p>
  * All link-navigation properties ({@code controller}, {@code action}, {@code params},
  * {@code modal}, {@code submit}, etc.) are delegated to the underlying {@link Menu}
- * items and can be set via the corresponding setters on this class.
+ * items and can be set via the corresponding setters on this class. Its {@code hotkey}
+ * property, selected from {@link Hotkey}, configures the default action.
  * </p>
  *
  * @author Gianluca Sartori
@@ -77,6 +79,7 @@ class Button extends Component {
      * {@code group} ({@link Boolean}),
      * {@code maxWidth} ({@link Integer}),
      * {@code text} ({@link String}) — label for the default action,
+     * {@code hotkey} ({@link Hotkey}) — hotkey for the default action,
      * {@code dontCreateDefaultAction} ({@link Boolean}) — skip auto-creation of the default action,
      *             plus all keys accepted by {@link Component#Component(Map)} and {@link Menu}
      */
@@ -86,9 +89,6 @@ class Button extends Component {
         defaultAction = null
         tailAction = null
         actionMenu = createComponent(Menu, id + 'Actions')
-
-        if (args.primary != null) setPrimary(args.primary as Boolean)
-//        if (args.params != null) setParams(args.params as Map)
 
         stretch = (args.stretch == null) ? true : args.stretch
         group = (args.group == null) ? false : args.group
@@ -108,21 +108,41 @@ class Button extends Component {
             defaultActionArgs.remove('id')
             addDefaultAction(defaultActionArgs)
         }
+
+        if (args.primary != null) {
+            setPrimary(args.primary as Boolean)
+        }
+    }
+
+    @Override
+    void setReadonly(Boolean value) {
+        super.setReadonly(value)
+        for (Menu action in actionMenu?.items ?: []) {
+            action.readonly = readonly
+        }
     }
 
     /**
      * Sets whether this button is rendered as a primary (highlighted) button.
      * When {@code true} and no background colour has been explicitly set, the
-     * primary text and background colours are applied automatically.
+     * primary text and background colours are applied automatically. The
+     * default action also receives the {@link Hotkey#ENTER} hotkey,
+     * including when the default action is assigned later.
      *
      * @param value {@code true} to mark this button as primary
      */
     void setPrimary(Boolean value) {
         primary = value
 
-        if (primary && !backgroundColor) {
+        if (primary) {
+            setPrimaryHotkey()
             textColor = primaryTextColor
             backgroundColor = primaryBackgroundColor
+
+        } else {
+            removeHotkey()
+            textColor = secondaryTextColor
+            backgroundColor = secondaryBackgroundColor
         }
     }
 
@@ -142,6 +162,38 @@ class Button extends Component {
      */
     void setAction(String value) {
         defaultAction.action = value
+    }
+
+    /** Returns the client-side function name of the default action. */
+    String getCall() {
+        return defaultAction.call
+    }
+
+    /** Sets the client-side function name of the default action. */
+    void setCall(String value) {
+        defaultAction.call = value
+    }
+
+    /** Returns the hotkey that triggers the default action. */
+    Hotkey getHotkey() {
+        return defaultAction.hotkey
+    }
+
+    /** Sets the hotkey that triggers the default action. */
+    void setHotkey(Hotkey value) {
+        defaultAction.hotkey = value
+    }
+
+    private void setPrimaryHotkey() {
+        if (primary && defaultAction) {
+            defaultAction.hotkey = Hotkey.ENTER
+        }
+    }
+
+    private void removeHotkey() {
+        if (defaultAction) {
+            defaultAction.hotkey = null
+        }
     }
 
     /**
@@ -188,7 +240,7 @@ class Button extends Component {
         }
     }
 
-    /** @return whether the default action opens in a modal window  */
+    /** @return whether the default action opens in a modal window   */
     Boolean getModal() {
         return defaultAction.modal
     }
@@ -202,7 +254,7 @@ class Button extends Component {
         defaultAction.modal = value
     }
 
-    /** @return whether the default action uses a small button style  */
+    /** @return whether the default action uses a small button style   */
     Boolean getSmall() {
         return defaultAction.small
     }
@@ -216,7 +268,7 @@ class Button extends Component {
         defaultAction.small = value
     }
 
-    /** @return whether the default action uses a large button style  */
+    /** @return whether the default action uses a large button style   */
     Boolean getLarge() {
         return defaultAction.large
     }
@@ -230,7 +282,7 @@ class Button extends Component {
         defaultAction.large = value
     }
 
-    /** @return the animation name applied to the default action transition  */
+    /** @return the animation name applied to the default action transition   */
     String getAnimate() {
         return defaultAction.animate
     }
@@ -244,7 +296,7 @@ class Button extends Component {
         defaultAction.animate = value
     }
 
-    /** @return whether the default action performs a direct (non-AJAX) navigation  */
+    /** @return whether the default action performs a direct (non-AJAX) navigation   */
     Boolean getDirect() {
         return defaultAction.direct
     }
@@ -258,7 +310,7 @@ class Button extends Component {
         defaultAction.direct = value
     }
 
-    /** @return whether the default action renders as a modal close button  */
+    /** @return whether the default action renders as a modal close button   */
     Boolean getCloseButton() {
         return defaultAction.closeButton
     }
@@ -272,7 +324,7 @@ class Button extends Component {
         defaultAction.closeButton = value
     }
 
-    /** @return the scroll target of the default action  */
+    /** @return the scroll target of the default action   */
     String getScroll() {
         return defaultAction.scroll
     }
@@ -333,13 +385,12 @@ class Button extends Component {
 
     /**
      * Sets the confirmation message shown before the default action is executed.
-     * Also wires the "Confirm" button to re-trigger the default action.
+     * The default action is re-triggered when no confirmation invocation is specified.
      *
      * @param value the i18n message key or literal confirmation message
      */
     void setConfirmMessage(String value) {
         defaultAction.confirmMessage = value
-        defaultAction.confirmMessageOnConfirm = new ComponentEvent(defaultAction.link.linkDefinition.asMap())
     }
 
     /**
@@ -352,12 +403,12 @@ class Button extends Component {
     }
 
     /**
-     * Sets the {@link ComponentEvent} fired when the user confirms the confirmation dialog
+     * Sets the {@link InvocationDefinition} fired when the user confirms the confirmation dialog
      * of the default action.
      *
-     * @param value the event to fire on confirmation
+     * @param value the invocation to run on confirmation
      */
-    void confirmMessageOnConfirm(ComponentEvent value) {
+    void confirmMessageOnConfirm(InvocationDefinition value) {
         defaultAction.confirmMessageOnConfirm = value
     }
 
@@ -411,7 +462,9 @@ class Button extends Component {
             args.loading = args.loading == null ? defaultAction.loading : args.loading
         }
 
-        return actionMenu.addItem(args)
+        Menu menu = actionMenu.addItem(args)
+        if (readonly) menu.readonly = true
+        return menu
     }
 
     /**
@@ -425,6 +478,7 @@ class Button extends Component {
         Menu menu = addMenu(args)
         if (!defaultAction) {
             defaultAction = menu
+            setPrimaryHotkey()
         }
         return this
     }
@@ -546,6 +600,7 @@ class Button extends Component {
         Menu action = getAction(args)
         action.link.textWrap = TextWrap.DEFAULT
         defaultAction = action
+        setPrimaryHotkey()
     }
 
     /**
@@ -619,9 +674,11 @@ class Button extends Component {
     void copyActionsFrom(Button fromButton) {
         for (action in fromButton.actionMenu.items) {
             Menu clonedAction = actionMenu.addItem(action.copy())
+            if (readonly) clonedAction.readonly = true
 
             if (action == fromButton.defaultAction) {
                 defaultAction = clonedAction
+                setPrimaryHotkey()
 
             } else if (action == fromButton.tailAction) {
                 tailAction = clonedAction

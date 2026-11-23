@@ -16,6 +16,7 @@ package goowee.application
 
 import goowee.elements.PageService
 import goowee.elements.pages.ShellService
+import goowee.security.AuthenticationProviderService
 import goowee.security.CryptoService
 import goowee.security.SecurityService
 import goowee.tenant.TenantPropertyService
@@ -32,8 +33,9 @@ import groovy.transform.CompileStatic
 class BootStrap {
 
 //    GroovyPagesTemplateEngine groovyPagesTemplateEngine
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
     SecurityService securityService
+    AuthenticationProviderService authenticationProviderService
     CryptoService cryptoService
     TenantPropertyService tenantPropertyService
     PageService pageService
@@ -41,13 +43,14 @@ class BootStrap {
 
     def init = {
 
-        applicationService.onPluginInstall {
+        gooweeApplication.onPluginInstall {
             applicationPropertyService.install()
             tenantService.install()
             securityService.install()
         }
 
-        applicationService.onPluginTenantInstall { String tenantId ->
+        gooweeApplication.onPluginTenantInstall { String tenantId ->
+            authenticationProviderService.tenantInstall(tenantId)
             securityService.tenantInstall()
             cryptoService.tenantInstall()
             tenantPropertyService.tenantInstall()
@@ -55,7 +58,7 @@ class BootStrap {
             shellService.tenantInstall()
         }
 
-        applicationService.beforeInit {
+        gooweeApplication.beforeInit {
             securityService.init()
 
             // It works only from the 'app-test' within this project
@@ -66,18 +69,19 @@ class BootStrap {
             Types.register(Quantity)
         }
 
-        applicationService.afterInit {
+        gooweeApplication.afterInit {
             applicationPropertyService.validateAll()
             securityService.registerFeatures()
         }
 
-        applicationService.beforeTenantInit { String tenantId ->
+        gooweeApplication.beforeTenantInit { String tenantId ->
             cryptoService.tenantInit()
         }
 
-        applicationService.afterTenantInit { String tenantId ->
+        gooweeApplication.afterTenantInit { String tenantId ->
             tenantPropertyService.validateAll()
         }
+
     }
 
     def destroy = {

@@ -14,7 +14,7 @@
  */
 package apptest
 
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
 import goowee.elements.ElementsController
 import goowee.elements.components.Form
 import goowee.elements.components.Label
@@ -24,10 +24,12 @@ import goowee.elements.contents.ContentEdit
 import goowee.elements.contents.ContentForm
 import goowee.elements.contents.ContentTable
 import goowee.elements.controls.*
+import goowee.elements.core.Hotkey
 import goowee.elements.style.Color
 import goowee.elements.style.TextDefault
 import goowee.elements.style.TextWrap
 import goowee.tenant.AuditService
+import goowee.tenant.TenantService
 import goowee.types.QuantityService
 import goowee.types.Type
 import grails.plugin.springsecurity.annotation.Secured
@@ -36,8 +38,9 @@ import java.time.LocalDate
 
 class CrudController implements ElementsController {
 
+    TenantService tenantService
     AuditService auditService
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
     QuantityService quantityService
     PersonService personService
     CompanyService companyService
@@ -46,17 +49,17 @@ class CrudController implements ElementsController {
 
 //        sleep(2000)
 
-        applicationService.registerTransformer('TRANSFORM_ME') { TCompany value ->
+        gooweeApplication.registerTransformer('TRANSFORM_ME') { TCompany value ->
             return "<i class='fa-fw fa-solid fa-building me-1'></i>${value.name.toUpperCase()}"
         }
 
-        applicationService.registerPrettyPrinter('PRETTY_MAP', '${it.a} ${it.b} ${it.c} ${it.d}')
+        gooweeApplication.registerPrettyPrinter('PRETTY_MAP', '${it.a} ${it.b} ${it.c} ${it.d}')
 
 //        throw new Exception("ATTENZIONE!!!")
 
         def c = createContent(ContentTable)
 
-        c.title = 'Runtime "content" title'
+        c.title = "${tenantService.currentTenantId}"
 
         if (isMobileDevice()) {
             c.addComponent(
@@ -70,7 +73,7 @@ class CrudController implements ElementsController {
 
         c.with {
             header.sticky = false
-            header.text = 'Runtime "content.header" title'
+            header.text = "Current tenant: ${tenantService.currentTenantId.toUpperCase()}"
             header.addBackButton().with {
                 addAction(action: 'pippo')
             }
@@ -78,6 +81,8 @@ class CrudController implements ElementsController {
             header.nextButton.addAction(controller: 'crudCompany', modal: true)
             header.nextButton.addAction(controller: 'crudPOGO', modal: true)
             header.nextButton.defaultAction.tooltip = 'default.create'
+            header.nextButton.primary = false
+            header.nextButton.hotkey = Hotkey.F1
 
             def form = c.addComponentBefore('table', Form)
             form.with {
@@ -114,6 +119,12 @@ class CrudController implements ElementsController {
                     addField(
                         class: TextField,
                         id: 'name',
+                        cols: 3,
+                    )
+                    addField(
+                        class: Checkbox,
+                        id: 'testCheckbox',
+                        defaultValue: true,
                         cols: 3,
                     )
                 }
@@ -258,12 +269,12 @@ class CrudController implements ElementsController {
     def onCreateRecords() {
         TCompany company = companyService.get(1)
 
-        (1..100).each {
+        for (int index in 1..100) {
             personService.create(
                 active: true,
                 company: company,
-                name: 'user' + it,
-                address: 'Via del\'automazione, ' + it,
+                name: 'user' + index,
+                address: 'Via del\'automazione, ' + index,
                 postcode: 12345
             )
         }

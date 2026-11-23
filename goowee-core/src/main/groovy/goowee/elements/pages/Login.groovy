@@ -20,9 +20,9 @@ import goowee.elements.components.Label
 import goowee.elements.components.Link
 import goowee.elements.controls.PasswordField
 import goowee.elements.controls.TextField
-import goowee.elements.core.KeyPress
 import goowee.elements.core.Page
 import goowee.elements.style.TextAlign
+import goowee.security.AuthenticationProviderType
 import groovy.transform.CompileStatic
 
 /**
@@ -33,31 +33,39 @@ import groovy.transform.CompileStatic
 @CompileStatic
 class Login extends Page {
 
-    Boolean autocomplete
-
     String copy
     String registerUrl
     String passwordRecoveryUrl
+    String googleLoginUrl
+    List<Map> oidcProviders = []
+    String tenantId
 
     String backgroundImage
     String logoImage
+    String logoTag
 
-    KeyPress loginKeyPress
+    Boolean rememberMeEnabled
+    Boolean phisicalIdEnabled
     Form form
 
     Login(Map args) {
         super(args)
 
         keyPress.enabled = false
-        loginKeyPress = createComponent(KeyPress, 'loginKeyPress')
-
-        autocomplete = (args.autocomplete == null) ? false : args.autocomplete
+        rememberMeEnabled = args.rememberMeEnabled as Boolean ?: false
+        phisicalIdEnabled = args.phisicalIdEnabled != null
+            ? args.phisicalIdEnabled
+            : false
 
         copy = args.copy
         registerUrl = args.registerUrl
         passwordRecoveryUrl = args.passwordRecoveryUrl
+        googleLoginUrl = args.googleLoginUrl
+        oidcProviders = (args.oidcProviders ?: []) as List<Map>
+        tenantId = args.tenantId as String
 
         logoImage = args.logoImage
+        logoTag = args.logoTag
         backgroundImage = args.backgroundImage
 
         form = createComponent(Form, 'loginForm')
@@ -84,6 +92,17 @@ class Login extends Page {
                 stretch: true,
                 primary: true,
             )
+            if (googleLoginUrl) {
+                addField(
+                    class: Button,
+                    id: 'googleLogin',
+                    url: googleLoginUrl,
+                    direct: true,
+                    label: 'authentication.google.login',
+                    displayLabel: false,
+                    stretch: true,
+                )
+            }
             if (passwordRecoveryUrl) {
                 addField(
                     class: Link,
@@ -113,6 +132,56 @@ class Login extends Page {
                     displayLabel: false,
                 )
             }
+            for (Map provider in oidcProviders) {
+                AuthenticationProviderType providerType = provider.providerType as AuthenticationProviderType
+                addField(
+                    class: Button,
+                    id: "oidcLogin${providerType.name().capitalize()}",
+                    url: provider.url as String,
+                    direct: true,
+                    text: provider.name as String,
+                    icon: oidcProviderIcon(providerType),
+                    backgroundColor: oidcProviderBackgroundColor(providerType),
+                    textColor: oidcProviderTextColor(providerType),
+                    displayLabel: false,
+                    stretch: true,
+                )
+            }
         }
     }
+
+    @Override
+    String getPropertiesAsJSON(Map properties = [:]) {
+        Map thisProperties = [
+            phisicalIdEnabled: phisicalIdEnabled,
+            rememberMeEnabled: rememberMeEnabled,
+        ]
+        return super.getPropertiesAsJSON(thisProperties + properties)
+    }
+
+    private static String oidcProviderIcon(AuthenticationProviderType providerType) {
+        switch (providerType) {
+            case AuthenticationProviderType.GOOGLE: return 'fa-brands fa-google'
+            case AuthenticationProviderType.MS_ENTRA: return 'fa-brands fa-microsoft'
+            case AuthenticationProviderType.SAP_IAS: return 'fa-bookmark'
+            default: return 'fa-brands fa-openid'
+        }
+    }
+
+    private static String oidcProviderTextColor(AuthenticationProviderType providerType) {
+        switch (providerType) {
+            case AuthenticationProviderType.GOOGLE: return '#333333'
+            case AuthenticationProviderType.MS_ENTRA: return '#ffffff'
+            case AuthenticationProviderType.SAP_IAS: return '#ffffff'
+        }
+    }
+
+    private static String oidcProviderBackgroundColor(AuthenticationProviderType providerType) {
+        switch (providerType) {
+            case AuthenticationProviderType.GOOGLE: return '#F5F6F7'
+            case AuthenticationProviderType.MS_ENTRA: return '#00A4EF'
+            case AuthenticationProviderType.SAP_IAS: return '#0070F2'
+        }
+    }
+
 }

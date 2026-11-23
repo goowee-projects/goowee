@@ -16,11 +16,11 @@ package goowee.elements
 
 import goowee.commons.utils.LogUtils
 import goowee.elements.contents.ContentHeader
-import goowee.elements.core.ComponentEvent
+import goowee.elements.core.InvocationDefinition
 import goowee.elements.core.Page
 import goowee.elements.core.PageContent
 import goowee.elements.core.Transition
-import goowee.elements.pages.PageWebsocket
+import goowee.elements.pages.PageBlank
 import grails.artefact.Controller
 import grails.artefact.Enhances
 import grails.artefact.controller.RestResponder
@@ -175,7 +175,7 @@ trait ElementsController implements Controller, RestResponder, WebRequestAware, 
 
     /** Returns the main {@link goowee.elements.core.Page} for the current session, falling back to a blank page. */
     private Page getMainPage() {
-        return getPageService().mainPage ?: createPage(PageWebsocket)
+        return getPageService().mainPage ?: createPage(PageBlank, params)
     }
 
     /**
@@ -260,23 +260,23 @@ trait ElementsController implements Controller, RestResponder, WebRequestAware, 
         } else if (args.message) {
             String message = args.message as String
             List messageArgs = args.messageArgs as List ?: []
-            t.infoMessage(message, messageArgs, new ComponentEvent(args))
+            t.infoMessage(message, messageArgs, new InvocationDefinition(args))
 
         } else if (args.confirmMessage) {
             String message = args.confirmMessage as String
             List messageArgs = args.messageArgs as List ?: []
-            t.confirmMessage(message, messageArgs, new ComponentEvent(args))
+            t.confirmMessage(message, messageArgs, new InvocationDefinition(args))
 
         } else if (args.errorMessage) {
             String message = args.errorMessage as String
             List messageArgs = args.messageArgs as List ?: []
-            t.errorMessage(message, messageArgs, new ComponentEvent(args))
+            t.errorMessage(message, messageArgs, new InvocationDefinition(args))
 
         } else if (args.exception) {
             Exception e = args.exception as Exception
             log.error LogUtils.logStackTrace(e)
             String message = e.message ?: e.cause.message ?: "${e.toString()} caused by ${e.cause.toString()}"
-            t.errorMessage(message, new ComponentEvent(args))
+            t.errorMessage(message, new InvocationDefinition(args))
 
         } else if (args.errors) {
             Integer submittedComponentCount = requestParams._21SubmittedCount as Integer

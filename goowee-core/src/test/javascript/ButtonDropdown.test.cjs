@@ -20,10 +20,18 @@ const path = require('node:path');
 const { spawnSync } = require('node:child_process');
 const { test } = require('node:test');
 
+const webjars = path.join(process.env.GOOWEE_TEST_WEBJARS ||
+    path.resolve(__dirname, '../../../build/javascript-test-assets'), 'META-INF/resources/webjars');
+const readWebjar = (name, file) => {
+    const versions = fs.readdirSync(path.join(webjars, name));
+    assert.equal(versions.length, 1, `Expected one resolved version of ${name}`);
+    return fs.readFileSync(path.join(webjars, name, versions[0], file), 'utf8');
+};
+
 const chrome = process.env.CHROME_BIN || '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome';
 
 for (const moduleName of ['goowee-core', 'app-test']) {
-    test(`${moduleName}: detached dropdown keyboard navigation stays with its owner`, {
+    test(`${moduleName}: WebJars preserve jQuery extensions, calendar positioning, user menu alignment and dropdown navigation`, {
         skip: !fs.existsSync(chrome) && 'Set CHROME_BIN to run the browser regression test',
     }, () => {
         const directory = fs.mkdtempSync(path.join(os.tmpdir(), 'goowee-dropdown-'));
@@ -35,22 +43,65 @@ for (const moduleName of ['goowee-core', 'app-test']) {
                 <li><a class="dropdown-item disabled" href="#">Disabled</a></li>
                 <li><a class="dropdown-item" style="display:none" href="#">Hidden</a></li>
                 <li><a class="dropdown-item" href="#" id="${id}-second">Second</a></li></ul></div>`;
-            const html = `<style>${read('libs/bootstrap-5.3.2-dist/css/bootstrap.min.css')}</style>
+            const userMenuHeader = fs.readFileSync(path.resolve(assets, '../../views/goowee/elements/pages/_ShellUserMenu.gsp'), 'utf8')
+                .match(/<div class="offcanvas-header">[\s\S]*?<\/div>/)[0]
+                .replace('${c.title}', 'Admin');
+            const html = `<style>${readWebjar('bootstrap', 'dist/css/bootstrap.css')}</style>
                 <style>${read('elements/components/Button.css')}
+                ${read('elements/pages/ShellUserMenu.css')}
                 :root { --elements-secondary-bg: 210, 225, 240; --elements-secondary-text: 20, 30, 40; }
                 * { transition: none !important; }</style>
+                <div id="shell-user-menu" style="width:240px">${userMenuHeader}</div>
                 <div id="page">${button('back')}<table><tr><td>${button('row')}</td></tr></table></div>
-                <div id="modal">${button('modal-row')}</div><pre id="result">PENDING</pre>
-                <script>${read('libs/jquery-4.0.0.min.js')}</script>
-                <script>${read('libs/bootstrap-5.3.2-dist/js/bootstrap.bundle.min.js')}</script>
+                <div id="modal">${button('modal-row')}</div>
+                <div id="calendar"><input type="text"></div><pre id="result">PENDING</pre>
+                <script>${readWebjar('jquery', 'dist/jquery.js')}</script>
+                <script>${readWebjar('bootstrap', 'dist/js/bootstrap.bundle.js')}</script>
+                <script>${read('utils/utils.js')}</script>
+                <script>${read('utils/utils-jquery.js')}</script>
+                <script>${read('libs/popper-2.11.8.min.js')}</script>
+                <script>${read('libs/tempus-dominus-6.9.4-dist/tempus-dominus.min.js')}</script>
                 <script>class Component { static register() {} }
                 const Page = { $self: $('#page') };
                 const PageModal = { isActive: false, $self: $('#modal') };</script>
                 <script>${read('elements/components/Button.js')}</script>
                 <script>
+                const oldElement = $('<div class="fa-old keep" data-enabled="true" data-empty=""></div>');
+                oldElement.data('runtime', 'preserved');
+                </script>
+                <script>
                 window.addEventListener('load', () => {
                     try {
                         const check = (value, message) => { if (!value) throw new Error(message); };
+                        const header = document.querySelector('#shell-user-menu .offcanvas-header');
+                        const close = header.querySelector('button').getBoundingClientRect();
+                        const right = header.getBoundingClientRect().right - parseFloat(getComputedStyle(header).paddingRight);
+                        check(Math.abs(close.right - right) < 1, 'User menu close button must align with the right padding');
+                        check(typeof $.fn.exists === 'function', 'Goowee jQuery extensions must be available');
+                        const freshElement = $('<div class="fa-old keep" data-enabled="true" data-empty=""></div>');
+                        for (const element of [oldElement, freshElement]) {
+                            check(element.exists(), 'Nonempty selection must exist');
+                            check(!$().exists(), 'Empty selection must not exist');
+                            check(element.attrIs('enabled', true), 'Data equality must work');
+                            check(element.attrIsTrue('enabled'), 'True data must work');
+                            check(!element.attrIsFalse('enabled'), 'True data must not be false');
+                            check(element.attrIsFalse('missing'), 'Missing data must be false');
+                            check(element.attrIsNot('enabled', false), 'Data inequality must work');
+                            check(element.attrIsNot('missing', true), 'Missing data must be unequal');
+                            check(element.attrExists('enabled'), 'Data attribute must exist');
+                            check(!element.attrExists('empty'), 'Empty data attribute must not exist');
+                            check(!element.attrExists('missing'), 'Missing data attribute must not exist');
+                            element.removeClassesStartingWith('fa-');
+                            check(element.attr('class') === 'keep', 'Class prefix removal must work');
+                        }
+                        check(oldElement.data('runtime') === 'preserved', 'Old selections retain their data');
+                        check(Utils.getQueryParameters('/test?a=1&b=2').b === '2', 'Query parsing must work');
+                        check(Utils.getUriString('/test?a=1') === '/test', 'URI parsing must work');
+                        const calendar = new tempusDominus.TempusDominus(document.getElementById('calendar'));
+                        calendar.show();
+                        check(document.querySelector('.tempus-dominus-widget.show'), 'Calendar must open with Popper available');
+                        calendar.hide();
+                        calendar.dispose();
                         const press = key => document.activeElement.dispatchEvent(new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true }));
                         const focused = id => check(document.activeElement.id === id, 'Expected focus on ' + id + ', got ' + document.activeElement.id);
                         $('.component-button').each(function () { Button.finalize($(this)); });

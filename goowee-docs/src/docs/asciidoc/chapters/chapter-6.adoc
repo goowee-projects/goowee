@@ -34,6 +34,10 @@ image::images/chapter-6/image-4.webp[align="center"]
 
 From now on, each time we deploy the application for the first time, those files will be extracted and added into the following folder: `~/demo/demo/tenants/DEFAULT/public/brand`
 
+To display a label over the navbar logo for this tenant, set the `LOGO_TAG` tenant property in _Tenant Management -> Tenant Properties_ to the desired text. Leave it empty to hide the label. Log out and back in for the navbar to reload the shell configuration.
+
+To display a label over the login logo, set the `LOGIN_LOGO_TAG` tenant property. Leave it empty to hide the label.
+
 To see the results of our effort we need to remove the default branding already installed under the `~/demo/demo` folder.
 
 IMPORTANT: Delete the `~/demo/demo` folder
@@ -52,7 +56,7 @@ image::images/chapter-6/image-5.webp[align="center"]
 
 Goowee applications can be configured from the _Tenant Properties_ _(System Administration -> Settings)_. That means each tenant can have a different setup.
 
-Login as `admin/admin`, click on _“System Administration -> Settings”_ on the Main Menu _(on the left)_ and search for “color”.
+Log in as `admin/admin`, click _“System Administration -> Settings”_ in the main menu _(on the left)_, and search for “color”.
 
 image::images/chapter-6/image-6.webp[align="center"]
 
@@ -92,7 +96,7 @@ image::images/chapter-6/image-8.webp[align="center"]
 image::images/chapter-6/image-9.webp[align="center"]
 image::images/chapter-6/image-10.webp[align="center"]
 
-Since we don’t want to manually set the colors every time we install the application, we can use the `onTenantInstall` method to set the _Tenant Properties_ like the follow.
+Since we don’t want to manually set the colors every time we install the application, we can use the `onInstall` method to set the _Tenant Properties_ like the follow.
 
 We are also adding some copy under the login form with a link to our website to let the users know who we are.
 
@@ -101,18 +105,17 @@ We are also adding some copy under the login form with a link to our website to 
 ----
 class BootStrap {
 
-    ServletContext servletContext
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
     TenantPropertyService tenantPropertyService
 
     ...
 
     def init = {
 
-        applicationService.onTenantInstall { String tenantId ->
+        gooweeApplication.onTenantInstall { String tenantId ->
             tenantPropertyService.setString('PRIMARY_BACKGROUND_COLOR', '#018B84')
             tenantPropertyService.setNumber('PRIMARY_BACKGROUND_COLOR_ALPHA', 0.25)
-            tenantPropertyService.setString('LOGIN_COPY', 'Copyright &copy; <a href="https://my-company.com" target="_blank">My Company</a><br/>Made in Italy')
+            tenantPropertyService.setString('LOGIN_COPY', '2024 &copy; <a href="https://my-company.com" target="_blank">My Company</a><br/>Made in Italy')
         }
 
     ...
@@ -159,18 +162,18 @@ $ ./gradlew bootRun
 Configuring Spring Security Core ...
 ... finished configuring Spring Security Core
 
-18:47:36.979 INFO  [restartedMain] d.elements.core.ApplicationService       : Available languages [en, it]
-18:47:36.982 INFO  [restartedMain] d.elements.core.ApplicationService       :
-18:47:36.982 INFO  [restartedMain] d.elements.core.ApplicationService       : --------------------------------------------------------------------------------
-18:47:36.982 INFO  [restartedMain] d.elements.core.ApplicationService       : APPLICATION: STARTING UP...
-18:47:36.982 INFO  [restartedMain] d.elements.core.ApplicationService       : --------------------------------------------------------------------------------
-18:47:36.987 INFO  [restartedMain] d.elements.core.ApplicationService       : Executing 'goowee.core.beforeInit'...
-18:47:37.029 INFO  [restartedMain] d.elements.core.ApplicationService       : Executing 'com.example.init'...
-18:47:37.030 INFO  [restartedMain] d.elements.core.ApplicationService       : Executing 'goowee.core.afterInit'...
-18:47:37.042 INFO  [restartedMain] d.elements.core.ApplicationService       : --------------------------------------------------------------------------------
-18:47:37.042 INFO  [restartedMain] d.elements.core.ApplicationService       : APPLICATION: STARTED.
-18:47:37.042 INFO  [restartedMain] d.elements.core.ApplicationService       : --------------------------------------------------------------------------------
-18:47:37.042 INFO  [restartedMain] d.elements.core.ApplicationService       :
+18:47:36.979 INFO  [restartedMain] d.elements.core.GooweeApplication       : Available languages [en, it]
+18:47:36.982 INFO  [restartedMain] d.elements.core.GooweeApplication       :
+18:47:36.982 INFO  [restartedMain] d.elements.core.GooweeApplication       : --------------------------------------------------------------------------------
+18:47:36.982 INFO  [restartedMain] d.elements.core.GooweeApplication       : APPLICATION: STARTING UP...
+18:47:36.982 INFO  [restartedMain] d.elements.core.GooweeApplication       : --------------------------------------------------------------------------------
+18:47:36.987 INFO  [restartedMain] d.elements.core.GooweeApplication       : Executing 'goowee.elements.core.beforeInit'...
+18:47:37.029 INFO  [restartedMain] d.elements.core.GooweeApplication       : Executing 'com.example.init'...
+18:47:37.030 INFO  [restartedMain] d.elements.core.GooweeApplication       : Executing 'goowee.elements.core.afterInit'...
+18:47:37.042 INFO  [restartedMain] d.elements.core.GooweeApplication       : --------------------------------------------------------------------------------
+18:47:37.042 INFO  [restartedMain] d.elements.core.GooweeApplication       : APPLICATION: STARTED.
+18:47:37.042 INFO  [restartedMain] d.elements.core.GooweeApplication       : --------------------------------------------------------------------------------
+18:47:37.042 INFO  [restartedMain] d.elements.core.GooweeApplication       :
 Grails application running at http://localhost:8080 in environment: development
 ----
 

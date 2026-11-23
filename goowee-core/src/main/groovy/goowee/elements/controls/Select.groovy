@@ -92,7 +92,7 @@ class Select extends Control {
      * {@code autoSelect} ({@link Boolean}, default {@code true}),
      * {@code multiple} ({@link Boolean}, default {@code false}),
      * {@code search} ({@link Boolean}),
-     * {@code allowClear} ({@link Boolean}),
+     * {@code allowClear} ({@link Boolean}, defaults to {@code true} for multiple selection),
      * {@code placeholder} ({@link String}),
      * {@code searchMinInputLength} ({@link Integer}, default {@code 0}),
      * {@code optionsFromRecordset}, {@code optionsFromList}, {@code optionsFromEnum},
@@ -174,6 +174,10 @@ class Select extends Control {
             )
         }
 
+        if (multiple && args.allowClear == null) {
+            allowClear = true
+        }
+
         // Automatically selects the first element if it's the only choice
         if (autoSelect && !nullable && options.size() == 1) {
             defaultValue = options[0].value
@@ -196,14 +200,11 @@ class Select extends Control {
 
     /**
      * Sets whether multiple values can be selected.
-     * When {@code true}, {@code allowClear} is forced to {@code false} as it is
-     * incompatible with multiple selection mode.
      *
      * @param value {@code true} to enable multiple selection; {@code null} is treated as {@code false}
      */
     void setMultiple(Boolean value) {
         this.multiple = (value == null) ? false : value
-        if (multiple) allowClear = false
     }
 
     /**
@@ -331,6 +332,8 @@ class Select extends Control {
             Collection collection = value as Collection
             if (ObjectUtils.hasId(collection[0])) {
                 super.setValue(value.collect { it['id'] })
+            } else {
+                super.setValue(value)
             }
 
         } else if (ObjectUtils.hasId(value)) {

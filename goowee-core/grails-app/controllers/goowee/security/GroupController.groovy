@@ -14,7 +14,8 @@
  */
 package goowee.security
 
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
+import goowee.commons.utils.LogUtils
 import goowee.elements.ElementsController
 import goowee.elements.components.TableRow
 import goowee.elements.contents.ContentCreate
@@ -36,9 +37,14 @@ import grails.plugin.springsecurity.annotation.Secured
 @Secured(['ROLE_SECURITY'])
 class GroupController implements ElementsController {
 
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
     SecurityService securityService
     TenantService tenantService
+
+    def handleException(Exception e) {
+        log.error LogUtils.logStackTrace(e)
+        display exception: e
+    }
 
     def index() {
         Boolean isSuperAdmin = securityService.isSuperAdmin()
@@ -53,21 +59,34 @@ class GroupController implements ElementsController {
         }
 
         def c = createContent(ContentTable)
+
+        c.header.nextButton.submit = ['table.filters.tenantId']
+
         c.table.with {
             filters.with {
-                fold = false
                 if (isSuperAdmin) {
                     addField(
                         class: Select,
-                        id: 'tenant',
+                        id: 'tenantId',
                         optionsFromRecordset: tenantService.list(),
+                        keys: ['tenantId'],
+                        cols: 2,
+                    )
+                } else {
+                    addField(
+                        class: TextField,
+                        id: 'tenantNoFilter',
+                        value: tenantService.currentTenantId,
+                        label: 'group.tenant',
+                        icon: 'fa-house-user',
+                        readonly: true,
                         cols: 2,
                     )
                 }
                 addField(
                     class: TextField,
                     id: 'name',
-                    cols: isSuperAdmin ? 10 : 12,
+                    cols: 10,
                 )
             }
 
@@ -129,11 +148,13 @@ class GroupController implements ElementsController {
             if (isSuperAdmin) {
                 addField(
                     class: Select,
-                    id: 'tenant',
+                    id: 'tenant.tenantId',
                     optionsFromRecordset: tenantService.list(),
-                    defaultValue: tenantService.defaultTenant.id,
+                    keys: ['tenantId'],
+                    defaultValue: params.'table.filters.tenantId' ?: tenantService.defaultTenantId,
                     search: false,
-                    noSelection: false,
+                    allowClear: false,
+                    readonly: obj,
                 )
             }
             addField(
@@ -156,7 +177,7 @@ class GroupController implements ElementsController {
     private List<Map> getLandingPages() {
         List<Map> results = []
 
-        for (feature in applicationService.mainFeatures.features) {
+        for (feature in gooweeApplication.mainFeatures.features) {
             List<Feature> subFeatures = feature.features
             if (subFeatures) {
                 for (subFeature in subFeatures) {
@@ -187,7 +208,7 @@ class GroupController implements ElementsController {
     }
 
     def onCreate() {
-        params.tenant = tenantService.get(params.tenant) ?: tenantService.currentTenant
+        params.tenantId = params.'tenant.tenantId' ?: tenantService.currentTenantId
         def obj = securityService.createGroup(params)
         if (obj.hasErrors()) {
             display errors: obj
@@ -202,7 +223,7 @@ class GroupController implements ElementsController {
         def c = buildForm(obj)
 
         if (obj.name == SecurityService.GROUP_USERS) {
-            c.form['name'].readonly = true
+            c.form.controls.name.readonly = true
             c.form.addField(
                 class: MultipleCheckbox,
                 id: 'authorities',
@@ -220,12 +241,12 @@ class GroupController implements ElementsController {
         }
 
         c.form.values = obj
-        c.form['authorities'].value = obj.authorities.collect { it.authority }
+        c.form.controls.authorities.value = obj.authorities.collect { it.authority }
         display content: c, modal: true
     }
 
     def onEdit() {
-        params.tenant = tenantService.get(params.tenant) ?: tenantService.currentTenant
+        params.tenantId = params.'tenant.tenantId' ?: tenantService.currentTenantId
         def obj = securityService.updateGroup(params)
         if (obj.hasErrors()) {
             display errors: obj

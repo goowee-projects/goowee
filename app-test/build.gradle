@@ -12,11 +12,31 @@ repositories {
 
 dependencies {
     implementation project(":goowee-core")
-//    implementation project(":goowee-extra")
+    implementation project(":goowee-extra")
 
     // Spring Boot DevTools may cause performance slowdowns or compatibility issues on larger applications
     developmentOnly "org.springframework.boot:spring-boot-devtools"
 
-    // LDAP
-    implementation "org.apache.grails:grails-spring-security-ldap:${grailsVersion}"
+}
+
+bootRun {
+    jvmArgs(
+            "-Xms2g",
+            "-Xmx2g",
+    )
+}
+
+configurations.all {
+    resolutionStrategy {
+        cacheChangingModulesFor 0, "seconds"
+    }
+}
+
+assets {
+    skipNonDigests = true
+    minifyOptions = [
+            //SIMPLE (default) or ADVANCED or WHITESPACE_ONLY
+            optimizationLevel: "SIMPLE",
+//            excludes: ["**/libs/**"]
+    ]
 }

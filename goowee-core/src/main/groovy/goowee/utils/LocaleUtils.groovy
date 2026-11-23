@@ -18,14 +18,9 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 /**
- * Utility class for handling localized properties in objects.
- * <p>
- * Provides methods to set, get, and check localized properties
- * on objects using language-specific suffixes (e.g., '_en', '_it').
- * </p>
- *
- * Author: Gianluca Sartori
+ * @author Gianluca Sartori
  */
+
 @Slf4j
 @CompileStatic
 class LocaleUtils {
@@ -43,6 +38,7 @@ class LocaleUtils {
             pt_pt: 'pt',
             pt_br: 'br',
             zh_cn: 'cn',
+            zh_tw: 'tw',
             cs   : 'cs_cz',
             da   : 'dk',
             ja   : 'jp',
@@ -53,18 +49,6 @@ class LocaleUtils {
         return langFlag
     }
 
-    /**
-     * Sets a localized property value on an object.
-     * <p>
-     * If no language is provided, the default English ('_en') property is set.
-     * If the object does not have the specified localized property, logs an error.
-     * </p>
-     *
-     * @param obj the object on which to set the property
-     * @param propertyName the base name of the property
-     * @param value the value to assign
-     * @param language the language code (optional, e.g., 'en', 'it')
-     */
     static void setLocalizedProperty(Object obj, String propertyName, String value, String language = null) {
         if (!language) {
             obj[propertyName + '_en'] = value
@@ -78,18 +62,6 @@ class LocaleUtils {
         }
     }
 
-    /**
-     * Gets the localized value of a property from an object.
-     * <p>
-     * Returns the value for the specified language if it exists;
-     * otherwise, returns the default English ('_en') value.
-     * </p>
-     *
-     * @param obj the object from which to get the property
-     * @param propertyName the base name of the property
-     * @param language the language code to retrieve
-     * @return the localized value if available, otherwise the default value
-     */
     static Object getLocalizedProperty(Object obj, String propertyName, String language) {
         def hasProperty = hasLocalizedProperty(obj, propertyName, language)
         def defaultValue = obj[propertyName + '_en']
@@ -102,14 +74,6 @@ class LocaleUtils {
         return localizedValue ?: defaultValue
     }
 
-    /**
-     * Checks if an object has a localized property for a given language.
-     *
-     * @param obj the object to check
-     * @param propertyName the base name of the property
-     * @param language the language code to check
-     * @return true if the localized property exists, false otherwise
-     */
     static Boolean hasLocalizedProperty(Object obj, String propertyName, String language) {
         return obj.hasProperty(propertyName + '_' + language)
     }

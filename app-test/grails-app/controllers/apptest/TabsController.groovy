@@ -20,9 +20,12 @@ import goowee.elements.contents.ContentCreate
 import goowee.elements.contents.ContentEdit
 import goowee.elements.controls.Select
 import goowee.elements.controls.TextField
-import goowee.elements.core.ComponentEvent
+import goowee.elements.core.InvocationDefinition
+import goowee.elements.core.Hotkey
 import goowee.elements.style.TextDefault
+import grails.gorm.multitenancy.CurrentTenant
 
+@CurrentTenant
 class TabsController implements ElementsController {
 
     def index() {
@@ -47,7 +50,8 @@ class TabsController implements ElementsController {
                 stretch: true,
                 group: true,
                 loading: false,
-            ).component.addAction(action: 'onHide', text: "Hide!")
+                hotkey: Hotkey.F12,
+            ).component.addAction(action: 'onHide', text: "Hide!", hotkey: Hotkey.F24)
         }
 
         Form f1 = c.addComponent(Form, 'f1')
@@ -235,7 +239,7 @@ class TabsController implements ElementsController {
 
         } else {
             def t = createTransition()
-            t.confirmMessage('Sicuro di voler continuare?', new ComponentEvent(
+            t.confirmMessage('Sicuro di voler continuare?', new InvocationDefinition(
                 controller: 'table',
                 action: 'index',
                 params: [f1: params.f1, f2: params.f2, table1: params.table1],

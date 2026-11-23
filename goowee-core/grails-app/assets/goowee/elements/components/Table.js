@@ -1,4 +1,4 @@
-//= require TableStickyHeaders
+//= require TableStickyHeader
 
 class Table extends Component {
 
@@ -32,12 +32,7 @@ class Table extends Component {
         }
 
         let $table = $element.find('table');
-        $table.stickyTableHeaders('destroy')
-        $table.stickyTableHeaders({
-            scrollableElement: '.component-table-dataset',
-            fixedOffset: stickyHeaderOffset,
-            zIndex: stickyHeaderZIndex == 0 ? 1 : stickyHeaderZIndex,
-        });
+        TableStickyHeader.initialize($table, stickyHeaderOffset, stickyHeaderZIndex);
     }
 
     static onScroll(event) {
@@ -128,11 +123,14 @@ class Table extends Component {
 
         Component.setDisplay($groupActions, value);
         Component.setDisplay($actionsLabel, !value);
+        TableStickyHeader.refresh($element.closest('table'));
     }
 
     static displaySelectAllRows($element, value) {
         let $tableSelectAllRows = $element.closest('table').find('.component-table-selection-header input');
-        Checkbox.setValue($tableSelectAllRows, TypedValue.bool(value));
+        if ($tableSelectAllRows.prop('checked') !== value) {
+            Checkbox.setValue($tableSelectAllRows, TypedValue.bool(value));
+        }
     }
 }
 

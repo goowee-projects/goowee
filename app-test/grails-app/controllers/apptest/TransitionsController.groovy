@@ -21,11 +21,12 @@ import goowee.elements.components.Label
 import goowee.elements.components.Separator
 import goowee.elements.contents.ContentForm
 import goowee.elements.controls.*
-import goowee.elements.core.ComponentEvent
+import goowee.elements.core.InvocationDefinition
 import goowee.elements.style.TextStyle
 import goowee.security.SecurityService
 import goowee.types.Money
 import goowee.types.Quantity
+import goowee.types.QuantityService
 import goowee.types.QuantityUnit
 
 import java.time.LocalDate
@@ -36,6 +37,7 @@ class TransitionsController implements ElementsController {
 
     SecurityService securityService
     PersonService personService
+    QuantityService quantityService
 
     def index() {
         // PAGE SETUP
@@ -50,7 +52,7 @@ class TransitionsController implements ElementsController {
                     class: Label,
                     id: 'transitioned',
                     text: 'Hai confermato, bravo!',
-                    textColor: '#cc0000',
+                    textColor: '#aa0000',
                     backgroundColor: "rgba(${primaryBackgroundColorInt.join(', ')}, ${primaryBackgroundColorAlpha})",
                     tag: true,
                     displayLabel: false,
@@ -63,21 +65,29 @@ class TransitionsController implements ElementsController {
                 id: 'messageButton',
                 action: 'showMessage',
                 displayLabel: false,
-                cols: 4,
+                cols: 3,
             )
             addField(
                 class: Button,
                 id: 'errorButton',
                 action: 'showError',
                 displayLabel: false,
-                cols: 4,
+                cols: 3,
             )
             addField(
                 class: Button,
                 id: 'confirmButton',
                 action: 'showConfirm',
                 displayLabel: false,
-                cols: 4,
+                cols: 3,
+            )
+            addField(
+                class: Button,
+                id: 'shakeButton',
+                action: 'shake',
+                text: 'SHAKE!',
+                displayLabel: false,
+                cols: 3,
             )
             addField(
                 class: Button,
@@ -117,7 +127,7 @@ class TransitionsController implements ElementsController {
                 keys: ['id'],
                 loading: true,
                 onChange: 'onSelectChange',
-                submit: 'form',
+                submit: ['form', 'user1', 'textfield'],
                 params: [id: 10],
                 textStyle: TextStyle.LINE_THROUGH,
                 cols: 12,
@@ -131,7 +141,7 @@ class TransitionsController implements ElementsController {
 //                    onChange: 'onSelect2Change',
                 textStyle: TextStyle.BOLD,
                 cols: 12,
-            ).on(event: 'change', submit: 'form', action: 'onSelect2Change')
+            ).component.on(event: 'change', submit: 'form', action: 'onSelect2Change')
 
             addField(
                 class: Select,
@@ -207,14 +217,14 @@ class TransitionsController implements ElementsController {
             addField(class: TextField, id: 'f2', value: 'Another value...', cols: 6)
         }
 
-        c.form['select2'].value = 'user3'
-        c.form['textfield'].value = 'My text'
-        c.form['moneyfield'].value = new Money(33)
-        c.form['numberfield'].value = 55.2
-        c.form['quantityfield'].value = new Quantity(12, QuantityUnit.L)
-//        c.form['datefield'].value = LocalDate.now()
-//        c.form['timefield'].value = LocalTime.now()
-        c.form['multiple'].value = ['admin', 'user']
+        c.form.controls.select2.value = 'user3'
+        c.form.controls.textfield.value = 'My text'
+        c.form.controls.moneyfield.value = new Money(33)
+        c.form.controls.numberfield.value = 55.2
+        c.form.controls.quantityfield.value = new Quantity(12, QuantityUnit.L)
+//        c.form.controls.datefield.value = LocalDate.now()
+//        c.form.controls.timefield.value = LocalTime.now()
+        c.form.controls.multiple.value = ['admin', 'user']
 
         // RENDERING
         //
@@ -234,7 +244,7 @@ class TransitionsController implements ElementsController {
     }
 
     def showConfirm() {
-        def onConfirm = new ComponentEvent(
+        def onConfirm = new InvocationDefinition(
             controller: 'transitions',
             action: 'index',
             params: [transitioned: true],
@@ -242,6 +252,18 @@ class TransitionsController implements ElementsController {
         )
         def t = createTransition()
         t.confirmMessage('transitions.messagebox.confirm', [securityService.currentUser.fullname], onConfirm)
+        display transition: t
+    }
+
+    def shake() {
+        def t = createTransition()
+        t.loading(false)
+        for (Integer i = 0; i < 5; i++) {
+            t.delay(300)
+            t.scrollTo('bottom')
+            t.delay(300)
+            t.scrollTo('top')
+        }
         display transition: t
     }
 
@@ -253,6 +275,7 @@ class TransitionsController implements ElementsController {
 
     def onSelectChange() {
         println params
+        println "Selected user: ${params.user1}, text: ${params.textfield}"
 
         sleep(1000)
         def t = createTransition()
@@ -318,6 +341,7 @@ class TransitionsController implements ElementsController {
 
         //setting value and unit
         t.setValue('quantityfield', new Quantity(500, QuantityUnit.M))
+        t.call('quantityfield', 'setAvailableUnits', [units: quantityService.listAllUnits()])
 
         t.setValue('textfield', 'Test 12345')
 

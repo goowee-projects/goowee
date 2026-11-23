@@ -3,12 +3,18 @@
 // Temporary solutions until we get support for static fields
 // See: https://github.com/google/closure-compiler/issues/2731
 let PageMessageBox_isActive = false;
+let PageMessageBox_isHiding = false;
+let PageMessageBox_showPending = false;
 let PageMessageBox_dialog = null;
 
 class PageMessageBox extends Component {
 
     static get isActive() { return PageMessageBox_isActive }
     static set isActive(value) { PageMessageBox_isActive = value }
+    static get isHiding() { return PageMessageBox_isHiding }
+    static set isHiding(value) { PageMessageBox_isHiding = value }
+    static get showPending() { return PageMessageBox_showPending }
+    static set showPending(value) { PageMessageBox_showPending = value }
     static get dialog() { return PageMessageBox_dialog }
     static set dialog(value) { PageMessageBox_dialog = value }
 
@@ -16,12 +22,15 @@ class PageMessageBox extends Component {
 
     static initialize() {
         PageMessageBox.isActive = false;
+        PageMessageBox.isHiding = false;
+        PageMessageBox.showPending = false;
         PageMessageBox.dialog = new bootstrap.Modal('#page-messagebox', {
             backdrop: 'static',
         });
 
         PageMessageBox.$self.off('show.bs.modal').on('show.bs.modal', PageMessageBox.onShow);
         PageMessageBox.$self.off('shown.bs.modal').on('shown.bs.modal', PageMessageBox.onShown);
+        PageMessageBox.$self.off('hidden.bs.modal').on('hidden.bs.modal', PageMessageBox.onHidden);
         PageMessageBox.$self.off('keydown.messagebox').on('keydown.messagebox', PageMessageBox.onKeyDown);
         PageMessageBox.$self.off('hide.bs.modal').on('hide.bs.modal', PageMessageBox.onHide);
     }
@@ -42,14 +51,27 @@ class PageMessageBox extends Component {
         Component.setFocus(PageMessageBox.$self.attr('tabindex', '-1'), true);
     }
 
+    static onHidden(event) {
+        PageMessageBox.isActive = false;
+        PageMessageBox.isHiding = false;
+        PageKeyPress.initializeKeyboardEvents();
+
+        if (PageMessageBox.showPending) {
+            PageMessageBox.showPending = false;
+            PageMessageBox.show();
+        }
+    }
+
     static onKeyDown(event) {
-        if (event.key !== 'Enter' || event.target !== PageMessageBox.$self[0]) return;
+        if (event.key !== 'Enter') return;
+        if (event.target !== PageMessageBox.$self[0] && !PageKeyPress.isHotkeyModifierPressed(event)) return;
 
         event.preventDefault();
         event.stopImmediatePropagation();
     }
 
     static onHide(event) {
+        PageMessageBox.isHiding = true;
         document.activeElement.blur();
 
         if (PageModal.isActive) {
@@ -177,12 +199,23 @@ class PageMessageBox extends Component {
     }
 
     static show() {
+        LoadingScreen.show(false);
+
+        if (PageMessageBox.isHiding) {
+            PageMessageBox.showPending = true;
+            return;
+        }
+
         PageMessageBox.dialog.show('#page-messagebox');
         PageMessageBox.isActive = true;
+        PageKeyPress.setHotkeysVisible(false);
         Component.setFocus(PageMessageBox.$self.attr('tabindex', '-1'), true);
     }
 
     static hide() {
+        if (PageMessageBox.isActive) {
+            PageMessageBox.isHiding = true;
+        }
         PageMessageBox.dialog.hide();
         PageMessageBox.isActive = false;
     }

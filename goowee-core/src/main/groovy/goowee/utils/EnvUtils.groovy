@@ -19,52 +19,40 @@ import groovy.transform.CompileStatic
 import groovy.util.logging.Slf4j
 
 /**
- * Utility class for detecting the current Grails application environment.
- * <p>
- * Provides helper methods to check if the application is running in development,
- * test, or production environments, as well as retrieving the current environment name.
- * </p>
- *
- * Author: Gianluca Sartori
+ * @author Gianluca Sartori
  */
+
 @Slf4j
 @CompileStatic
 class EnvUtils {
 
     /**
-     * Checks if the application is running in the Grails development environment.
-     *
-     * @return true if the current environment is 'development', false otherwise
+     * Returns true if the the app is running in grails DEV environment
+     * @return true if the the app is running in grails DEV environment
      */
     static Boolean isDevelopment() {
         return currentEnvironment == 'development'
     }
 
     /**
-     * Checks if the application is running in the Grails test environment.
-     *
-     * @return true if the current environment is 'test', false otherwise
+     * Returns true if the the app is running in grails TEST environment
+     * @return true if the the app is running in grails TEST environment
      */
     static Boolean isTesting() {
         return currentEnvironment == 'test'
     }
 
     /**
-     * Checks if the application is running in the Grails production environment.
-     *
-     * @return true if the current environment is 'production', false otherwise
+     * Returns true if the the app is running in grails PROD environment
+     * @return true if the the app is running in grails PROD environment
      */
     static Boolean isProduction() {
         return currentEnvironment == 'production'
     }
 
     /**
-     * Returns the name of the currently running Grails environment.
-     * <p>
-     * Typical return values are 'development', 'test', or 'production'.
-     * </p>
-     *
-     * @return the name of the current environment as a string
+     * Returns a string specifying the currently running environment: 'dev', 'test' or 'prod'
+     * @return a string specifying the currently running environment: 'dev', 'test' or 'prod'
      */
     static String getCurrentEnvironment() {
         return Environment.currentEnvironment.name

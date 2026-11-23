@@ -41,7 +41,7 @@ class ContentHomeTagLib implements WebRequestAware {
         List<Menu> favourites = parent.items.findAll { !it.hasSubitems() }
 
         for (feature in favourites) {
-            out << render(template: tagsTemplatesPath + "ContentHomeFavourite", model: [feature: feature])
+            out << g.render(template: tagsTemplatesPath + "ContentHomeFavourite", model: [feature: feature])
         }
     }
 

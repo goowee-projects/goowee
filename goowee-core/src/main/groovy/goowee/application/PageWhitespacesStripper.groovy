@@ -14,11 +14,9 @@
  */
 package goowee.application
 
-import groovy.transform.CompileStatic
 import org.apache.logging.log4j.util.Chars
 import org.grails.gsp.GroovyPageSourceDecorator
 
-@CompileStatic
 class PageWhitespacesStripper implements GroovyPageSourceDecorator {
 
     @Override
@@ -34,7 +32,7 @@ class PageWhitespacesStripper implements GroovyPageSourceDecorator {
         char prev = '*'
 
         while (i < length) {
-            char[] tag = '12345678' as char[]
+            char[] tag = '12345678'
             int tagLength = tag.length
             if (i < sb.length() - tagLength) {
                 sb.getChars(i, i + tagLength, tag as char[], 0)

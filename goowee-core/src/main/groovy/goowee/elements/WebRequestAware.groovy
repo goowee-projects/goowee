@@ -85,7 +85,11 @@ trait WebRequestAware {
      */
     Boolean isMobileDevice() {
         GrailsParameterMap params = getRequestParams()
-        return params.mobile || params._21IsMobileDevice ? true : false
+
+        // These parameters bypass ParamsInterceptor deserialization
+        // since they need to work across the whole application
+        return Boolean.parseBoolean(params.mobile?.toString()) ||
+            Boolean.parseBoolean(params._21IsMobileDevice?.toString())
     }
 
     /**
@@ -512,8 +516,23 @@ trait WebRequestAware {
      * @return the 'fontSize' parameter configured by the current user in its user profile
      */
     Integer getFontSize() {
-        Integer fontSize = session['_21FontSize'] as Integer
-        return fontSize ?: 14
+        return session['_21FontSize'] as Integer
+    }
+
+    /**
+     * Sets the 'mobileFontSize' parameter configured by the current user in its user profile
+     * @param value The 'mobileFontSize' parameter configured by the current user in its user profile
+     */
+    void setMobileFontSize(Integer value) {
+        session['_21MobileFontSize'] = value
+    }
+
+    /**
+     * Returns the 'mobileFontSize' parameter configured by the current user in its user profile
+     * @return the 'mobileFontSize' parameter configured by the current user in its user profile
+     */
+    Integer getMobileFontSize() {
+        return session['_21MobileFontSize'] as Integer
     }
 
     /**

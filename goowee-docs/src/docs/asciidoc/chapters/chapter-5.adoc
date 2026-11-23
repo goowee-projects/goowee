@@ -51,17 +51,16 @@ The _mock-up_ code uses the `PersonService` we are going to create in a minute.
 ----
 package com.example
 
-import goowee.core.ApplicationService
+import goowee.core.GooweeApplication
 import java.time.LocalDate
 
 class BootStrap {
 
-    ServletContext servletContext
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
     PersonService personService
 
     def init = {
-        applicationService.onDevInstall { String tenantId ->
+        gooweeApplication.onDevInstall { String tenantId ->
             personService.create(
                     firstname: 'Felicity',
                     lastname: 'Green',
@@ -79,7 +78,7 @@ class BootStrap {
             )
         }
 
-        applicationService.onInit {
+        gooweeApplication.onInit {
             registerFeature(
                     controller: 'person',
                     icon: 'fa-user',
@@ -101,7 +100,7 @@ GORM will generate a database table for us. Let’s see:
 $ ./gradlew bootRun
 ----
 
-Login as Superuser (`super/super`).
+Log in as the superuser (`super/super`).
 
 Click on “*Connection Sources*” in the Main Menu _(on the left)_ and copy the connection URL:
 
@@ -136,7 +135,7 @@ import grails.gorm.multitenancy.CurrentTenant
 import jakarta.annotation.PostConstruct
 
 @CurrentTenant
-@CompileStaic
+@CompileStatic
 class PersonService {
 
     @PostConstruct
@@ -186,7 +185,7 @@ class PersonService {
         return query.list(fetchParams)
     }
 
-    Number count(Map filterParams = [:]) {
+    Integer count(Map filterParams = [:]) {
         def query = buildQuery(filterParams)
         return query.count()
     }
@@ -202,7 +201,7 @@ class PersonService {
 
     @Transactional
     @CompileDynamic
-    @Requires({ args.id  })
+    @Requires({ args.id })
     TPerson update(Map args = [:]) {
         if (args.failOnError == null) args.failOnError = false
 
@@ -412,4 +411,3 @@ video::lB12PqKSRXw[youtube,width=640,height=480]
 This chapter closes the first round on the Goowee basics.
 
 In the next chapter we are going to explore the Tenant Properties to configure the application to reflect our customer’s brand.
-

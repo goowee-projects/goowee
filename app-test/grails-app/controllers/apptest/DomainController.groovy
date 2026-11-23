@@ -21,6 +21,8 @@ import goowee.elements.contents.ContentTable
 
 class DomainController implements ElementsController {
 
+    CompanyService companyService
+
     def index() {
         def c = createContent(ContentTable)
         c.header.removeNextButton()

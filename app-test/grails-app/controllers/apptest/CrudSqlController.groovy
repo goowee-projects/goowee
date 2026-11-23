@@ -14,7 +14,7 @@
  */
 package apptest
 
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
 import goowee.commons.utils.SqlUtils
 import goowee.elements.ElementsController
 import goowee.elements.components.TableRow
@@ -32,7 +32,7 @@ import java.time.LocalDate
 
 class CrudSqlController implements ElementsController {
 
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
 
     def dataSource
 
@@ -41,24 +41,24 @@ class CrudSqlController implements ElementsController {
 
     @PostConstruct
     void init() {
-//        applicationService.registerPrettyPrinter('COMPANY', '${it.name} (${it.date_created.toLocalDate().year})')
-        applicationService.registerPrettyPrinter('COMPANY', '${it.name}')
-        applicationService.registerTransformer('COMPANY') { value ->
+//        gooweeApplication.registerPrettyPrinter('COMPANY', '${it.name} (${it.date_created.toLocalDate().year})')
+        gooweeApplication.registerPrettyPrinter('COMPANY', '${it.name}')
+        gooweeApplication.registerTransformer('COMPANY') { value ->
             Map r = SqlUtils.get(dataSource, tblCompany, [id: value])
             return r.name
         }
-        applicationService.registerTransformer('2MONEY') { value ->
+        gooweeApplication.registerTransformer('2MONEY') { value ->
             if (!value || !value[0]) return null
             return new Money(value[0], value[1])
         }
-        applicationService.registerTransformer('2QUANTITY') { value ->
+        gooweeApplication.registerTransformer('2QUANTITY') { value ->
             if (!value || !value[0]) return null
             return new Quantity(value[0], value[1] as QuantityUnit)
         }
     }
 
     def index() {
-        applicationService.registerPrettyPrinter('COMPANY', '${it.name}')
+        gooweeApplication.registerPrettyPrinter('COMPANY', '${it.name}')
         def c = createContent(ContentTable)
         c.table.with {
             filters.with {
@@ -123,7 +123,7 @@ class CrudSqlController implements ElementsController {
     }
 
     private buildForm(Map args = [:]) {
-        applicationService.registerTransformer('MONEY') { value ->
+        gooweeApplication.registerTransformer('MONEY') { value ->
             if (value == null) return null
             return new Money((value as String).replace(',', '.') as BigDecimal)
         }
@@ -231,7 +231,7 @@ class CrudSqlController implements ElementsController {
     def edit() {
         def c = buildForm(create: false)
         c.form.values = SqlUtils.get(dataSource, tblPerson, [id: params.id])
-        c.form['prezzo'].value = new Money(5.1)
+        c.form.controls.prezzo.value = new Money(5.1)
         display content: c, modal: true
     }
 

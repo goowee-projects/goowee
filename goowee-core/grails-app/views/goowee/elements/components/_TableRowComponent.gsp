@@ -4,7 +4,7 @@ ATTENTION PLEASE
 ================
 
 When modifying this template, please update also:
- - `_TableRow.gsp`
+- `_TableRow.gsp`
 --%>
 <tr class="component-table-row ${c.textStyle} ${c.cssClass}"
     style="${c.backgroundColor ? '--bs-table-striped-bg: ' + c.backgroundColor + '; ' : ''}${c.cssStyleColors}"
@@ -64,7 +64,7 @@ When modifying this template, please update also:
         <g:if test="${!cell.isColumnSpanned()}">
             <g:if test="${cell.row.isHeader}">
                 <th colspan="${cell.colspan}"
-                    class="component-table-header ${cell.column} ${cell.id} ${cell.textAlign} ${cell.verticalAlign}"
+                    class="component-table-header col-${cell.column} ${cell.id} ${cell.textAlign} ${cell.verticalAlign}"
                     data-21-component="${cell.getClassName()}"
                     data-21-id="${cell.getId()}"
                     data-21-properties="${cell.propertiesAsJSON}"
@@ -73,7 +73,7 @@ When modifying this template, please update also:
             </g:if>
 
             <g:else>
-                <td class="component-table-cell ${cell.column} ${cell.id} ${cell.textAlign} ${cell.verticalAlign} ${cell.cssClass}"
+                <td class="component-table-cell col-${cell.column} ${cell.id} ${cell.textAlign} ${cell.verticalAlign} ${cell.cssClass}"
                     colspan="${cell.colspan}"
                     data-21-component="${cell.getClassName()}"
                     data-21-id="${cell.getId()}"
@@ -81,8 +81,8 @@ When modifying this template, please update also:
                     data-21-events="${cell.eventsAsJSON}"
                     ${cell.cssStyleColors ? raw('style="' + cell.cssStyleColors + '"') : ''}
                 ><div ${cell.label ? '' : raw('class="input-group control-focus-group"')}
-                      ${c.table.widths[column] ? raw('style="width: ' + c.table.widths[column] + 'px"') : ''}>
-                    <render:component instance="${cell.component}" />
+                ${c.table.widths[column] ? raw('style="width: ' + c.table.widths[column] + 'px"') : ''}>
+                <render:component instance="${cell.component}" />
                 </div>
                 </td>
             </g:else>

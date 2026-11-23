@@ -64,13 +64,24 @@ tasks.withType(Test) {
 
 assets {
     packagePlugin = true
-    minifyCss = true
-    minifyJs = true
     minifyOptions = [
-        //SIMPLE (default) or ADVANCED or WHITESPACE_ONLY
-        optimizationLevel: "SIMPLE",
+            //SIMPLE (default) or ADVANCED or WHITESPACE_ONLY
+            optimizationLevel: "SIMPLE",
     ]
     excludes = [
-        'webjars/**', // We provide our own external libraries
+            'webjars/**',
     ]
+}
+
+// Keep generated plugin assets outside processResources' output: its Sync step
+// otherwise removes the files produced by assetPluginPackage on a clean build.
+afterEvaluate {
+    def packageAssets = tasks.named("assetPluginPackage") {
+        destinationDirectory = layout.buildDirectory.dir("generated/plugin-assets/META-INF")
+    }
+    tasks.named("processResources") {
+        from(packageAssets) {
+            into "META-INF"
+        }
+    }
 }

@@ -14,7 +14,6 @@
  */
 package goowee.database
 
-
 import goowee.commons.utils.SqlUtils
 import goowee.elements.core.Elements
 import goowee.tenant.TenantService
@@ -29,9 +28,9 @@ class GormExplorerService {
 
     List getDomainProperties(Class domainClass) {
         List results = []
-        domainClass.constrainedProperties.each {
-            if (it.value.property.propertyType !in Set) {
-                results << it
+        for (Map.Entry entry in domainClass.constrainedProperties.entrySet()) {
+            if (entry.value.property.propertyType !in Set) {
+                results << entry
             }
         }
         return results
@@ -39,9 +38,9 @@ class GormExplorerService {
 
     List<String> getDomainColumns(Class domainClass) {
         List<String> results = ['id']
-        domainClass.constrainedProperties.each {
-            if (it.value.property.propertyType !in Set) {
-                results << it.key.toString()
+        for (Map.Entry entry in domainClass.constrainedProperties.entrySet()) {
+            if (entry.value.property.propertyType !in Set) {
+                results << entry.key.toString()
             }
         }
         return results
@@ -49,9 +48,9 @@ class GormExplorerService {
 
     Map<String, String> getDomainFieldNames(Class domainClass) {
         Map<String, String> results = [id: 'id']
-        domainClass.constrainedProperties.each {
-            if (it.value.property.propertyType !in Set) {
-                results << [(it.key): it.key.toString()]
+        for (Map.Entry entry in domainClass.constrainedProperties.entrySet()) {
+            if (entry.value.property.propertyType !in Set) {
+                results << [(entry.key): entry.key.toString()]
             }
         }
         return results

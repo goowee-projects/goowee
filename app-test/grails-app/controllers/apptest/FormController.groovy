@@ -14,7 +14,7 @@
  */
 package apptest
 
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
 import goowee.elements.ElementsController
 import goowee.elements.components.*
 import goowee.elements.contents.ContentForm
@@ -29,7 +29,7 @@ import java.time.LocalTime
 
 class FormController implements ElementsController {
 
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
     QuantityService quantityService
     PersonService personService
 
@@ -113,14 +113,14 @@ class FormController implements ElementsController {
         def isReadonly = requireParam('isReadonly')
         def animate = requireParam('animate')
 
-        applicationService.registerTransformer('PERSON') {
+        gooweeApplication.registerTransformer('PERSON') {
             return "PERSON_TRANS [${it.id}] - ${it.id}"
         }
-        applicationService.registerTransformer('CUSTOM_TRANSFORMER') {
+        gooweeApplication.registerTransformer('CUSTOM_TRANSFORMER') {
             return "CUSTOM_TRANS [${it.key}] - ${it.id} ${it.lastname}"
         }
 
-        applicationService.registerPrettyPrinter('OBJ2TEXT', '${it.name}')
+        gooweeApplication.registerPrettyPrinter('OBJ2TEXT', '${it.name}')
 
         setReturnPoint()
 
@@ -202,6 +202,8 @@ class FormController implements ElementsController {
             addField(
                 class: TextField,
                 id: 'textfield',
+                maxSize: 50,
+                displayMaxSize: true,
                 textTransform: TextTransform.UPPERCASE,
                 help: 'Questo è un messaggio di aiuto per te che non sai cosa diavolo fare',
             )
@@ -233,7 +235,7 @@ class FormController implements ElementsController {
                 class: NumberField,
                 id: 'numberfield',
                 value: 0,
-                cols: 6,
+                cols: 3,
             ).component.addAction(
                 action: 'increment',
                 submit: 'form',
@@ -242,6 +244,20 @@ class FormController implements ElementsController {
             ).addAction(
                 action: 'decrement',
                 submit: 'form',
+                icon: 'fa-minus',
+                text: '',
+            )
+            addField(
+                class: NumberField,
+                id: 'numberfieldJS',
+                value: 0,
+                cols: 3,
+            ).component.addAction(
+                call: 'incrementNumberfieldJS',
+                icon: 'fa-plus',
+                text: '',
+            ).addAction(
+                call: 'decrementNumberfieldJS',
                 icon: 'fa-minus',
                 text: '',
             )
@@ -274,6 +290,84 @@ class FormController implements ElementsController {
                 cols: 6,
             )
             addField(
+                class: ProgressBar,
+                id: 'progress',
+                value: 70,
+                max: 140,
+                cols: 9,
+            )
+            addField(
+                class: Button,
+                id: 'progressButton',
+                text: '-',
+                action: 'decrementProgress',
+                submit: 'progress',
+                group: true,
+                loading: false,
+                cols: 3,
+            ).component.addAction(
+                action: 'incrementProgress',
+                text: '+',
+                submit: 'progress',
+                loading: false,
+            ).addAction(
+                action: 'togglePercentage',
+                text: '%',
+                loading: false,
+            )
+            addField(
+                class: ProgressBar,
+                id: 'progress2',
+                value: 70,
+                cols: 9,
+            )
+            addField(
+                class: Button,
+                id: 'progressButton2',
+                text: 'Indefinite',
+                readonly: true,
+                cols: 3,
+            )
+            addField(
+                class: Image,
+                id: 'loginBackground',
+                image: linkPublicResource('brand/login-background.jpg'),
+                fitWidth: false,
+                backgroundColor: 'black',
+                displayLabel: false,
+                cols: 6,
+                rows: 6,
+            )
+            addField(
+                class: Image,
+                id: 'logo',
+                image: linkPublicResource('brand/logo.png'),
+                fitWidth: false,
+                padding: 1,
+                backgroundColor: 'black',
+                displayLabel: false,
+                cols: 6,
+                rows: 6,
+            )
+            addField(
+                class: Image,
+                id: 'loginBackground2',
+                image: linkPublicResource('brand/login-background.jpg'),
+                keepAspectRatio: false,
+                displayLabel: false,
+                cols: 12,
+                rows: 6,
+            )
+            addField(
+                class: Image,
+                id: 'loginBackground3',
+                image: linkPublicResource('brand/login-background.jpg'),
+                fitWidth: true,
+                displayLabel: false,
+                cols: 12,
+                rows: 6,
+            )
+            addField(
                 class: Upload,
                 id: 'upload1',
             )
@@ -293,18 +387,18 @@ class FormController implements ElementsController {
                 .addAction(action: 'anotherAction3')
                 .addAction(action: 'anotherAction4')
 
-            def buttonGroupField = addField(
+            def buttonGroup = addField(
                 class: Button,
                 id: 'buttonGroup',
                 stretch: true,
                 group: true,
                 backgroundColor: Color.DANGER_BACKGROUND,
                 textColor: Color.DANGER_TEXT,
-            )
-            buttonGroupField.component.addAction(action: 'anotherAction1', backgroundColor: Color.WARNING_BACKGROUND, textColor: Color.WARNING_TEXT)
-            buttonGroupField.component.addAction(action: 'anotherAction2', backgroundColor: Color.SUCCESS_BACKGROUND, textColor: Color.SUCCESS_TEXT)
-            buttonGroupField.component.addAction(action: 'anotherAction3', backgroundColor: Color.INFO_BACKGROUND, textColor: Color.INFO_TEXT)
-            buttonGroupField.component.addAction(action: 'anotherAction4', backgroundColor: mainBackgroundColor, textColor: Color.DISABLED_TEXT)
+            ).component as Button
+            buttonGroup.addAction(action: 'anotherAction1', backgroundColor: Color.WARNING_BACKGROUND, textColor: Color.WARNING_TEXT)
+            buttonGroup.addAction(action: 'anotherAction2', backgroundColor: Color.SUCCESS_BACKGROUND, textColor: Color.SUCCESS_TEXT)
+            buttonGroup.addAction(action: 'anotherAction3', backgroundColor: Color.INFO_BACKGROUND, textColor: Color.INFO_TEXT)
+            buttonGroup.addAction(action: 'anotherAction4', backgroundColor: mainBackgroundColor, textColor: Color.DISABLED_TEXT)
             addField(
                 class: Separator,
                 id: 'separator',
@@ -379,7 +473,7 @@ class FormController implements ElementsController {
 
             addField(
                 class: Label,
-                id: 'label',
+                id: 'label1',
                 label: 'The label of a label',
             )
             addField(
@@ -448,19 +542,19 @@ class FormController implements ElementsController {
             )
         }
 
-        c.form['datefield'].value = LocalDate.now()
-        c.form['timefield'].value = LocalTime.now()
-        c.form['datetimefield'].value = LocalDateTime.now()
-        c.form['label'].text = """
+        c.form.controls.datefield.value = LocalDate.now()
+        c.form.controls.timefield.value = LocalTime.now()
+        c.form.controls.datetimefield.value = LocalDateTime.now()
+        c.form.fields.label1Field.component.text = """
             [label.text] Lorem ipsum
                     dolor sit amet
         """
-        c.form['label2'].text = """[label.text + TextAlign.END]"""
-        c.form['label3'].text = """[label.text + TextWrap.LINE_WRAP]
+        c.form.fields.label2Field.component.text = """[label.text + TextAlign.END]"""
+        c.form.fields.label3Field.component.text = """[label.text + TextWrap.LINE_WRAP]
             Lorem ipsum
             dolor sit amet"""
-        c.form['info'].text = '[label.text + tag] Lorem ipsum dolor sit amet'
-        c.form['paragraph'].html = '<em>[label.html]</em> <strong>Lorem ipsum dolor sit amet</strong>, <u>consectetur adipisci elit</u>, <a href="#">sed eiusmod tempor incidunt ut labore et dolore magna aliqua</a>. Ut enim ad minim veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
+        c.form.fields.infoField.component.text = '[label.text + tag] Lorem ipsum dolor sit amet'
+        c.form.fields.paragraphField.component.html = '<em>[label.html]</em> <strong>Lorem ipsum dolor sit amet</strong>, <u>consectetur adipisci elit</u>, <a href="#">sed eiusmod tempor incidunt ut labore et dolore magna aliqua</a>. Ut enim ad minim veniam, quis nostrum exercitationem ullam corporis suscipit laboriosam, nisi ut aliquid ex ea commodi consequatur. Quis aute iure reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint obcaecat cupiditat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.'
 
         c.addComponent(Table, 'colorTable').with {
             columns = [
@@ -537,6 +631,26 @@ class FormController implements ElementsController {
         Integer n = params.numberfield ?: 0
         if (n > 0) n--
         t.setValue('numberfield', [value: n])
+        display transition: t
+    }
+
+    def decrementProgress() {
+        BigDecimal value = params.progress as BigDecimal ?: 0.0
+        def t = createTransition()
+        t.setValue('progress', (value - 10.0).max(0.0))
+        display transition: t
+    }
+
+    def incrementProgress() {
+        BigDecimal value = params.progress as BigDecimal ?: 0.0
+        def t = createTransition()
+        t.setValue('progress', (value + 10.0).min(140.0))
+        display transition: t
+    }
+
+    def togglePercentage() {
+        def t = createTransition()
+        t.call('progress', 'togglePercentage')
         display transition: t
     }
 }

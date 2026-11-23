@@ -2,7 +2,7 @@ class ShellMenu extends Component {
 
     static initialize($element, $root) {
         let $menu = $('#shell-menu-items');
-        enableSimpleBar($menu[0]);
+        Utils.mountSimpleBar($menu[0]);
     }
 
     static finalize($element, $root) {
@@ -153,7 +153,17 @@ class ShellMenu extends Component {
             }
         });
 
-        if (isEmpty(search)) $('.sidebar-nav li').removeClass('hide');
+        $('#shell-menu li.nav-item-title').each(function () {
+            let sectionHasVisibleItems = $(this).nextUntil('.nav-item-title')
+                .filter('li.nav-item:has(a):not(.d-none)').length > 0;
+            if (sectionHasVisibleItems) {
+                $(this).removeClass('d-none');
+            } else {
+                $(this).addClass('d-none');
+            }
+        });
+
+        if (Utils.isEmpty(search)) $('.sidebar-nav li').removeClass('hide');
     }
 }
 

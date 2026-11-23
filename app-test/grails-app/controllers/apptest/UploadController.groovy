@@ -17,6 +17,7 @@ package apptest
 import goowee.elements.ElementsController
 import goowee.elements.components.Button
 import goowee.elements.contents.ContentForm
+import goowee.elements.controls.Select
 import goowee.elements.controls.TextField
 import goowee.elements.controls.Upload
 import goowee.tenant.TenantService
@@ -67,15 +68,22 @@ class UploadController implements ElementsController {
                     onUpload: 'onUploadFile',
                     onSuccess: 'onUploadSuccess',
                     maxFiles: 1,
-                    acceptedFiles: ['.jpg', '.jpeg'],
+                    acceptedFileTypes: ['image/jpeg', 'image/png', 'application/pdf'],
                     submit: 'form',
                     loading: true,
                     rows: 5,
                 )
                 addField(
+                    class: Select,
+                    id: 'select3',
+                    optionsFromList: ['One', 'Two', 'Three'],
+                    cols: 6,
+                )
+                addField(
                     class: TextField,
                     id: 'test2',
                     value: 'This is another test',
+                    cols: 6,
                 )
             }
         }

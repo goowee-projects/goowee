@@ -39,7 +39,6 @@ import java.time.LocalTime
  */
 
 @CurrentTenant
-@Transactional
 @CompileStatic
 class AuditService implements WebRequestAware {
 
@@ -70,8 +69,9 @@ class AuditService implements WebRequestAware {
         log(operation, message, null, null, null)
     }
 
+    @Transactional
     void log(AuditOperation operation, String message, String objectName, String stateBefore, String stateAfter) {
-        String username = securityService.currentUsername ?: 'super'
+        String username = securityService.currentUsername ?: SecurityService.USERNAME_SUPERADMIN
         LocalDateTime dateCreated = LocalDateTime.now()
 
         Map log = buildLog(dateCreated, username, operation, message, objectName, stateBefore, stateAfter, getClientIp(request), request.getHeader('User-Agent'))
@@ -82,15 +82,28 @@ class AuditService implements WebRequestAware {
         log.requestInfo = getClientRequestInfo(request)
 
         TAuditLog obj = new TAuditLog(log + integrity)
+        obj.dateCreated = dateCreated
         obj.save(flush: true, failOnError: true)
     }
 
     Boolean verifyLogIntegrity(TAuditLog obj) {
+        if (obj.digest == null) return false
+
         Map log = buildLog(obj.dateCreated, obj.username, obj.operation, obj.message, obj.objectName, obj.stateBefore, obj.stateAfter, obj.ip, obj.userAgent)
         byte[] AESKey = cryptoService.getTenantAESKey()
         String actualDigest = computeHmac(log, AESKey)
 
         return MessageDigest.isEqual(actualDigest.bytes, obj.digest.bytes)
+    }
+
+    List<TAuditLog> listInvalidLogIntegrity() {
+        List<TAuditLog> invalidLogs = []
+        for (TAuditLog obj in list()) {
+            if (!verifyLogIntegrity(obj)) {
+                invalidLogs.add(obj)
+            }
+        }
+        return invalidLogs
     }
 
     private Map buildLog(LocalDateTime dateCreated, String username, AuditOperation operation, String message, String objectName, String stateBefore, String stateAfter, String ip, String userAgent) {

@@ -63,6 +63,43 @@
     border-bottom: rgb(var(--elements-main-bg)) .25rem solid;
 }
 
+@supports (animation-timeline: --table-horizontal-scroll) and
+    (scroll-timeline-name: --table-horizontal-scroll) and
+    (scroll-timeline-axis: x) {
+    .component-table-dataset {
+        scroll-timeline-name: --table-horizontal-scroll;
+        scroll-timeline-axis: x;
+    }
+
+    .component-table-dataset .table-sticky-header-scroll-timeline {
+        animation-name: table-sticky-header-scroll;
+        animation-duration: 1s;
+        animation-timing-function: linear;
+        animation-fill-mode: both;
+        animation-timeline: --table-horizontal-scroll;
+    }
+
+    @keyframes table-sticky-header-scroll {
+        from {
+            transform: translateX(0);
+        }
+
+        to {
+            transform: translateX(calc(-1 * var(--table-sticky-scroll-distance)));
+        }
+    }
+}
+
+@media print {
+    .component-table-dataset .table-floating-header-placeholder {
+        display: none !important;
+    }
+
+    .component-table-dataset .sticky-header {
+        position: static !important;
+    }
+}
+
 .component-table-dataset .component-table-header a {
     color: rgb(var(--elements-primary-bg));
     text-decoration: none;
@@ -90,8 +127,8 @@
     display: inline-flex;
     position: relative;
     vertical-align: bottom;
-    width: 15px;
-    height: 15px;
+    width: 1.0714rem; /* 15px at 14px font size */
+    height: 1.0714rem; /* 15px at 14px font size */
 }
 
 .component-table-dataset :is(.component-table-selection, .component-table-selection-header) .checkbox.simple:has(.form-check-input:focus-visible)::after {
@@ -100,7 +137,7 @@
 
 .component-table-dataset :is(.component-table-selection, .component-table-selection-header) .checkbox.simple::after {
     transition-duration: .2s;
-    border: 2px solid rgba(var(--elements-main-text), .7);
+    border: .1429rem solid rgba(var(--elements-main-text), .7); /* 2px at 14px font size */
     border-radius: var(--bs-border-radius-lg);
     content: "";
     display: inline-block;

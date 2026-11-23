@@ -26,8 +26,10 @@ class PageContent extends Component {
         PageContent.updateScrollbar();
 
         PageContent.$scrollbar.off('scroll').on('scroll', PageContent.onScrollbarScroll);
-        $(window).on('scroll', PageContent.onWindowScroll);
-        $(window).on('resize', PageContent.onWindowResize);
+        $(window)
+            .off('scroll.pageContent resize.pageContent')
+            .on('scroll.pageContent', PageContent.onWindowScroll)
+            .on('resize.pageContent', PageContent.onWindowResize);
     }
 
     static onWindowResize(event) {
@@ -75,7 +77,7 @@ class PageContent extends Component {
     }
 
     static updateScrollbar() {
-        if (getOS() == 'iOS') {
+        if (Utils.getOS() == 'iOS') {
             // No scrollbars on iOS, it has a glitch that brakes smooth scrolling
             return;
         }

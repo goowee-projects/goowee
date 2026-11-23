@@ -34,7 +34,7 @@ import java.awt.image.BufferedImage
 @Slf4j
 @Deprecated
 @CompileStatic
-class PdfBoxUtils {
+class PDFBoxUtils {
 
     static Float mmToPt(Float mm) {
         Float pointsPerInch = 72

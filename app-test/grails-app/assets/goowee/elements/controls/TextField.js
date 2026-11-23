@@ -12,6 +12,7 @@ class TextField extends Control {
         $element.off('paste').on('paste', Control.onPaste);
         $element.off('keypress').on('keypress', TextField.onKeyPress);
         $element.off('input').on('input', TextField.onChange);
+        TextField.updateCharacterCounter($element);
 
         Transition.triggerEvent($element, 'load');
     }
@@ -41,6 +42,8 @@ class TextField extends Control {
             event.target.selectionStart = selStart;
             event.target.selectionEnd = selStart;
         }
+
+        TextField.updateCharacterCounter($element);
 
         let async = properties['onChangeAsync'];
         Transition.triggerEvent($element, 'change', async);
@@ -82,6 +85,7 @@ class TextField extends Control {
         }
 
         $element.val(value);
+        TextField.updateCharacterCounter($element);
 
         if (!trigger) $element.on('input', TextField.onChange);
     }
@@ -94,6 +98,32 @@ class TextField extends Control {
 
     static setPlaceholder($element, value) {
         $element[0].placeholder = value;
+    }
+
+    static updateCharacterCounter($element) {
+        let $counter = $element.siblings('.character-counter');
+        if (!$counter.length) return;
+
+        let maxSize = parseInt($counter.attr('data-max'), 10);
+        let value = $element.val() || '';
+
+        $counter.children('.character-counter-value').text(Math.max(0, maxSize - value.length));
+        TextField.updateCharacterCounterPosition($element, $counter);
+    }
+
+    static updateCharacterCounterPosition($element, $counter = $element.siblings('.character-counter')) {
+        if (!$counter.length) return;
+
+        let input = $element[0];
+        let container = input.parentElement;
+        if (!container || !container.classList.contains('input-group')) return;
+
+        let inputRect = input.getBoundingClientRect();
+        let containerRect = container.getBoundingClientRect();
+        $counter.css({
+            right: `${Math.max(0, containerRect.right - inputRect.right)}px`,
+            bottom: `${Math.max(0, containerRect.bottom - inputRect.bottom)}px`
+        });
     }
 
     static setIcon($element, value) {

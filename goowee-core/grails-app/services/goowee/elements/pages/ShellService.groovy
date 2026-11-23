@@ -15,7 +15,7 @@
 package goowee.elements.pages
 
 import goowee.application.ApplicationPropertyService
-import goowee.application.ApplicationService
+import goowee.application.GooweeApplication
 import goowee.commons.utils.LogUtils
 import goowee.elements.ElementsException
 import goowee.elements.LinkGeneratorAware
@@ -34,7 +34,7 @@ import groovy.util.logging.Slf4j
 @CompileStatic
 class ShellService implements WebRequestAware, LinkGeneratorAware {
 
-    ApplicationService applicationService
+    GooweeApplication gooweeApplication
     TenantService tenantService
     ApplicationPropertyService applicationPropertyService
     TenantPropertyService tenantPropertyService
@@ -43,6 +43,7 @@ class ShellService implements WebRequestAware, LinkGeneratorAware {
     void tenantInstall() {
         String tenantId = tenantService.currentTenantId
         tenantPropertyService.setString('LOGO', linkPublicResource(tenantId, '/brand/logo.png', false))
+        tenantPropertyService.setString('LOGO_TAG', '')
     }
 
     Shell getShell() {
@@ -68,8 +69,8 @@ class ShellService implements WebRequestAware, LinkGeneratorAware {
         ShellConfig shellConfig = new ShellConfig()
 
         // These are not cloned, we will have direct access to the servletContext objects
-        shellConfig.features.user = applicationService.userFeatures
-        shellConfig.features.main = applicationService.mainFeatures
+        shellConfig.features.user = gooweeApplication.userFeatures
+        shellConfig.features.main = gooweeApplication.mainFeatures
 
         // System properties
         shellConfig.display.menu = applicationPropertyService.getBoolean('DISPLAY_MENU', true)
@@ -79,6 +80,7 @@ class ShellService implements WebRequestAware, LinkGeneratorAware {
 
         // Tenant properties
         shellConfig.display.logo = tenantPropertyService.getString('LOGO', true)
+        shellConfig.display.logoTag = tenantPropertyService.getString('LOGO_TAG', true)
 
         return shellConfig
     }

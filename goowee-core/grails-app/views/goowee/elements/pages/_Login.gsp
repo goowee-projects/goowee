@@ -9,6 +9,7 @@
       style="background-image: url('${raw(c.backgroundImage)}');"
       data-21-page="${c.className}"
       data-21-id="${c.id}"
+      data-21-properties="${c.propertiesAsJSON}"
 >
 
 <page:loading />
@@ -16,18 +17,30 @@
 <div id="page-content" class="page-login justify-content-center">
 
     <div class="page-login-box text-center p-3">
-        <img class="page-login-logo py-2"
-             src="${raw(c.logoImage)}"
-        />
+        <div class="page-login-logo-wrapper">
+            <img class="page-login-logo py-2"
+                 src="${raw(c.logoImage)}"
+            />
+            <g:if test="${c.logoTag}">
+                <span class="page-login-logo-tag badge rounded-pill">
+                    ${c.logoTag}
+                </span>
+            </g:if>
+        </div>
         <div class="page-login-error d-none">
             <render:message code="shell.auth.bad.credentials"/>
         </div>
 
-        <render:component instance="${c.loginKeyPress}" />
         <render:component instance="${c.form}" />
     </div>
 
 </div>
+
+<g:if test="${c.tenantId}">
+    <div class="page-login-tenant">
+        <render:message code="authentication.tenant" args="${[c.tenantId]}"/>
+    </div>
+</g:if>
 
 </div>
 

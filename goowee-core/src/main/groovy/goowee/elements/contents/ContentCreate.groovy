@@ -44,3 +44,4 @@ class ContentCreate extends ContentForm {
         header.nextButton.action = 'onCreate'
     }
 }
+

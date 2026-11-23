@@ -15,11 +15,12 @@ class Select extends Control {
             ele: element,
             dropboxWrapper: '#' + dropboxPortal.id,
             zIndex: 1060,
+            optionHeight: Select.getOptionHeight(dropboxPortal),
             options: properties.options,
             multiple: properties.multiple,
             search: properties.search,
             placeholder: properties.multiple ? '' : properties.placeholder,
-            hideClearButton: properties.multiple || !properties.allowClear,
+            hideClearButton: !properties.allowClear,
             autoSelectFirstOption: false,
             disableSelectAll: true,
             searchPlaceholderText: properties.text.search,
@@ -31,7 +32,8 @@ class Select extends Control {
             allOptionsSelectedText: properties.text.allSelected,
             additionalClasses: 'w-100',
             silentInitialValueSet: true,
-            showDropboxAsPopup: false,
+            showDropboxAsPopup: Elements.isMobileDevice,
+            popupDropboxBreakpoint: Elements.isMobileDevice ? '99999px' : '576px',
             showDuration: 0,
             hideDuration: 0,
         };
@@ -221,6 +223,29 @@ class Select extends Control {
         ($trailing.length ? $trailing.last() : $previous).trigger('focus');
     }
 
+    static getOptionHeight(dropboxPortal) {
+        // Virtual Select uses optionHeight for its virtual scroll calculations.
+        // Measure the styled option so the virtual scroll matches the active
+        // root font size and popup row sizing on mobile.
+        let optionHeightProbe = document.createElement('div');
+        optionHeightProbe.className = Elements.isMobileDevice
+            ? 'vscomp-wrapper show-as-popup'
+            : 'vscomp-wrapper';
+        optionHeightProbe.style.position = 'absolute';
+        optionHeightProbe.style.visibility = 'hidden';
+        optionHeightProbe.style.pointerEvents = 'none';
+
+        let optionProbe = document.createElement('div');
+        optionProbe.className = 'vscomp-option';
+        optionHeightProbe.appendChild(optionProbe);
+        dropboxPortal.appendChild(optionHeightProbe);
+
+        let optionHeight = getComputedStyle(optionProbe).height;
+        optionHeightProbe.remove();
+
+        return optionHeight;
+    }
+
     static setValue($element, valueMap, trigger = true) {
         valueMap = TypedValue.require(valueMap);
 
@@ -270,6 +295,7 @@ class Select extends Control {
         };
 
         $.ajax({
+            cache: false,
             url: Transition.buildUrl(searchEvent),
             data: Transition.build21Params(searchEvent),
 

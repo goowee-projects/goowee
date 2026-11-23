@@ -14,7 +14,6 @@
  */
 package goowee.application
 
-
 import goowee.commons.utils.StringUtils
 import goowee.elements.ElementsController
 import goowee.elements.components.Label
@@ -67,7 +66,6 @@ class ApplicationPropertyController implements ElementsController {
 
         c.table.with {
             filters.with {
-                fold = false
                 addField(
                     class: TextField,
                     id: 'find',
@@ -78,7 +76,6 @@ class ApplicationPropertyController implements ElementsController {
                     class: Select,
                     id: 'type',
                     optionsFromEnum: PropertyType,
-                    noSelection: true,
                     cols: 2,
                 )
                 addField(
@@ -86,7 +83,6 @@ class ApplicationPropertyController implements ElementsController {
                     id: 'validation',
                     optionsFromList: ['error'],
                     search: false,
-                    noSelection: true,
 //                        textPrefix: 'applicationProperty.validation',
                     cols: 2,
                 )
@@ -112,7 +108,7 @@ class ApplicationPropertyController implements ElementsController {
                 row.cells.type.tag = true
 
                 if (values.validation) {
-                    row.textColor = '#cc0000'
+                    row.textColor = '#aa0000'
                     row.cells.issues.icon = 'fa-circle-exclamation'
                     row.cells.issues.tooltip = values.validation
                 }
@@ -164,7 +160,7 @@ class ApplicationPropertyController implements ElementsController {
                 id: 'name',
                 textStyle: TextStyle.MONOSPACE,
                 textTransform: TextTransform.UPPERCASE,
-                readonly: obj.name && !securityService.isDeveloper(),
+                readonly: obj.name,
                 cols: 9,
             )
 
@@ -331,7 +327,7 @@ class ApplicationPropertyController implements ElementsController {
 
         if (obj) {
             c.form.values = obj
-            c.form['value'].value = applicationPropertyService.getValue(obj.type, obj.name, true)
+            c.form.controls.value.value = applicationPropertyService.getValue(obj.type, obj.name, true)
         }
 
         return c

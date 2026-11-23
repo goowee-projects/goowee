@@ -98,7 +98,7 @@ class SqlUtils {
      * @param filterParams optional map of column names to filter values
      * @return the number of matching rows
      */
-    static Number count(DataSource dataSource, String table, Map filterParams = [:]) {
+    static Integer count(DataSource dataSource, String table, Map filterParams = [:]) {
         Sql sql = new Sql(dataSource)
         String query = generateSelect(true, table, [], filterParams)
         log.trace(query)

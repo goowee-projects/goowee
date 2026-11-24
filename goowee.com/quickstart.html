@@ -1,0 +1,146 @@
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one
+  or more contributor license agreements.  See the NOTICE file
+  distributed with this work for additional information
+  regarding copyright ownership.  The ASF licenses this file
+  to you under the Apache License, Version 2.0 (the
+  "License"); you may not use this file except in compliance
+  with the License.  You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing,
+  software distributed under the License is distributed on an
+  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+  KIND, either express or implied.  See the License for the
+  specific language governing permissions and limitations
+  under the License.
+-->
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <script>
+        (() => {
+            let choice = 'system';
+            try {
+                const savedChoice = localStorage.getItem('goowee-theme');
+                if (['system', 'light', 'dark'].includes(savedChoice)) {
+                    choice = savedChoice;
+                }
+            } catch (error) {
+                // Use the system preference when browser storage is unavailable.
+            }
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const mobileViewport = window.matchMedia('(max-width: 760px)').matches;
+            const useSystemTheme = mobileViewport || choice === 'system';
+            document.documentElement.dataset.themeChoice = choice;
+            document.documentElement.dataset.theme = useSystemTheme ? (prefersDark ? 'dark' : 'light') : choice;
+        })();
+    </script>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <meta name="description" content="Start a Grails 8 web application and add the Goowee Developer AI skill."/>
+    <title>Quickstart — Goowee</title>
+    <link rel="icon" type="image/png" href="images/brand/avatar.png"/>
+    <link rel="stylesheet" href="assets/fontawesome/css/all.min.css"/>
+    <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+<main class="goowee-site">
+    <header class="site-header">
+        <a class="brand" href="index.html#home" aria-label="Goowee home">
+            <img src="images/brand/avatar.png" alt="Goowee" class="brand-mark"/>
+            <span>goowee</span>
+        </a>
+        <nav class="site-nav" aria-label="Main navigation">
+            <a href="quickstart.html" aria-current="page"><i class="fa-solid fa-rocket" aria-hidden="true"></i> Quickstart</a>
+            <a href="https://www.dueuno.com/docs/index.html" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Documentation</a>
+            <a class="nav-cta" href="https://github.com/dueuno-projects/dueuno?tab=readme-ov-file#dueuno-elements" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github" aria-hidden="true"></i> GitHub</a>
+        </nav>
+        <div class="theme-switch" role="group" aria-label="Color theme">
+            <button type="button" data-theme-choice="system" aria-label="Use system color scheme" title="System" aria-pressed="true"><i class="fa-solid fa-desktop" aria-hidden="true"></i></button>
+            <button type="button" data-theme-choice="light" aria-label="Use light theme" title="Light" aria-pressed="false"><i class="fa-solid fa-sun" aria-hidden="true"></i></button>
+            <button type="button" data-theme-choice="dark" aria-label="Use dark theme" title="Dark" aria-pressed="false"><i class="fa-solid fa-moon" aria-hidden="true"></i></button>
+        </div>
+    </header>
+
+    <div class="quickstart-page">
+        <section class="quickstart-hero" aria-labelledby="quickstart-title">
+            <p class="eyebrow">Quickstart</p>
+            <h1 id="quickstart-title">Build your first <span>AI-powered app.</span></h1>
+        </section>
+
+        <section aria-labelledby="steps-title">
+            <div class="quickstart-section-heading">
+                <p class="eyebrow" id="steps-title">Three steps to get going</p>
+            </div>
+
+            <div class="quickstart-grid">
+                <article class="feature-card quickstart-step">
+                    <div class="card-heading"><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-1"></i></span><h3>Grails</h3></div>
+                    <p>Open Grails Forge, choose <strong>Web Application</strong> and select <strong>Grails 8.0.0</strong>, then generate and download your project. <span class="quickstart-inline-tag">Requires Java 21 or later</span></p>
+                    <a class="quickstart-link" href="https://grails.apache.org/start/" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-rocket" aria-hidden="true"></i> Grails Forge</a>
+                </article>
+
+                <article class="feature-card quickstart-step">
+                    <div class="card-heading"><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-2"></i></span><h3>Goowee</h3></div>
+                    <p>Download and unzip the Goowee Developer archive in your project&apos;s root. The <code>.agents</code> folder contains the skill and its supporting files.</p>
+                    <a class="quickstart-link" href="https://github.com/dueuno-projects/dueuno-developer/archive/refs/heads/main.zip" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-cloud-arrow-down" aria-hidden="true"></i> Goowee Developer</a>
+                </article>
+
+                <article class="feature-card quickstart-step">
+                    <div class="card-heading"><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-3"></i></span><h3>Prompt</h3></div>
+                    <p>Open the project in your coding agent and start with a prompt such as:</p>
+                    <pre class="quickstart-prompt"><code>Build a Goowee bookstore application for Books and Authors.</code></pre>
+                </article>
+            </div>
+        </section>
+
+        <div class="quickstart-section-heading quickstart-more-heading">
+            <p class="eyebrow">A couple more to go</p>
+        </div>
+
+        <article class="feature-card quickstart-step quickstart-run" aria-labelledby="run-title">
+            <div class="card-heading"><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-play"></i></span><h3 id="run-title">Run</h3></div>
+            <p>When the agent is finished, start the app from the project directory. Then open <a href="http://localhost:8080" target="_blank" rel="noopener noreferrer"><code>http://localhost:8080</code></a> in your browser.</p>
+            <div class="quickstart-prompt quickstart-command-box">
+                <div class="quickstart-shell-group">
+                    <p class="quickstart-shell-label">Linux / macOS</p>
+                    <pre class="quickstart-shell-command"><code><span class="quickstart-shell-prompt">$</span> ./gradlew bootRun</code></pre>
+                </div>
+                <div class="quickstart-shell-group">
+                    <p class="quickstart-shell-label">Windows</p>
+                    <pre class="quickstart-shell-command"><code><span class="quickstart-shell-prompt">$</span> gradlew.bat bootRun</code></pre>
+                </div>
+            </div>
+        </article>
+
+        <article class="feature-card quickstart-step quickstart-deploy" aria-labelledby="deploy-title">
+            <div class="card-heading"><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-cloud-arrow-up"></i></span><h3 id="deploy-title">Deploy</h3></div>
+            <p>Build an executable Spring Boot JAR, then launch it with Java. Replace the placeholder with the JAR filename generated in <code>build/libs</code>.</p>
+            <div class="quickstart-prompt quickstart-command-box">
+                <div class="quickstart-shell-group">
+                    <p class="quickstart-shell-label">Linux / macOS</p>
+                    <pre class="quickstart-shell-command"><code><span class="quickstart-shell-prompt">$</span> ./gradlew bootJar</code></pre>
+                </div>
+                <div class="quickstart-shell-group">
+                    <p class="quickstart-shell-label">Windows</p>
+                    <pre class="quickstart-shell-command"><code><span class="quickstart-shell-prompt">$</span> gradlew.bat bootJar</code></pre>
+                </div>
+                <div class="quickstart-shell-group quickstart-shell-final">
+                    <p class="quickstart-shell-label">Run the generated JAR</p>
+                    <pre class="quickstart-shell-command"><code><span class="quickstart-shell-prompt">$</span> java -jar build/libs/&lt;app-name&gt;-&lt;version&gt;.jar</code></pre>
+                </div>
+            </div>
+        </article>
+    </div>
+
+    <footer class="site-footer">
+        <a class="footer-brand" href="index.html#home"><img src="images/brand/avatar.png" alt=""/> goowee</a>
+        <span>Build boldly. Ship with confidence.</span>
+        <a href="#quickstart-title">Back to top <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></a>
+    </footer>
+</main>
+<script src="theme.js" defer></script>
+</body>
+</html>

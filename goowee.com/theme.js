@@ -20,12 +20,14 @@
     const root = document.documentElement;
     const buttons = [...document.querySelectorAll('[data-theme-choice]')];
     const systemPreference = window.matchMedia('(prefers-color-scheme: dark)');
+    const mobileViewport = window.matchMedia('(max-width: 760px)');
 
     let choice = root.dataset.themeChoice || 'system';
 
     const applyTheme = (nextChoice, persist = true) => {
         choice = nextChoice;
-        const resolvedTheme = choice === 'system' ? (systemPreference.matches ? 'dark' : 'light') : choice;
+        const useSystemTheme = mobileViewport.matches || choice === 'system';
+        const resolvedTheme = useSystemTheme ? (systemPreference.matches ? 'dark' : 'light') : choice;
 
         root.dataset.themeChoice = choice;
         root.dataset.theme = resolvedTheme;
@@ -48,10 +50,12 @@
     }
 
     systemPreference.addEventListener('change', () => {
-        if (choice === 'system') {
-            applyTheme('system', false);
+        if (choice === 'system' || mobileViewport.matches) {
+            applyTheme(choice, false);
         }
     });
+
+    mobileViewport.addEventListener('change', () => applyTheme(choice, false));
 
     applyTheme(choice, false);
 })();

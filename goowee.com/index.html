@@ -31,13 +31,15 @@
             } catch (error) {
                 // Use the system preference when browser storage is unavailable.
             }
-            const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const mobileViewport = window.matchMedia('(max-width: 760px)').matches;
+            const useSystemTheme = mobileViewport || choice === 'system';
             document.documentElement.dataset.themeChoice = choice;
-            document.documentElement.dataset.theme = choice === 'system' ? (systemPrefersDark ? 'dark' : 'light') : choice;
+            document.documentElement.dataset.theme = useSystemTheme ? (prefersDark ? 'dark' : 'light') : choice;
         })();
     </script>
     <meta name="viewport" content="width=device-width, initial-scale=1"/>
-    <meta name="description" content="Build enterprise applications with AI and Apache Groovy using Goowee."/>
+    <meta name="description" content="Build enterprise applications with AI using Goowee."/>
     <title>Goowee — Build enterprise applications</title>
     <link rel="icon" type="image/png" href="images/brand/avatar.png"/>
     <link rel="stylesheet" href="assets/fontawesome/css/all.min.css"/>
@@ -51,10 +53,9 @@
             <span>goowee</span>
         </a>
         <nav class="site-nav" aria-label="Main navigation">
-            <a href="https://github.com/dueuno-projects/dueuno-developer" target="_blank" rel="noopener noreferrer">AI</a>
-            <a href="https://github.com/dueuno-projects/dueuno-app-template?tab=readme-ov-file#dueuno-application-template" target="_blank" rel="noopener noreferrer">Quickstart</a>
-            <a href="https://www.dueuno.com/docs/index.html" target="_blank" rel="noopener noreferrer">Documentation</a>
-            <a class="nav-cta" href="https://github.com/dueuno-projects/dueuno?tab=readme-ov-file#dueuno-elements" target="_blank" rel="noopener noreferrer">GitHub <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i></a>
+            <a href="quickstart.html"><i class="fa-solid fa-rocket" aria-hidden="true"></i> Quickstart</a>
+            <a href="https://www.dueuno.com/docs/index.html" target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-book-open" aria-hidden="true"></i> Documentation</a>
+            <a class="nav-cta" href="https://github.com/dueuno-projects/dueuno?tab=readme-ov-file#dueuno-elements" target="_blank" rel="noopener noreferrer"><i class="fa-brands fa-github" aria-hidden="true"></i> GitHub</a>
         </nav>
         <div class="theme-switch" role="group" aria-label="Color theme">
             <button type="button" data-theme-choice="system" aria-label="Use system color scheme" title="System" aria-pressed="true">
@@ -71,24 +72,20 @@
 
     <section class="hero" id="home" aria-labelledby="hero-title">
         <div class="hero-copy">
-            <p class="eyebrow"><span class="eyebrow-dot"></span> The enterprise application platform</p>
-            <h1 id="hero-title">Build Enterprise Applications with <span>AI and Apache Groovy</span></h1>
-            <p class="hero-description">Describe your application in a prompt and let AI implement it with the <code>goowee-developer</code> agent—or build it by hand. With Groovy, Grails and Goowee, you’re just as fast.</p>
+            <h1 id="hero-title">Build Enterprise Applications with <span>AI</span></h1>
+            <div class="hero-actions">
+                <p class="hero-description">Describe your application in a prompt and let AI implement it with the <code>goowee-developer</code> agent, or build it by hand. With Goowee, you’re just as fast.</p>
+                <p class="hero-description hero-license"><span class="quickstart-inline-tag"><a href="https://www.apache.org/licenses/LICENSE-2.0" target="_blank" rel="noopener noreferrer">Apache License 2.0.</a></span></p>
+            </div>
         </div>
-        <div class="hero-art" aria-hidden="true">
-            <div class="orbit orbit-outer"></div>
-            <div class="orbit orbit-inner"></div>
-            <div class="hero-glow"></div>
-            <img src="images/brand/avatar.png" alt="" class="hero-avatar"/>
-            <div class="hero-caption"><span class="status-pulse"></span> Built for what’s next</div>
+        <div class="hero-art">
+            <a class="hero-cta hero-art-cta" href="quickstart.html"><i class="fa-solid fa-rocket" aria-hidden="true"></i> Start now <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>
         </div>
-        <div class="hero-index" aria-hidden="true">01 <span></span> 04</div>
     </section>
 
     <section class="platform-section" id="platform" aria-labelledby="platform-title">
         <div class="section-heading">
             <div>
-                <p class="eyebrow">One platform. Room to grow.</p>
                 <h2 id="platform-title">Enterprise-ready. <span>From day one.</span></h2>
             </div>
         </div>
@@ -96,41 +93,46 @@
         <div class="feature-grid">
             <article class="feature-card feature-web">
                 <div class="web-card-copy">
-                    <div class="card-topline"><span class="card-number">01</span><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-mobile-screen-button"></i></span></div>
-                    <h3>Progressive web apps for every screen</h3>
-                    <p>Build Progressive Web Applications (PWAs) for desktops, tablets and phones. Install them on Windows, macOS, Linux, Android or iOS and enjoy a native app experience.</p>
-                </div>
-                <div class="device-options" aria-label="Supported operating systems">
-                    <span>Windows</span><span>macOS</span><span>Linux</span>
-                    <span>Android</span><span>iOS</span>
+                    <div class="card-heading"><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-mobile-screen-button"></i></span><h3>One application, many devices</h3></div>
+                    <div class="web-details">
+                        <p>Build Progressive Web Applications (PWAs) that adapt automatically to desktops, tablets and phones, without device-specific work for developers. Install them on Windows, macOS, Linux, Android or iOS and enjoy a native-like experience.</p>
+                        <div class="device-options" aria-label="Supported operating systems">
+                            <span>Windows</span><span>macOS</span><span>iOS</span>
+                            <span>Linux</span><span>Android</span>
+                        </div>
+                    </div>
                 </div>
             </article>
 
             <article class="feature-card feature-deployment" id="deployment">
-                <div class="card-topline"><span class="card-number">02</span><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-cloud-arrow-up"></i></span></div>
-                <h3>Deploy anywhere</h3>
-                <p>Built on Spring Boot, Goowee fits the way you run applications. Deploy on your own infrastructure or in the cloud.</p>
+                <div class="card-heading"><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-cloud-arrow-up"></i></span><h3>Deploy anywhere</h3></div>
+                <p>Built on Grails &amp; Spring Boot, Goowee fits the way you run applications. Deploy on your own infrastructure or in the cloud.</p>
                 <ul class="tag-list" aria-label="Deployment options">
                     <li>On premises</li><li>Cloud</li><li>As a service</li>
                 </ul>
             </article>
 
             <article class="feature-card feature-auth">
-                <div class="card-topline"><span class="card-number">03</span><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-shield-halved"></i></span></div>
-                <h3>Authentication included</h3>
-                <p>Access your applications with the sign-in methods and identity systems your organization already uses.</p>
+                <div class="card-heading"><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-shield-halved"></i></span><h3>Authentication included</h3></div>
+                <p>Access your applications as a standalone setup, with a physical token or with the identity systems your organization already uses.</p>
                 <ul class="check-list">
                     <li>Local username and password</li>
                     <li>Hardware security tokens</li>
                     <li>LDAP and Active Directory</li>
                     <li>IBM i (AS/400, iSeries, System i)</li>
-                    <li>OIDC providers: Google Cloud Identity, Microsoft Entra ID, SAP Identity Authentication Service and any OpenID Connect provider</li>
+                    <li>OIDC providers
+                        <ul class="auth-sublist">
+                            <li>Google Cloud Identity</li>
+                            <li>Microsoft Entra ID</li>
+                            <li>SAP Identity Authentication Service</li>
+                            <li>Any OpenID Connect provider</li>
+                        </ul>
+                    </li>
                 </ul>
             </article>
 
             <article class="feature-card feature-tenancy">
-                <div class="card-topline"><span class="card-number">04</span><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-database"></i></span></div>
-                <h3>Multi-tenant by design</h3>
+                <div class="card-heading"><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-database"></i></span><h3>Multi-tenant by design</h3></div>
                 <p>Run multiple tenants from the same codebase, each with a separate database and isolated data.</p>
                 <div class="tenant-visual" aria-label="One codebase serving isolated tenant databases">
                     <span class="tenant-source">One codebase</span>
@@ -141,17 +143,28 @@
                 </div>
             </article>
 
-            <article class="feature-card feature-i18n">
-                <div class="card-topline"><span class="card-number">05</span><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-language"></i></span></div>
-                <h3>Native i18n</h3>
-                <p>Internationalization is built in, making your application simple to localize for every audience.</p>
-                <div class="language-chips" aria-label="Example languages"><span>EN</span><span>IT</span><span>日本語</span><span>ES</span></div>
-            </article>
+            <div class="feature-trio">
+                <article class="feature-card feature-ux">
+                    <div class="card-heading"><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-layer-group"></i></span><h3>Familiar UX</h3></div>
+                    <p>Goowee UX, like an operating system’s GUI, is a common human-computer interaction language. Users can recognize different applications and use them with ease from the start.</p>
+                </article>
+
+                <article class="feature-card feature-keyboard">
+                    <div class="card-heading"><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-keyboard"></i></span><h3>Legacy-friendly</h3></div>
+                    <p>Goowee implements a web UI with legacy-style keyboard navigation to make the transition easier for users familiar with systems like AS/400.</p>
+                </article>
+
+                <article class="feature-card feature-i18n">
+                    <div class="card-heading"><span class="card-icon" aria-hidden="true"><i class="fa-solid fa-language"></i></span><h3>Native i18n</h3></div>
+                    <p>Internationalization is built in, making your application simple to localize for every audience.</p>
+                    <div class="language-chips" aria-label="Example languages"><span>EN</span><span>IT</span><span>日本語</span><span>ES</span></div>
+                </article>
+            </div>
         </div>
     </section>
 
     <footer class="site-footer">
-        <a class="footer-brand" href="#home"><img src="images/brand/avatar.png" alt=""/> Goowee</a>
+        <a class="footer-brand" href="#home"><img src="images/brand/avatar.png" alt=""/> goowee</a>
         <span>Build boldly. Ship with confidence.</span>
         <a href="#home">Back to top <i class="fa-solid fa-arrow-up" aria-hidden="true"></i></a>
     </footer>

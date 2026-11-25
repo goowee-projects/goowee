@@ -28,7 +28,7 @@
             </g:if>
         </div>
         <div class="page-login-error d-none">
-            <render:message code="shell.auth.bad.credentials"/>
+            <render:message code="feature.auth.bad.credentials"/>
         </div>
 
         <render:component instance="${c.form}" />

@@ -72,7 +72,7 @@ class UserController implements ElementsController {
         c.table.actionbar.addAction(
             controller: 'userSession',
             action: 'index',
-            text: 'shell.security.userSession.index',
+            text: 'feature.security.userSession.index',
             icon: 'fa-users',
         )
 

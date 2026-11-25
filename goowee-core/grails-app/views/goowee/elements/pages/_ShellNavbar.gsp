@@ -44,7 +44,7 @@
                                  data-bs-custom-class="tooltip"
                                  data-bs-toggle="tooltip"
                                  data-bs-html="true"
-                                 data-bs-title="${c.message('shell.user.menu')}"/>
+                                 data-bs-title="${c.message('feature.user.menu')}"/>
                 </i>
             </button>
         </div>

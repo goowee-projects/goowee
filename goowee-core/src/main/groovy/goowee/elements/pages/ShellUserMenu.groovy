@@ -35,6 +35,6 @@ class ShellUserMenu extends Menu {
         viewPath = '/goowee/elements/pages/'
 
         shell = args.shell as Shell
-        title = prettyPrint('shell.user.menu')
+        title = prettyPrint('feature.user.menu')
     }
 }

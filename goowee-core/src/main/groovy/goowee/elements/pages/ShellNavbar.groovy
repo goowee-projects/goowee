@@ -45,7 +45,7 @@ class ShellNavbar extends Component {
             controller: 'shell',
             icon: 'fa-solid fa-home',
             text: '',
-            tooltip: 'shell.home.menu',
+            tooltip: 'feature.home.menu',
             animate: 'fade',
         )
         logo = (Link) createComponent(

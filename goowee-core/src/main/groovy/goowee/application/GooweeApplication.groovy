@@ -542,7 +542,7 @@ class BootStrap {
         }
 
         registerUserFeature(
-            text: 'shell.user.menu.credits',
+            text: 'feature.user.menu.credits',
             icon: 'fa-circle-info',
             controller: 'shell',
             action: 'credits',

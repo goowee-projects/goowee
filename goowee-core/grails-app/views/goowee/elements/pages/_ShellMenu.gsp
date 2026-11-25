@@ -20,7 +20,7 @@
                 <span id="shell-menu-search-icon" class="input-group-text d-none d-xxl-flex"><i
                         class="fa-solid fa-magnifying-glass"></i></span>
                 <input class="form-control text-light ps-0" type="search"
-                       placeholder="${c.message('shell.menu.search.placeholder')}"
+                       placeholder="${c.message('feature.menu.search.placeholder')}"
                        aria-label="Search">
             </g:if>
         </div>

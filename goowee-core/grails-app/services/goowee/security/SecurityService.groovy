@@ -217,7 +217,7 @@ class SecurityService implements WebRequestAware, LinkGeneratorAware {
             controller: 'authentication',
             action: 'logout',
             icon: 'fa-power-off',
-            confirmMessage: 'shell.security.authentication.logout.confirm',
+            confirmMessage: 'feature.security.authentication.logout.confirm',
             direct: true,
             order: 10000020,
         )

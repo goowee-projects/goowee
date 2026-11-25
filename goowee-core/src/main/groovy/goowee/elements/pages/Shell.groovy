@@ -49,15 +49,15 @@ class Shell extends Page {
         username = ''
         userFullname = ''
 
-        menu = addComponent(ShellMenu, 'menu', [shell: this, textPrefix: 'shell'])
+        menu = addComponent(ShellMenu, 'menu', [shell: this, textPrefix: 'feature'])
         menu.createFromFeature(config.features.main)
         menu.displaySearch = config.display.menuSearch
 
-        userMenu = addComponent(ShellUserMenu, 'userMenu', [shell: this, textPrefix: 'shell'])
+        userMenu = addComponent(ShellUserMenu, 'userMenu', [shell: this, textPrefix: 'feature'])
         userMenu.createFromFeature(config.features.user)
 
-        navbar = addComponent(ShellNavbar, 'navbar', [shell: this, textPrefix: 'shell'])
-        home = createComponent(ContentHome, 'home', [shell: this, textPrefix: 'shell'])
+        navbar = addComponent(ShellNavbar, 'navbar', [shell: this, textPrefix: 'feature'])
+        home = createComponent(ContentHome, 'home', [shell: this, textPrefix: 'feature'])
     }
 
     void setUser(String username, String firstname, String lastname) {

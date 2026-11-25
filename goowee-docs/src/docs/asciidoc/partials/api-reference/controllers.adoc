@@ -341,8 +341,8 @@ English:
 .grails-app/i18n/messages.properties.groovy
 [source]
 ----
-shell.book=Books
-shell.read=Read
+feature.book=Books
+feature.read=Read
 book.index.header.title=Books
 book.create.header.title=New Book
 book.edit.header.title=Book
@@ -358,8 +358,8 @@ Italian:
 .grails-app/i18n/messages_it.properties.groovy
 [source]
 ----
-shell.book=Libri
-shell.read=Leggi
+feature.book=Libri
+feature.read=Leggi
 book.index.header.title=Libri
 book.create.header.title=Nuovo libro
 book.edit.header.title=Libro

@@ -365,8 +365,8 @@ To finish the UI we implement the _English_ and _Italian_ translations deleting 
 ----
 app.name=People Registry
 
-shell.person=People
-shell.person.help=Manage the People Registry
+feature.person=People
+feature.person.help=Manage the People Registry
 
 person.index.header.title=People
 person.create.header.title=New Person
@@ -383,8 +383,8 @@ person.birthdate=Birth Date
 ----
 app.name=Registro persone
 
-shell.person=Persone
-shell.person.help=Gestisci il registro persone
+feature.person=Persone
+feature.person.help=Gestisci il registro persone
 
 person.index.header.title=Persone
 person.create.header.title=Nuova persona

@@ -15,7 +15,7 @@
                     icon="${feature.link.icon}"
             />
             <div class="p-4 text-white text-shadow-1">
-                <% label = "shell.${feature.link.controller}.${feature.link.action}" %>
+                <% label = "feature.${feature.link.controller}.${feature.link.action}" %>
                 <% labelHelp = "${label}.help" %>
                 <h2 class="card-title text-truncate"><render:icon icon="${feature.link.icon}" class="me-3" /><render:message code="${label}"/></h2>
                 <p class="card-text fw-light">

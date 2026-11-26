@@ -430,6 +430,11 @@ The `display` method is a key Goowee feature. It renders the GUI on the server a
 |
 |Error message to display in a message box.
 
+|`infoMessage`
+|`String`
+|
+|Informational message to display instead of running the click invocation associated with a message. This option applies when `message`, `confirmMessage`, or `errorMessage` is also specified.
+
 |`exception`
 |`Exception`
 |
@@ -505,11 +510,6 @@ The `display` method is a key Goowee feature. It renders the GUI on the server a
 |
 |Rendering options to apply to the redirect destination. For `content`, pass the individual rendering options listed below.
 
-|`infoMessage`
-|`String`
-|
-|Informational message to display instead of running the click invocation associated with a message. This option applies when `message`, `confirmMessage`, or `errorMessage` is also specified.
-
 |`modal`
 |`Boolean`
 |
@@ -550,6 +550,23 @@ The `display` method is a key Goowee feature. It renders the GUI on the server a
 |
 |Scroll behavior to apply after rendering the destination content.
 |===
+
+==== Field errors from a map
+When one component is submitted, pass a map whose keys match the IDs of its fields and whose values are error messages or i18n message keys. The action must be triggered by an event that submits the component.
+
+[source,groovy]
+----
+def onSave() {
+    Map fieldErrors = [
+        title : 'Enter a title.',
+        author: 'Enter an author.',
+    ]
+
+    display errors: fieldErrors
+}
+----
+
+Message values are resolved through the message bundle. If a value does not match a message key, it is displayed as written.
 ////
 Licensed to the Apache Software Foundation (ASF) under one or more
 contributor license agreements. See the NOTICE file distributed with

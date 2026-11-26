@@ -15,11 +15,10 @@ c.form.with {
     )
 }
 ----
-<1> The parameter name is composed by `on` followed by the capitalized name of the event (the event `change` in this case). The parameter value can be an action name, such as `onChangeBook`, or a `controller.action` pair, such as `books.onChangeBook`.
+<1> The parameter name is `on` followed by the event name with its first letter capitalized. The value is an action name or a `controller.action` pair. If `submit` is omitted, this shorthand submits the component on which the event is registered.
 
-When only the action is specified, the current controller is used while the
-event is configured during a web request. Use the dot notation when the action
-belongs to another controller:
+When only the action is specified, the current controller is used. Use the dot
+notation when the action belongs to another controller:
 
 [source,groovy]
 ----
@@ -32,19 +31,23 @@ c.form.addField(
 
 This invokes the `onChangeBook` action of the `books` controller. The same
 target can be configured with the explicit `on()` method by specifying
-`controller` and `action` separately.
+`controller` and `action` separately. In `on(Map)`, both `event` and `action`
+are required; `event` can be a string or a list of event names. If `controller`
+is omitted, the current controller is used when one is available in the web
+request; otherwise, specify it explicitly. Unlike the shorthand, `on(Map)` does
+not submit component values unless `submit` is specified.
 
 Multiple events can be configured as follows.
 
 [source,groovy]
 ----
 c.form.with {
-    def books = addField(
+    def book = addField(
         class: Select,
         id: 'book',
     ).component // <1>
 
-    books.with {
+    book.with {
         on( // <2>
             event: 'load',
             action: 'onLoadBooks',
@@ -62,102 +65,116 @@ c.form.with {
 <2> Configures the `load` event.
 <3> Configures the `change` event for the `books` controller.
 
-The following properties can be specified when configuring an event on a component.
+The following properties can be specified when configuring an event. Some options,
+such as `target` and message dialogs, apply to `Link` events.
 
 === Properties
 [cols="1,1,1,7a"]
 |===
 |Name|Type|Default|Description
 
+|`event`
+|`String` or `List<String>`
+|Required by `on(Map)`
+|The lowercase event name or names that trigger the action. The `onEvent` shorthand derives this from the parameter name (for example, `onChange` registers `change`).
 |`namespace`
 |`String`
 |
-|The namespace of the controller to redirect to.
+|The namespace of the controller that handles the event.
 |`controller`
 |`String`
-|
-|The name of the controller to redirect to. If no `action` is specified the `index` action will be displayed. When using the `onEvent` shorthand (for example `onChange`), the controller can instead be specified in the action string as `controller.action`.
+|Current controller, if available
+|The controller that handles the event. When using the `onEvent` shorthand (for example, `onChange`), specify another controller in the action string as `controller.action`.
 |`action`
 |`String`
+|Required by `on(Map)`; `index` for a `Link` when omitted
+|The action to invoke. The `onEvent` shorthand takes an action name, optionally prefixed with a controller name.
+|`call`
+|`String`
 |
-|The name of the action to redirect to. If no `controller` is specified and we are in the context of a web request (e.g. it is a user-triggered event), the current controller will be used. If we are configuring the event outside of a web request (e.g. sending an event from a job), a `controller` must be specified explicitly.
+|For a `Link`, calls a client-side JavaScript function instead of navigating. A dotted name can refer to a function on a global object, for example `myApp.refresh`.
 |`params`
 |`Map<String, Object>`
 |
-|The params to pass when redirecting to a `controller` or `action`
+|Request parameters to pass to the event action.
 |`url`
 |`String`
 |
-|Point to a specific URL. If specified, it has precedence over the `controller` / `action` pair.
+|Explicit destination URL. If specified, it takes precedence over the `controller` and `action`. It makes `direct` default to `true` unless `direct` is explicitly set.
 |`direct`
 |`Boolean`
-|
-|Whether to render the whole HTML page, or raw HTTP body, instead of a Transition.
+|`false`; `true` when `url` is supplied
+|When `true`, navigates to the destination with a full browser page load instead of requesting and applying a `Transition`.
 |`submit`
-|`List<String>`
+|`String` or `List<String>`
 |
-|Name list of the components whose values we want to submit. Each component is responsible to define the data structure for the values it contains. The default behaviour will send the values of all the controls contained within the component.
+|IDs of the components or controls whose values are submitted with the event. The `onEvent` shorthand defaults this to the component on which the event is registered; `on(Map)` does not submit values by default.
 |`target`
 |`String`
 |
-|Target page or browser tab where the event destination is displayed.
+|For a `Link`, the browser browsing context in which to open the destination (for example, `_blank` or `_self`). A target other than `_self` opens the destination in that context.
 |`targetNew`
 |`Boolean`
-|
-|If set to `true`, opens the event destination in a new browser tab.
+|`false`
+|For a `Link`, setting this to `true` opens the destination in a new browser tab. It is a convenience property for `target: '_blank'` and `direct: true`.
 |`loading`
 |`Boolean`
 |
-|If set to `true`, a waiting screen is displayed while the event is being executed.
+|Whether to display a loading indicator while the event request is in progress. A `Link` displays one by default; `load` events default to no indicator.
 |`infoMessage`
 |`String`
 |
-|If specified, an info message pops up and the event action is not executed.
+|For a `Link`, displays an informational message instead of executing the link.
 |`infoMessageArgs`
 |`List`
 |
-|A list of objects to pass to the localized info message.
+|For a `Link`, arguments used to interpolate `infoMessage` through message lookup.
 |`confirmMessage`
 |`String`
 |
-|If specified, a confirmation message pops up giving the user a chance to cancel the event action.
+|For a `Link`, asks the user to confirm before executing the link. If the user cancels, the link is not executed.
 |`confirmMessageArgs`
 |`List`
 |
-|A list of objects to pass to the localized confirm message.
+|For a `Link`, arguments used to interpolate `confirmMessage` through message lookup.
+|`renderProperties`
+|`PageRenderProperties` or `Map`
+|
+|Options for rendering the destination page content. The same options can be set directly on the event.
 |`modal`
 |`Boolean`
 |
-|Whether to display the destination content in a modal dialog or not.
+|Whether to display the destination content in a modal dialog.
 |`small`
 |`Boolean`
 |
-|When displaying the content as `modal`, the dialog will be smaller.
+|When displaying content in a modal, use a narrower layout.
 |`large`
 |`Boolean`
 |
-|When displaying the content as `modal`, the dialog will be wider.
+|When displaying content in a modal, use a wider layout.
 |`fullscreen`
 |`Boolean`
 |
-|When displaying the content as `modal`, the dialog will fit the whole browser window size.
+|When displaying content in a modal, use the full browser window.
 |`closeButton`
 |`Boolean`
 |
-|When displaying the content as `modal`, whether to show the close button.
+|Whether to show a close button on the modal dialog.
 |`updateUrl`
 |`Boolean`
 |
-|Whether the browser address bar should be updated with the event destination URL.
+|Whether to update the browser address bar with the destination URL. For event transitions, the client currently sets this automatically to `true` on desktop and `false` on mobile, overriding the configured value.
 |`animate`
 |`String`
 |
-|Graphical transition to apply when changing content.
+|CSS animation to apply when the destination content is displayed.
 |`scroll`
 |`String`
 |
-|Scroll behavior to apply when rendering the destination content.
+|Scroll behavior to apply after rendering the destination content.
 |===
+
 ////
 Licensed to the Apache Software Foundation (ASF) under one or more
 contributor license agreements. See the NOTICE file distributed with

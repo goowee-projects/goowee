@@ -137,9 +137,12 @@ String color = tenantPropertyService.getString('ORDER_COLOR')
 tenantPropertyService.setString('ORDER_COLOR', '#AA0000')
 ----
 
+[WARNING]
+====
 Never cache a tenant property in a singleton or static field: the active tenant
 can change between requests. Always read it through `TenantPropertyService` in
 the current tenant context.
+====
 
 === Types
 

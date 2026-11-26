@@ -444,7 +444,7 @@ class MovieController implements ElementsController { // <2>
 <2> Implementing `ElementsController` exposes the Goowee API to this controller.
 <3> By convention, name actions that display the interface with a verb or noun. Prefix actions that execute business logic with `on`.
 
-Use `ContentTable` to list records and `ContentCreate` and `ContentEdit` to create and edit them (see xref:{api-reference-xref}#contents[Contents]).
+Use `ContentTable` to list records and `ContentCreate` and `ContentEdit` to create and edit them (see xref:{api-reference-xref}#contents[Page Content]).
 
 .grails-app/controllers/BookController.groovy
 [source,groovy]

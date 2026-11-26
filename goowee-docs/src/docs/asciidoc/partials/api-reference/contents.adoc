@@ -1,27 +1,35 @@
 [[contents]]
-== Contents
+== Page Content
 
-Contents provide a canvas for each feature. You can create a `ContentBlank`, an empty canvas, and add <<components>> to it. You will not usually need to do this because Goowee provides ready-to-use, pre-assembled contents.
+`PageContent` is the base class for the content area displayed within a `Page`. Page content can contain components and controls, and a `Transition` can replace it without reloading the whole page. Goowee provides ready-to-use page content classes for common layouts. To build a custom page content area, create a `ContentBlank` and add <<components>> to it.
 
-Components are added to the content in a _vertical strip_, one after another. Components cannot be laid out directly; to create a layout, use the `Form` or `Grid` component, or create a custom component.
+Components are added to page content in a _vertical strip_, one after another. Components cannot be laid out directly; to create a layout, use the `Form` or `Grid` component, or create a custom component.
 
-=== ContentBase
+=== PageContent
+Abstract base class for the main content area of a `Page`.
 
-Embeds a `Header` and a _Confirm_ `Button` that submits a component called `form` (not provided) to an action called `onConfirm`.
+=== ContentBlank
+Extends `PageContent` and provides an empty page content area that you can populate with components.
+
+=== ContentHome
+Internal page content used by the application shell for its home page. It extends `ContentBlank` and provides a `favouriteMenu` for quick access to the user's favourite features. It is not intended for direct use in application code.
+
+=== ContentHeader
+Extends `ContentBlank` and adds a sticky `Header` with a primary _Confirm_ button. By default, the button submits the component with ID `form` to the `onConfirm` action.
 
 === ContentForm
 Extends `ContentHeader` and embeds a `Form` called `form`.
 
 === ContentCreate
-Extends `ContentForm` and provides a _Create_ `Button` that submits the `form` component to an action called `onCreate`.
+Extends `ContentForm` and configures the header's primary button with the _Save_ label and the `onCreate` action. The button submits the `form` component.
 
 === ContentEdit
-Extends `ContentForm` and provides a _Save_ `Button` that submits the `form` component to an action called `onEdit`.
+Extends `ContentForm` and configures the header's primary button with the _Save_ label and the `onEdit` action. The button submits the `form` component.
 
 === ContentTable
-Extends `ContentHeader` and embeds a `Table` component. Provides a _New_ `Button` that redirects to an action called `create`.
+Extends `ContentHeader` and embeds a `Table` component. Provides a _New_ `Button` that redirects to the `create` action.
 
-The `Table` component is configured to display _Edit_ and _Delete_ buttons for each row. The _Edit_ button submits the raw ID to an action called `edit`, while the _Delete_ button asks for confirmation before redirecting to an action called `onDelete`.
+By default, the table displays _Edit_ and _Delete_ actions for each row and passes the row's key values to the corresponding actions, `edit` and `onDelete`. The row's `id` is used as a key when available; otherwise, the first table column is used. _Delete_ asks for confirmation before invoking `onDelete`.
 ////
 Licensed to the Apache Software Foundation (ASF) under one or more
 contributor license agreements. See the NOTICE file distributed with

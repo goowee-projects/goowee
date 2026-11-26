@@ -219,7 +219,10 @@ class BootStrap {
     def init = {
 
         gooweeApplication.onInit {
-            registerCredits('Application Development', 'Francesco Piceghello', 'Gianluca Sartori')
+            registerCredits('Application Development',
+                'Mario Rossi',
+                'Giuseppe Verdi',
+            )
         }
 
     }

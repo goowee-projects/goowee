@@ -17,7 +17,7 @@ limitations under the License.
 [[custom-components]]
 == Custom Components
 
-A Goowee component joins a server-side model to a GSP template and a browser-side JavaScript class. CSS supplies its presentation. This chapter builds the `PieChart` component found in the `goowee-extra` plugin; it uses Chart.js, but the same structure applies to components that do not depend on an external library.
+A Goowee component joins a server-side model to a GSP template and a browser-side JavaScript class. CSS supplies its presentation. The `goowee-extra` plugin includes `PieChart` and `BarChart`, both backed by a shared `Chart` model. This chapter builds `PieChart`; it uses Chart.js, but the same structure applies to components that do not depend on an external library.
 
 The four parts have distinct responsibilities:
 
@@ -35,16 +35,24 @@ In a reusable Grails plugin, keep the files under matching package and asset pat
 src/main/groovy/goowee/elements/components/
     Chart.groovy
     PieChart.groovy
+    BarChart.groovy
 grails-app/views/goowee/elements/components/
     _PieChart.gsp
+    _BarChart.gsp
 grails-app/assets/goowee/elements/components/
     PieChart.js
     PieChart.css
+    BarChart.js
+    BarChart.css
 grails-app/assets/goowee/elements/
     elements-extra.js
     elements-extra.css
-grails-app/assets/goowee/libs/
-    chart-4.6.1.min.js
+grails-app/assets/goowee/
+    libs.min.js
+    libs.min.css
+    libs/
+        chart-4.6.1.min.js
+        chart-LICENSE.md
 grails-app/init/goowee/elements/extra/
     BootStrap.groovy
 ----
@@ -118,13 +126,12 @@ class PieChart extends Chart {
     PieChart(Map args) {
         super(args)
 
-        containerSpecs.acceptedCols = [3, 6, 12]
         containerSpecs.rows = 8
     }
 }
 ----
 
-`containerSpecs` contains hints for a parent container. Here the chart accepts widths of 3, 6, or 12 columns and requests eight rows. A parent that does not use these hints may ignore them.
+`containerSpecs` contains hints for a parent container. Here the chart requests eight rows. A parent that does not use these hints may ignore them.
 
 === GSP Template
 
@@ -202,13 +209,20 @@ Prefix selectors with a component-specific class so styles do not leak into the 
 
 === Assets
 
-Create one JavaScript and one CSS manifest for the component library. Dependencies must appear before the component that uses them.
+Create JavaScript and CSS manifests for the component library. Dependencies must appear before the components that use them. The plugin keeps the Chart.js dependency in a shared asset manifest.
+
+.Create `grails-app/assets/goowee/libs.min.js`
+[source,javascript]
+----
+//= require libs/chart-4.6.1.min
+----
 
 .Create `grails-app/assets/goowee/elements/elements-extra.js`
 [source,javascript]
 ----
-//= require libs/chart-4.6.1.min
-//
+//= require ../libs/libs.min
+
+//= require components/BarChart
 //= require components/PieChart
 ----
 
@@ -216,11 +230,14 @@ Create one JavaScript and one CSS manifest for the component library. Dependenci
 [source,css]
 ----
 /*
+ *= require ../libs/libs.min
+
+ *= require components/BarChart
  *= require components/PieChart
  */
 ----
 
-If you add more components, include each asset in these manifests. Do not add a runtime dependency merely for convenience; reusable third-party assets require an appropriate license review and attribution.
+If you add more components, include their assets in these manifests. Keep third-party licenses with the assets and review their terms before distributing them.
 
 Register the bundle during application or plugin startup:
 

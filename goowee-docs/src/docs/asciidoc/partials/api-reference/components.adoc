@@ -141,7 +141,7 @@ A `GridColumn` is returned by `Grid.addColumn()` and holds the components arrang
 === Header
 A `Header` is a bar at the top of the `Content` area. It can stay fixed at the top or scroll with the content. Its main purpose is to hold navigation buttons.
 
-A `Header` can have a `backButton` on the left, a `nextButton` on the right, and a `title` in the middle.
+A `Header` can have a `backButton` on the left, a `nextButton` on the right, and a `text` in the middle.
 
 ==== Properties
 [cols="1,1,1,7a"]
@@ -210,8 +210,8 @@ Each table can have <<table-filters>>, and each row can have its own action butt
 
 |`columns`
 |`List<String>`
-|
-|A list of column names to display. Each column name must match the recordset column name to automatically display its values.
+|`[]`
+|Names or dot-separated property paths of the columns to display. For map or object records, each name must resolve to a value; for list records, values are displayed in the specified column order.
 [source,groovy]
 ----
     c.table.with {
@@ -223,8 +223,8 @@ Each table can have <<table-filters>>, and each row can have its own action butt
 ----
 |`keys`
 |`List<String>`
-|
-|List of key names. When specified, a new column will be created for each key. The keys will be automatically submitted when a row action is activated.
+|`[]`
+|Record property names used as row keys and submitted with row actions. If no keys are set, the table uses `id` when records have an `id` property; otherwise, it uses the first column. Key values are stored in hidden fields; developer display hints may add key columns to the table.
 [source,groovy]
 ----
 c.table.with {
@@ -235,8 +235,8 @@ c.table.with {
 ----
 |`sortable`
 |`Map<String, String>`
-|
-|Defines the sortable columns
+|`[:]`
+|Maps sortable column names to their initial sort directions (`asc` or `desc`). Setting this property also initializes the table's sort order.
 [source,groovy]
 ----
 c.table.with {
@@ -247,8 +247,8 @@ c.table.with {
 ----
 |`sort`
 |`Map<String, String>`
-|
-|Defines the sorting of the recordset. It takes precedence over the `sortable` property and forces the specified sorting.
+|`[:]`
+|Default sort order for the records. The current sort state is maintained in this map and in `fetchParams`; use `sortable` to enable clickable sort headers.
 [source,groovy]
 ----
 c.table.with {
@@ -257,14 +257,10 @@ c.table.with {
     ]
 }
 ----
-|`fetchParams`
-|`Map<String, Object>`
-|`[:]`
-|Additional parameters sent when the table fetches its data. The current sort state is also maintained in this map.
 |`submit`
 |`List<String>`
-|
-|The name of the column names whose values must be included when the table is submitted by a <<button>> or <<link>>.
+|`[]`
+|Column names whose values are included in the parameters submitted with each row action.
 [source,groovy]
 ----
 c.table.with {
@@ -273,10 +269,14 @@ c.table.with {
     ]
 }
 ----
+|`submitParams`
+|`Map<String, Object>`
+|`[:]`
+|Additional parameters merged into row-action and filter-action requests.
 |`labels`
 |`Map<String, String>`
-|
-|Programmatically change the label of the specified columns.
+|`[:]`
+|Overrides the displayed header label for the specified columns.
 [source,groovy]
 ----
 c.table.with {
@@ -287,8 +287,8 @@ c.table.with {
 ----
 |`transformers`
 |`Map<String, String>`
-|
-|Sets a transformer to a column. Each value of that column will be processed by the specified transformer (See <<registerTransformer()>>)
+|`[:]`
+|Maps column names to registered transformer names. Each row value in that column is processed by the specified transformer. See <<registerTransformer()>>.
 [source,groovy]
 ----
 c.table.with {
@@ -299,20 +299,20 @@ c.table.with {
 ----
 |`prettyPrinters`
 |`Map<String, Object>`
-|
-|Sets a pretty printer to a column. Each value of that column will be processed by the specified pretty printer (See <<registerPrettyPrinter()>>)
+|`[:]`
+|Maps column names to registered pretty printer names or classes. See <<registerPrettyPrinter()>>.
 [source,groovy]
 ----
 c.table.with {
-    prettyPrinter = [
-        title: '${it.code}',
+    prettyPrinters = [
+        title: 'BOOK_TITLE',
     ]
 }
 ----
 |`prettyPrinterProperties`
 |`Map<String, Map>`
-|
-|Sets some pretty printer properties to a column. Each value of that column will be processed by the specified properties (See <<pretty-printer-properties>>)
+|`[:]`
+|Maps column names to pretty printer properties applied to the cell's values. See <<pretty-printer-properties>>.
 [source,groovy]
 ----
 c.table.with {
@@ -329,16 +329,105 @@ c.table.with {
 ----
 |`title`
 |`Separator`
-|
-|The separator displayed above the table. Set its `text` to change the title.
+|Hidden by default
+|Optional separator above the table. Set `title.text` and `title.display = true` to show a title.
 |`stickyHeader`
 |`Boolean`
 |`true`
 |If `true` the table header will stick to top when scrolling. Not available in modals.
-|`filters`
-|`TableFilters`
+|`rowActions`
+|`Boolean`
+|`true`
+|Whether to display row action buttons. They are hidden when the table is read-only.
+|`hasHeader`
+|`Boolean`
+|`true`
+|Whether to display the table header or not
+|`hasFooter`
+|`Boolean`
+|`true`
+|Whether to display the table footer or not
+|`hasPagination`
+|`Boolean`
+|`false`
+|Whether to display the table pagination or not
+|`hasComponents`
+|`Boolean`
+|`false`
+|Whether to render custom components in table cells. Enabling this feature slows down rendering.
+|`widths`
+|`Map<String, Integer>`
+|`[:]`
+|Sets the width, in pixels, of the specified columns.
+|`includeValues`
+|`List<String>`
+|`[]`
+|For GORM recordsets, adds the named properties to each row's values map, including properties not listed among the domain's persistent properties. This option does not affect map or list recordsets.
+|`excludeValues`
+|`List<String>`
+|`[]`
+|Omits the named properties from each row's values map for GORM and POJO recordsets. Map and list recordsets are not filtered.
+|`stickyHeaderOffset`
+|`Double`
 |
-|To define table filters:
+|Offset, in pixels, applied to the sticky table header. When unset or `0`, the page's sticky-box offset is used.
+|`stickyHeaderZIndex`
+|`Integer`
+|`0`
+|The CSS `z-index` applied to the sticky table header.
+|`rowHighlight`
+|`Boolean`
+|`true`
+|Whether to highlight the rows on mouse pointer hover
+|`rowStriped`
+|`Boolean`
+|`false`
+|Whether to apply alternating row stripes.
+|`rowBorderless`
+|`Boolean`
+|`true`
+|Whether to omit borders between table rows.
+|`rowScrollToLastChanged`
+|`Boolean`
+|`false`
+|Currently has no effect; the table rendering and client code do not use this property.
+|`rowHighlightLastChanged`
+|`Boolean`
+|`false`
+|Currently has no effect; the table rendering and client code do not use this property.
+|`noResults`
+|`Boolean`
+|`true`
+|Whether to display the no-results message when the table has no rows.
+|`noResultsIcon`
+|`String`
+|
+|Icon classes for the no-results message. Choose an icon from https://fontawesome.com/[Font Awesome,window=_blank].
+|`noResultsMessage`
+|`String`
+|
+|Message key for the text displayed when the table has no results.
+|===
+
+==== Table child components
+`Table` creates and manages the components used to render its rows and controls. Use the corresponding `Table` properties and methods to work with them:
+
+[cols="1,1,6a"]
+|===
+|Component|Access|Role
+
+|`TableRowset`
+|`header`, `body`, `footer`
+|Holds the table's column headings, data rows, or footer rows. Assign recordsets through these properties; use `body.eachRow` to configure individual rows.
+|`TableRow`
+|The `row` argument of `body.eachRow`
+|Represents one row and exposes its cells and row actions.
+|`TableCell`
+|`row.cells[columnName]`
+|Represents a cell. It can contain a label or, when `hasComponents` is enabled, a component.
+|`TableFilters`
+|`filters`
+|Holds the table's filter fields and manages the filter search and reset actions. Define the fields through `filters`; their submitted values are available through `filterParams`. See <<table-filters>>.
 [source,groovy]
 ----
 c.table.with {
@@ -358,90 +447,13 @@ c.table.with {
 
 Map filters = c.table.filterParams // <1>
 ----
-<1> The submitted values of the filters fields. See <<table-filters>>
-
-|`rowActions`
-|`Boolean`
-|`true`
-|Whether to display the row action buttons or not
-|`hasHeader`
-|`Boolean`
-|`true`
-|Whether to display the table header or not
-|`hasFooter`
-|`Boolean`
-|`true`
-|Whether to display the table footer or not
-|`hasPagination`
-|`Boolean`
-|`false`
-|Whether to display the table pagination or not
-|`hasComponents`
-|`Boolean`
-|`false`
-|Whether to render the table to host custom components on its cells or not. Enabling this feature slows down the rendering.
-|`widths`
-|`Map<String, Integer>`
-|
-|Sets the width, in pixels, of the specified columns.
-|`includeValues`
-|`List<String>`
-|
-|List of record values to include in the submitted row payload.
-|`excludeValues`
-|`List<String>`
-|
-|List of record values to exclude from the submitted row payload.
-|`stickyHeaderOffset`
-|`Double`
-|
-|Offset, in pixels, applied to the sticky table header.
-|`stickyHeaderZIndex`
-|`Integer`
-|`0`
-|The CSS `z-index` applied to the sticky table header.
-|`rowHighlight`
-|`Boolean`
-|`true`
-|Whether to highlight the rows on mouse pointer hover
-|`rowStriped`
-|`Boolean`
-|`false`
-|Whether to set the zebra style or not
-|`rowBorderless`
-|`Boolean`
-|`true`
-|Whether to omit borders between table rows.
-|`noResults`
-|`Boolean`
-|`true`
-|Whether to display a box with an icon and a text when the table has no results
-|`noResultsIcon`
-|`String`
-|
-|The icon ti display when the table has no results. Choose one from https://fontawesome.com/[Font Awesome,window=_blank].
-|`noResultsMessage`
-|`String`
-|
-|The message to display when the table has no results
-|===
-
-==== Table child components
-`Table` creates and manages the components used to render its rows and controls. Use the corresponding `Table` properties and methods to work with them:
-
-[cols="1,1,6a"]
-|===
-|Component|Access|Role
-
-|`TableRowset`
-|`header`, `body`, `footer`
-|Holds the table's column headings, data rows, or footer rows. Assign recordsets through these properties; use `body.eachRow` to configure individual rows.
-|`TableRow`
-|The `row` argument of `body.eachRow`
-|Represents one row and exposes its cells and row actions.
-|`TableCell`
-|`row.cells[columnName]`
-|Represents a cell. It can contain a label or, when `hasComponents` is enabled, a component.
+<1> The submitted values of the filter fields.
+|`Button`
+|`actions`
+|Configures the actions shown on each row. Defaults to _Edit_ and _Delete_; added actions are copied to every row. See <<table-row-actions>>.
+|`Button`
+|`groupActions`
+|Configures actions for selected rows. The button appears when one or more rows are selected. See <<table-group-actions>>.
 |`TableActionbar`
 |`actionbar`
 |Hosts actions above the table, including filter actions.
@@ -476,6 +488,18 @@ c.table.footer = bookService.listTotals()
 [source,groovy]
 ----
 c.table.paginate = bookService.count()
+----
+|`fetchParams`
+|Contains the current sort and pagination values for fetching table records. You can add other fetch options here and pass the map to the service that loads the records.
+[source,groovy]
+----
+Map fetchParams = c.table.fetchParams
+----
+|`filterParams`
+|Returns the current filter values as a map keyed by filter field ID. Values are initialized from the request, action session, or defaults. Pass this map to the service that filters the records.
+[source,groovy]
+----
+Map filters = c.table.filterParams
 ----
 |`getFilter(String id)`
 |Returns the current value of the named filter. The value is initialized from the request, action session, default value, or a filter reset when needed. Returns `null` if the filter id is unknown.

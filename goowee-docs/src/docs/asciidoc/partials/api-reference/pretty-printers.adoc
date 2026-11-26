@@ -1,7 +1,9 @@
 [[pretty-printer-properties]]
 == PrettyPrinterProperties
 
-The `PrettyPrinter` subsystem renders every value in Goowee. You can configure <<components>> and <<controls>> to override user and system settings. See each component's documentation for details.
+The `PrettyPrinter` subsystem renders values in Goowee. You can configure <<components>> and <<controls>> to override user and system formatting settings. See each component's documentation for details.
+
+All `PrettyPrinterProperties` fields are nullable. The defaults below describe the effective behavior of the relevant formatter or control; request-aware rendering can also inherit preferences from the current user.
 
 [cols="1,1,1,7a"]
 |===
@@ -10,91 +12,91 @@ The `PrettyPrinter` subsystem renders every value in Goowee. You can configure <
 |`prettyPrinter`
 |`Object`
 |
-|`Class` or `String` name of the pretty printer
+|A `Class` or registered `String` name that selects a pretty printer template. When unset, the value's class is used to look up a registered template.
 |`transformer`
 |`String`
 |
-|Transformer name
+|Name of a registered transformer to apply to the value before formatting.
 |`locale`
 |`Locale`
-|
-|-
+|Current locale
+|Locale used for message lookup and date/number formatting. Request-aware controls use the current user's locale; direct pretty printing falls back to the current thread locale.
 |`renderTextPrefix`
 |`Boolean`
-|
-|Default: `false`, set to `true` to translate the value into `message.properties` files
+|`true` in `PrettyPrinter`; component-specific (`false` in `Label` and `TextField`)
+|Whether to resolve string values as i18n message keys. When enabled, `textPrefix` is prepended to the key.
 |`textPrefix`
 |`String`
 |
-|Add or change the message prefix
+|Optional i18n key prefix. When `renderTextPrefix` is enabled, the prefix is prepended to the string value before message lookup.
 |`textArgs`
 |`List`
-|
-|Add args for the i18n message
+|`[]`
+|Arguments used to interpolate the resolved i18n message.
 |`renderBoolean`
 |`Boolean`
-|`true`
-|If `false` renders the text `true/false` otherwise renders a check symbol when `true` and nothing when `false`
+|`true` in `Label`
+|For `Label`, enables Boolean-specific rendering: `true` displays a check mark and `false` displays no text. Setting this to `false` does not display the literal `true` or `false` text.
 |`highlightNegative`
 |`Boolean`
-|`false`
-|If the value is `< 0` the text will be highlighted in red
+|`true` in `Label`
+|For `Label`, negative numeric values are highlighted in red. In the current implementation, numeric text is assigned only when this option is enabled.
 |`renderZero`
 |`String`
 |
-|If the value is 0 render the specified string instead
+|Replacement text for a numeric value of zero. When unset, zero is formatted normally.
 |`renderDate`
 |`Boolean`
-|
-|For `LocalDateTime` values, whether to render the DATE part or not
+|`true` for `LocalDateTime`
+|For `LocalDateTime` values, whether to include the date portion. Has no effect when `renderDatePattern` is set.
 |`renderDatePattern`
 |`String`
 |
-|Change the way the date is rendered (See https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html[DateTimeFormatter,window=_blank])
+|Date/time pattern applied with https://docs.oracle.com/javase/8/docs/api/java/time/format/DateTimeFormatter.html[DateTimeFormatter,window=_blank]. It applies to date, time, and date-time values and takes precedence over their other pattern options.
 |`renderTime`
 |`Boolean`
-|
-|For `LocalDateTime` values, whether to render the TIME part or not
+|`true` for `LocalDateTime`
+|For `LocalDateTime` values, whether to include the time portion. Has no effect when `renderDatePattern` is set.
 |`renderSeconds`
 |`Boolean`
-|
-|For `LocalTime` values, whether to display the seconds or not
+|`false`
+|Whether to include seconds in `LocalTime` values and the time portion of `LocalDateTime` values. Has no effect when `renderDatePattern` is set.
 |`renderDelimiter`
 |`String`
 |`', '`
-|For `Map` and `List` values, use this delimiter to list the items
+|Delimiter used to join values in a `Map` or collection.
 |`decimals`
 |`Integer`
-|
-|For `Number` values, how many decimals digits to display
+|`2` for decimal numbers; `0` for integers
+|Number of decimal places used for numeric values. Integers are always formatted with zero decimal places.
 |`decimalFormat`
 |`String`
 |`ISO_COM`
-|For `Number` values, which decimal separator to use. It can be `ISO_COM` (,) or `ISO_DOT` (.).
+|Decimal separator for numeric values: `ISO_COM` (comma) or `ISO_DOT` (period). The current user's preference is used when available.
 |`prefixedUnit`
 |`Boolean`
 |`false`
-|For `Quantity` and `Money` values, whether to display the unit of measure before or after the value
+|For `Quantity` and `Money` values, whether to display the unit before the value. Otherwise, the unit follows the value.
 |`symbolicCurrency`
 |`Boolean`
 |`true`
-|For `Money` values, whether to display the currency with a symbolic or ISO code
+|For `Money` values, whether to display the currency symbol instead of its ISO code.
 |`symbolicQuantity`
 |`Boolean`
 |`true`
-|For `Quantity` values, whether to display the unit of measure with a symbolic or SI code
+|For `Quantity` values, whether to display a unit symbol instead of its SI code.
 |`invertedMonth`
 |`Boolean`
 |`false`
-|For `Date` values, whether to display month/day/year (`true`) or day/month/year (`false`)
+|For date values, whether to use `MM/dd/yyyy` (`true`) instead of `dd/MM/yyyy` (`false`). Also affects date picker controls.
 |`twelveHours`
 |`Boolean`
 |`false`
-|For `Time` values, whether to display 12H (`true`, uses AM/PM) or 24H (`false`)
+|For time values, whether to use 12-hour time with AM/PM (`true`) instead of 24-hour time (`false`).
 |`firstDaySunday`
 |`Boolean`
 |`false`
-|Whether to display Sunday as the first day of the week (`true`) or not
+|Whether calendar controls start the week on Sunday (`true`) instead of Monday (`false`).
 |===
 ////
 Licensed to the Apache Software Foundation (ASF) under one or more

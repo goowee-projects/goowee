@@ -46,7 +46,7 @@ An action can build an interactive graphical user interface (GUI), or serve as a
 
 Keep business logic in https://docs.grails.org/latest/guide/services.html[Grails services,window=_blank] rather than controller actions, following Grails conventions and best practices.
 
-To display a GUI, build it using <<contents>> and <<components>>. The following example creates a GUI to list, create, and edit books:
+To display a GUI, build its page content using <<contents>> and <<components>>. The following example creates a GUI to list, create, and edit books:
 
 .grails-app/controllers/BookController.groovy
 [source,groovy]
@@ -106,8 +106,8 @@ class BookController implements ElementsController {
 }
 ----
 <1> The `BookService` service implements the business logic
-<2> `createContent()` instantiates one of the available <<contents>> to display a list of records
-<3> The GUI we build for the `create` and `edit` actions is the same. We make sure to use the appropriate content for creating and editing (See <<contents>>)
+<2> `createContent()` instantiates a page content class to display a list of records (see <<contents>>).
+<3> The GUI we build for the `create` and `edit` actions is the same. We use the appropriate page content class for each action (see <<contents>>).
 
 Each action ends with a `display` statement that renders the composed GUI in the browser.
 
@@ -240,6 +240,37 @@ When rejecting values, you can use the following default `ValidationError` messa
 |Does not match pattern [{3}]
 |===
 
+==== Displaying errors on submitted components
+Pass validation errors to `display(errors: ...)` to show them on submitted components. For one submitted component, use a map whose keys match the field names in the component and whose values are error messages or i18n message keys. You can also pass a `Validateable` or GORM domain instance with an `errors` property.
+
+[source,groovy]
+----
+def onSave() {
+    display errors: [
+        title : 'Enter a title.',
+        author: 'Enter an author.',
+    ]
+}
+----
+
+When an event submits multiple components, pass a map keyed by component ID. Each value is either a field-to-message map or a `Validateable` or GORM domain instance with an `errors` property. The event's `submit` property must include each component ID.
+
+[source,groovy]
+----
+def onSave() {
+    display errors: [
+        bookForm: [
+            title: 'Enter a title.',
+        ],
+        authorForm: [
+            name: 'Enter an author name.',
+        ],
+    ]
+}
+----
+
+For example, configure the event with `submit: ['bookForm', 'authorForm']`. Message values are resolved through the message bundle. If a value does not match a message key, it is displayed as written.
+
 Now implement the complete CRUD interface:
 
 .grails-app/controllers/BookController.groovy
@@ -329,7 +360,7 @@ class BookController implements ElementsController {
 }
 ----
 <1> The `BookValidator` class checks that fields are not `null` and that the title is unique, and highlights invalid fields.
-<2> The `ContentTable`, `ContentCreate`, and `ContentEdit` contents define these method names.
+<2> The `ContentTable`, `ContentCreate`, and `ContentEdit` classes define these method names.
 
 NOTE: To see which URL each button calls, hover over the _Delete_, _Create_, or _Save_ button and check the bottom-left corner of your browser.
 
@@ -393,7 +424,7 @@ The `display` method is a key Goowee feature. It renders the GUI on the server a
 |`content`
 |`PageContent`
 |
-|Content to render in the page or transition. Render options can be passed as additional arguments. See <<contents>>.
+|Page content to render in the page or transition. Render options can be passed as additional arguments. See <<contents>>.
 
 |`transition`
 |`Transition`
@@ -430,11 +461,6 @@ The `display` method is a key Goowee feature. It renders the GUI on the server a
 |
 |Error message to display in a message box.
 
-|`infoMessage`
-|`String`
-|
-|Informational message to display instead of running the click invocation associated with a message. This option applies when `message`, `confirmMessage`, or `errorMessage` is also specified.
-
 |`exception`
 |`Exception`
 |
@@ -443,7 +469,7 @@ The `display` method is a key Goowee feature. It renders the GUI on the server a
 |`errors`
 |`Object`
 |
-|Validation errors to display on a submitted component. Accepts a field-to-message map or an object with an `errors` property, such as a `Validateable` or GORM domain instance.
+|Validation errors to display on submitted components. See <<validation>> for supported formats and examples.
 
 |`controller`
 |`String`
@@ -551,22 +577,6 @@ The `display` method is a key Goowee feature. It renders the GUI on the server a
 |Scroll behavior to apply after rendering the destination content.
 |===
 
-==== Field errors from a map
-When one component is submitted, pass a map whose keys match the IDs of its fields and whose values are error messages or i18n message keys. The action must be triggered by an event that submits the component.
-
-[source,groovy]
-----
-def onSave() {
-    Map fieldErrors = [
-        title : 'Enter a title.',
-        author: 'Enter an author.',
-    ]
-
-    display errors: fieldErrors
-}
-----
-
-Message values are resolved through the message bundle. If a value does not match a message key, it is displayed as written.
 ////
 Licensed to the Apache Software Foundation (ASF) under one or more
 contributor license agreements. See the NOTICE file distributed with

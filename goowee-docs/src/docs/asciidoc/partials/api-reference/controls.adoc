@@ -14,15 +14,15 @@ Each control extends the base class `Control` and shares the following propertie
 
 |`value`
 |`Object`
-|
+|`null`
 |The value held by the control.
 |`valueType`
 |`String`
-|
+|`null` on `Control`; concrete controls set their own type
 |The type name used to serialize and deserialize the control value.
 |`defaultValue`
 |`Object`
-|
+|`null`
 |Default value to use when no value has been assigned.
 |`nullable`
 |`Boolean`
@@ -30,27 +30,27 @@ Each control extends the base class `Control` and shares the following propertie
 |Whether the control can hold a `null` value.
 |`invalidChars`
 |`String`
-|
+|`null`
 |Characters that are not accepted as input. It takes precedence over `validChars` and `pattern`.
 |`validChars`
 |`String`
-|
+|`null`
 |Characters accepted as input. It takes precedence over `pattern`.
 |`pattern`
 |`String`
-|
+|`''`
 |A RegEx pattern to accept only specific input.
 |`prettyPrinter`
 |`String`
-|
+|`null`
 |Name of the pretty printer used to render the value. See <<registerPrettyPrinter()>>.
 |`transformer`
 |`String`
-|
+|`null`
 |Name of the transformer used to render the value. See <<registerTransformer()>>.
 |`textPrefix`
 |`String`
-|
+|Current controller name
 |Prefix used to look up localized text in `messages.properties`.
 |`renderTextPrefix`
 |`Boolean`
@@ -58,11 +58,11 @@ Each control extends the base class `Control` and shares the following propertie
 |Whether to display the `textPrefix` or not.
 |`textArgs`
 |`List`
-|
+|`null`
 |A list of objects to pass to the localized text.
 |`textStyle`
 |`TextStyle`
-|
+|`BOLD`
 |Text style applied by controls that render text.
 |===
 
@@ -104,11 +104,11 @@ c.form.addField(
 |The HTML input mode. It can be set to `NONE`, `TEXT`, `NUMERIC`, `DECIMAL`, `SEARCH`, `EMAIL`, `URL` or `TEL`.
 |`icon`
 |`String`
-|
+|`''`
 |An icon to display within the control, you can choose one from https://fontawesome.com/[Font Awesome,window=_blank]
 |`prefix`
 |`String`
-|
+|`''`
 |A text to display before the edit area of the control
 |`maxSize`
 |`Integer`
@@ -120,7 +120,7 @@ c.form.addField(
 |Whether to display a remaining-character counter. Set a positive `maxSize` as well for the counter to have a limit.
 |`placeholder`
 |`String`
-|
+|`''`
 |A text to display when the text area is empty
 |`autocomplete`
 |`Boolean`
@@ -132,7 +132,7 @@ c.form.addField(
 |Whether the field value is automatically selected when the field gets focus.
 |`textTransform`
 |`TextTransform`
-|
+|`NONE`
 |Transforms the input while typing. It may be one of the following:
 
 - `NONE`
@@ -142,7 +142,7 @@ c.form.addField(
 
 |`textStyle`
 |`TextStyle`
-|
+|`BOLD`
 |Determines the text style:
 
 - `NORMAL`
@@ -153,8 +153,12 @@ c.form.addField(
 - `LINE_THROUGH`
 |`pattern`
 |`String`
-|
+|`''`
 |A regular expression that accepts only specific input (for example, `'^[0-9\\.\\,]*$'` accepts only numbers, periods, and commas)
+|`renderTextPrefix`
+|`Boolean`
+|`false`
+|Whether the field's localized text prefix is rendered. This control defaults to `false`, overriding the `Control` default.
 |`onChangeAsync`
 |`Boolean`
 |`false`
@@ -192,47 +196,47 @@ Displays a list of options to choose from.
 
 |`optionsFromRecordset`
 |`List<Map>` or `List<Object>` or `GORM Recordset`
-|
+|`null`
 |Options will be set from the recordset
 |`optionsFromList`
 |`List`
-|
+|`null`
 |Options will be set from the List items. The key of each item will match the value of the item itself.
 |`optionsFromEnum`
 |`Enum`
-|
+|`null`
 |Options will be set from the Enum. The key of each item will match the value of the item itself.
 |`options`
 |`Map`
-|
+|`[]` (resolved options)
 |Options will be set from the Map items (key/value)
 |`keys`
 |`List<String>`
-|`['id']`
-|List of column names to submit as the key for the selected option
+|`[]`
+|List of column names to submit as the key for the selected option. When building options from records, Goowee uses `id` automatically if present.
 |`keysSeparator`
 |`String`
 |`,`
 |Separator used when multiple `keys` are combined into the option id.
 |`exclude`
 |`List`
-|
+|`[]`
 |List of values to exclude when building options from a list or enum.
 |`forEachOption`
 |`Closure`
-|
+|`null`
 |Closure executed for each option while options are being built.
 |`prettyPrinter`
 |`Class` or `String`
-|
+|`null` (inferred from the option type when possible)
 |Use the specified pretty printer to display the options. See <<registerPrettyPrinter()>>. If the registered pretty printer `Class` matches the item class, the pretty printer will be automatically applied.
 |`transformer`
 |`String`
-|
+|`null`
 |Name of the transformer to use to display the options. See <<registerTransformer()>>
 |`textStyle`
 |`TextStyle`
-|
+|`BOLD`
 |Determines the text style:
 
 - `NORMAL`
@@ -243,7 +247,7 @@ Displays a list of options to choose from.
 - `LINE_THROUGH`
 |`textPrefix`
 |`String`
-|
+|Current controller name
 |Prefix to add to each item so it can be referred in `message.properties` files to localise it
 |`renderTextPrefix`
 |`Boolean`
@@ -251,11 +255,11 @@ Displays a list of options to choose from.
 |Whether to display the `textPrefix` or not
 |`placeholder`
 |`String`
-|
+|`control.select.placeholder`
 |Displays a text when no option is selected
 |`allowClear`
 |`Boolean`
-|`true` when `multiple` is `true`; otherwise depends on the option source
+|`true` for recordset options or multiple selection; otherwise `false`
 |If `true` the selection can be cleared
 |`autoSelect`
 |`Boolean`
@@ -267,12 +271,12 @@ Displays a list of options to choose from.
 |Enables multiple selections
 |`search`
 |`Boolean`
-|
-|Displays a search box to filter the available options. It works on the client side, to search on the server we need to user the `search` event.
+|`true` for recordset and map options; `false` for list and enum options
+|Displays a search box to filter the available options. Without a `search` event, filtering is client-side. With a `search` event, Goowee requests options from the server when the list opens and when the search text changes.
 |`searchMinInputLength`
 |`Integer`
 |`0`
-|Minimum number of characters to input before the search on the server can start. Works in combination with the `search` event.
+|Currently has no effect in the client. A configured `search` event runs when the list opens and when the search text changes, regardless of this value.
 |===
 
 ==== Methods
@@ -302,12 +306,12 @@ Displays a list of options to choose from.
 |`change`
 |Triggered when the value changes
 |`search`
-|Triggered when `searchMinInputLength` is reached
+|Triggered when the list opens and when the search text changes.
 |===
 
 [[select-server-search]]
 ==== Search on server
-Example of setting up a server search.
+When a `search` event is configured, the control requests its initial options when the list opens and requests matching options as the user types. Each response must be a `Transition` that sets the `options` property on this `Select`.
 
 [source,groovy]
 ----
@@ -315,18 +319,16 @@ c.form.with {
     addField(
         class: Select,
         id: 'activity',
-        onLoad: 'onActivityLoad', // <1>
-        onChange: 'onActivityChange',
-        onSearch: 'onActivitySearch', // <2>
-        searchMinInputLength: 0, // <3>
+        onLoad: 'onLoadActivity', // <1>
+        onChange: 'onChangeActivity',
+        onSearch: 'onSearchActivity', // <2>
         submit: ['form'],
         allowClear: true,
     )
 }
 ----
-<1> The `load` event must return a single option to display
-<2> The `search` event will return a list of matching options
-<3> If `0` then the `search` event will be triggered as soon as the user clicks on the control to open the options list.
+<1> When a value is selected, the `load` event returns that option so the control can display its label. It returns no options when there is no selected value.
+<2> The `search` action returns matching options in a `Transition`.
 
 We need to create the following actions.
 
@@ -334,7 +336,7 @@ We need to create the following actions.
 ----
 ActivityService activityService
 
-def onActivityLoad() {
+def onLoadActivity() {
     def t = createTransition()
     def activities = activityService.list(id: params.activity) // <1>
     def options = Select.optionsFromRecordset(recordset: activities)
@@ -342,17 +344,17 @@ def onActivityLoad() {
     display transition: t
 }
 
-def onActivityChange() {
-    def t = createTransition()
-    // Do something...
-    display transition: t
-}
-
-def onActivitySearch() {
+def onSearchActivity() {
     def t = createTransition()
     def activities = activityService.list(find: params.activity) // <2>
     def options = Select.optionsFromRecordset(recordset: activities)
     t.set('activity', 'options', options)
+    display transition: t
+}
+
+def onChangeActivity() {
+    def t = createTransition()
+    // Do something...
     display transition: t
 }
 ----
@@ -383,7 +385,7 @@ c.form.with {
 
 |`text`
 |`String`
-|
+|Current `controller.id.text` message key
 |The text to display
 |`textArgs`
 |`List`
@@ -395,15 +397,15 @@ c.form.with {
 |If set to `true`, renders the checkbox with the simple style.
 |`option`
 |`Map`
-|
+|`null`
 |A single key/value option represented by this checkbox.
 |`optionKey`
 |`Object`
-|
+|`''`
 |The submitted value when this checkbox is checked.
 |`optionValue`
 |`Object`
-|
+|`''`
 |The displayed value for `optionKey`.
 |===
 
@@ -427,39 +429,39 @@ Use this control to manage multiple checkboxes like a `Select` control with mult
 
 |`optionsFromRecordset`
 |`List<Map>` or `List<Object>` or `GORM Recordset`
-|
+|`null`
 |Options will be set from the recordset.
 |`optionsFromList`
 |`List`
-|
+|`null`
 |Options will be set from the List items. The key of each item will match the value of the item itself.
 |`optionsFromEnum`
 |`Enum`
-|
+|`null`
 |Options will be set from the Enum. The key of each item will match the value of the item itself.
 |`options`
 |`Map`
-|
+|`[]` (resolved options)
 |Options will be set from the Map items (key/value).
 |`keys`
 |`List<String>`
-|`['id']`
-|List of column names to submit as the key for each option.
+|`[]`
+|List of column names to submit as the key for each option. When building options from records, Goowee uses `id` automatically if present.
 |`keysSeparator`
 |`String`
 |`,`
 |Separator used when multiple `keys` are combined into the option id.
 |`exclude`
 |`List`
-|
+|`[]`
 |List of values to exclude when building options from a list or enum.
 |`forEachOption`
 |`Closure`
-|
+|`null`
 |Closure executed for each option while options are being built.
 |`textPrefix`
 |`String`
-|
+|Current controller name
 |Prefix to add to each item so it can be referred in `message.properties` files to localise it.
 |`simple`
 |`Boolean`
@@ -469,7 +471,7 @@ Use this control to manage multiple checkboxes like a `Select` control with mult
 
 [[textarea]]
 === Textarea
-A text area that can span multiple lines in a form.
+A text area that can span multiple lines in a form. It inherits the other <<text-field,TextField>> properties.
 
 [source,groovy]
 ----
@@ -493,6 +495,10 @@ c.form.with {
 |`Integer`
 |`0`
 |Max number of characters the user can input
+|`autoSelect`
+|`Boolean`
+|`false`
+|Whether to select the field value when it receives focus. This defaults to `false` for `Textarea`, overriding the `TextField` default.
 |`displayMaxSize`
 |`Boolean`
 |`true`
@@ -554,7 +560,7 @@ Wildcards: `image/&#42;`, `audio/&#42;`, `video/&#42;`, `text/&#42;`, `applicati
 An empty list accepts all file types; Goowee does not define a fixed allowlist.
 |`maxFiles`
 |`Integer`
-|
+|`null`
 |Maximum number of files that can be uploaded.
 |`maxFileSize`
 |`String`
@@ -611,17 +617,25 @@ c.form.with {
 |`Boolean`
 |`false`
 |If negative values are allowed
+|`inputMode`
+|`TextFieldInputMode`
+|`DECIMAL`
+|The input mode follows the default `decimals: 2` setting.
+|`pattern`
+|`String`
+|`^[0-9]*((?<=[0-9])[.,])?[0-9]{0,2}$` with the default values
+|Generated from `decimals` and `negative`; changing either property changes the pattern.
 |`availableUnits`
 |`List`
-|
+|`[]`
 |A list of units to select from.
 |`unitOptions`
 |`Map<String, String>`
-|
+|`[:]`
 |The available units rendered as key/value options.
 |`defaultUnit`
 |`QuantityUnit`
-|
+|First available unit; otherwise `QuantityUnit.ND`
 |The default unit to display
 |===
 
@@ -673,6 +687,14 @@ c.form.with {
 |`Boolean`
 |`false`
 |If negative values are allowed
+|`inputMode`
+|`TextFieldInputMode`
+|`DECIMAL`
+|The input mode follows the default `decimals: 2` setting.
+|`pattern`
+|`String`
+|`^[0-9]*((?<=[0-9])[.,])?[0-9]{0,2}$` with the default values
+|Generated from `decimals` and `negative`; changing either property changes the pattern.
 |`currency`
 |`String`
 |`EUR`
@@ -692,7 +714,7 @@ c.form.with {
 
 [[number-field]]
 === NumberField
-A text field to manage number values.
+A text field to manage number values. The input mode and validation pattern are generated from `decimals` and `negative`.
 
 [source,groovy]
 ----
@@ -719,13 +741,21 @@ c.form.with {
 |`Boolean`
 |`true`
 |If negative values are allowed
+|`pattern`
+|`String`
+|`^-?[0-9]*$` with the default values
+|Generated from `decimals` and `negative`; changing either property changes the pattern.
+|`inputMode`
+|`TextFieldInputMode`
+|`NUMERIC` with the default `decimals: 0`; `DECIMAL` when `decimals` is greater than `0`
+|The input mode is set automatically when `decimals` changes.
 |`min`
 |`Integer`
-|
+|`null`
 |Minimum number the user can input
 |`max`
 |`Integer`
-|
+|`null`
 |Maximum number the user can input
 |===
 
@@ -742,7 +772,7 @@ c.form.with {
 
 [[date-field]]
 === DateField
-A control to input a date.
+A control to input a date. Its default validation pattern is `^[0-9/]*$`.
 
 [source,groovy]
 ----
@@ -763,11 +793,15 @@ c.form.with {
 
 |`min`
 |`LocalDate`
-|
+|`null`
 |Minimum date the user can input
+|`pattern`
+|`String`
+|`^[0-9/]*$`
+|Validation pattern applied to date input.
 |`max`
 |`LocalDate`
-|
+|`null`
 |Maximum date the user can input
 |`autoPopulate`
 |`Boolean`
@@ -788,7 +822,7 @@ c.form.with {
 
 [[month-field]]
 === MonthField
-A control to input a month. See <<date-field>>.
+A control to input a month. It inherits the date and time boundaries and `autoPopulate` option from <<datetime-field>>. Its default validation pattern is `^[0-9/]*$`.
 
 [source,groovy]
 ----
@@ -813,7 +847,7 @@ c.form.with {
 
 [[time-field]]
 === TimeField
-A control to input a time.
+A control to input a time. Its default validation pattern is `^[0-9:]*$`.
 
 [source,groovy]
 ----
@@ -834,15 +868,19 @@ c.form.with {
 
 |`min`
 |`LocalTime`
-|
+|`null`
 |Minimum time the user can input
+|`pattern`
+|`String`
+|`^[0-9:]*$`
+|Validation pattern applied to time input.
 |`max`
 |`LocalTime`
-|
+|`null`
 |Maximum time the user can input
 |`timeStep`
 |`Integer`
-|
+|`null` (picker default)
 |The amount of minutes the user can select. For example if set to `15` the only available time selections are `00`, `15`, `30` and `45`.
 |`renderSeconds`
 |`Boolean`
@@ -867,7 +905,7 @@ c.form.with {
 
 [[datetime-field]]
 === DateTimeField
-A control to input a date and time.
+A control to input a date and time. Its default validation pattern is `^[0-9/: ]*$`.
 
 [source,groovy]
 ----
@@ -887,15 +925,19 @@ c.form.with {
 
 |`min`
 |`LocalDate`, `LocalTime` or `LocalDateTime`
-|
+|`null`
 |Minimum date and time the user can input
+|`pattern`
+|`String`
+|`^[0-9/: ]*$`
+|Validation pattern applied to date and time input. `DateField`, `MonthField`, and `TimeField` use their own patterns.
 |`max`
 |`LocalDate`, `LocalTime` or `LocalDateTime`
-|
+|`null`
 |Maximum date and time the user can input
 |`timeStep`
 |`Integer`
-|
+|`null` (picker default)
 |The amount of minutes the user can select. For example if set to `15` the only available time selections are `00`, `15`, `30` and `45`.
 |`renderSeconds`
 |`Boolean`
@@ -920,7 +962,7 @@ c.form.with {
 
 [[email-field]]
 === EmailField
-A control to input an email. See <<TextField>>.
+A control to input an email. It inherits the properties of <<TextField>> and defaults to `inputMode: EMAIL`, the `fa-at` icon, and the pattern `^(?!.*@.*@)(?!.*(\.)\1).[A-Za-z0-9_\-\.@]*$`.
 
 [source,groovy]
 ----
@@ -934,7 +976,7 @@ c.form.with {
 
 [[telephone-field]]
 === TelephoneField
-A control to input a telephone number. See <<TextField>>.
+A control to input a telephone number. It inherits the properties of <<TextField>> and defaults to `inputMode: TEL`, the `fa-phone` icon, and the pattern `^[0-9\+]*$`.
 
 [source,groovy]
 ----
@@ -948,7 +990,7 @@ c.form.with {
 
 [[url-field]]
 === UrlField
-A control to input a URL. See <<TextField>>.
+A control to input a URL. It inherits the properties of <<TextField>> and defaults to `inputMode: URL`, the `fa-globe` icon, and the pattern `^[a-zA-Z0-9@\-_.:\/~#=!?&\*()]*$`.
 
 [source,groovy]
 ----
@@ -962,7 +1004,7 @@ c.form.with {
 
 [[password-field]]
 === PasswordField
-A control to input a password. See <<TextField>>.
+A control to input a password. It inherits the properties of <<TextField>> and defaults to `inputType: PASSWORD`, the `fa-lock` icon, and `autocomplete: false`.
 
 [source,groovy]
 ----
@@ -976,7 +1018,7 @@ c.form.with {
 
 [[hidden-field]]
 === HiddenField
-A control to store a value without displaying it to the user.
+A control to store a value without displaying it to the user. If no value is set, its `valueType` defaults to `STRING`; `display` and `skipFocus` default to `false` and `true`, respectively.
 
 [source,groovy]
 ----

@@ -16,7 +16,7 @@ Each component extends the base class `Component`, so all components share the f
 
 |`id`
 |`String`
-|
+|Required
 |Id of the component instance. This is mandatory, it must be unique and provided in the constructor.
 |`visible`
 |`Boolean`
@@ -36,23 +36,23 @@ Each component extends the base class `Component`, so all components share the f
 |The component won't participate in keyboard or mouse selection
 |`sticky`
 |`Boolean`
-|
+|`null`
 |The component is sticky on top
 |`containerSpecs`
 |`Map`
-|
+|`[:]` (with `attributes: [:]`)
 |Contains instructions for the container. The container component may or may not respect them, see the documentation for the specific container component.
 |`textColor`
 |`String`
-|
+|`null`
 |The text color, CSS format
 |`backgroundColor`
 |`String`
-|
+|`null`
 |Background color, CSS format
 |`cssClass`
 |`String`
-|
+|`''`
 |Custom CSS class to apply. The CSS class must be a https://getbootstrap.com/[Bootstrap,window=_blank] CSS class or a custom one declared in the `grails-app/assets/stylesheets/goowee.css` file. See <<custom-css>>.
 |===
 
@@ -103,7 +103,7 @@ grid.addColumn().addComponent(
 |Whether the grid renders as an HTML element instead of a CSS-only container.
 |`xs`, `sm`, `md`, `lg`, `xl`, `xxl`
 |`Integer`
-|
+|`null` (each breakpoint)
 |The default column span at each Bootstrap breakpoint. An unset breakpoint inherits the applicable wider-breakpoint behavior.
 |===
 
@@ -129,7 +129,7 @@ A `GridColumn` is returned by `Grid.addColumn()` and holds the components arrang
 
 |`xs`, `sm`, `md`, `lg`, `xl`, `xxl`
 |`Integer`
-|
+|`null` (each breakpoint)
 |Column span at the corresponding Bootstrap breakpoint. A value set on the column overrides the same breakpoint on its parent grid.
 |`scrollable`
 |`Boolean`
@@ -150,35 +150,35 @@ A `Header` can have a `backButton` on the left, a `nextButton` on the right, and
 
 |`sticky`
 |`Boolean`
-|
+|`null`
 |When set to `true` the header will stick on top. Adding a `backButton` or `nextButton` does not change this property. Set `sticky` explicitly to `true` to keep the header and its buttons visible while scrolling, or to `false` to make the header scroll with the content.
 |`text`
 |`String`
-|
+|Current `controller.action.id` message key
 |The title text to display
 |`textArgs`
 |`List`
-|
+|`[]`
 |Args to use when looking up an i18n message. For example, if `messages.properties` contains `book.index.header=Books for {0} {1}` and `textArgs = ['Mario', 'Rossi']`, the rendered text will be `Books for Mario Rossi`.
 |`icon`
 |`String`
-|
+|`null`
 |An icon to be displayed before the title text. We can choose one from https://fontawesome.com/[Font Awesome,window=_blank]
 |`hasBackButton`
 |`Boolean`
-|
+|`false`
 |`true` if a `backButton` has been added
 |`hasNextButton`
 |`Boolean`
-|
+|`false`
 |`true` if a `nextButton` has been added
 |`backButton`
 |`Button`
-|
+|`null`
 |The back button object. See <<button>>
 |`nextButton`
 |`Button`
-|
+|`null`
 |The next button object. See <<button>>
 |===
 
@@ -369,7 +369,7 @@ c.table.with {
 |Omits the named properties from each row's values map for GORM and POJO recordsets. Map and list recordsets are not filtered.
 |`stickyHeaderOffset`
 |`Double`
-|
+|`null`
 |Offset, in pixels, applied to the sticky table header. When unset or `0`, the page's sticky-box offset is used.
 |`stickyHeaderZIndex`
 |`Integer`
@@ -401,11 +401,11 @@ c.table.with {
 |Whether to display the no-results message when the table has no rows.
 |`noResultsIcon`
 |`String`
-|
+|`'fa-regular fa-folder-open mb-n2'`
 |Icon classes for the no-results message. Choose an icon from https://fontawesome.com/[Font Awesome,window=_blank].
 |`noResultsMessage`
 |`String`
-|
+|`'component.table.no.results'`
 |Message key for the text displayed when the table has no results.
 |===
 
@@ -717,15 +717,15 @@ c.table.with {
 
 |`isFiltering`
 |`Boolean`
-|
+|`false` (before filtering)
 |`true` if the filters form has values in its fields
 |`fold`
 |`Boolean`
-|`true`
+|`true` on mobile; otherwise `false`
 |Whether the filters form is displayed as folded or not at its first appearance. After that its folded state will be stored in the session.
 |`autoFold`
 |`Boolean`
-|`false`
+|`true` on mobile; otherwise `false`
 |If set to `true` the filters form will be folded each time a search is submitted
 |===
 
@@ -744,14 +744,13 @@ c.table.with {
 
 [[form]]
 === Form
-A `Form` lays out <<components>> and <<controls>>. When its grid system is enabled, it provides 12 columns for arranging form fields horizontally.
+A `Form` lays out <<components>> and <<controls>> in a 12-column grid for arranging form fields horizontally.
 
 On mobile devices, all fields are displayed in a single column, making them easier to use when horizontal space is limited.
 
 [source,groovy]
 ----
 c.form.with {
-    grid = true
     addField(
         class: TextField,
         id: 'title',
@@ -814,12 +813,8 @@ properties before assigning `optionsFromRecordset`, `optionsFromList`, or
 
 |`validate`
 |`Class`
-|
+|`null`
 |A `grails.validation.Validateable` class or a GORM domain class used to automatically render the field as required. A red `*` will be displayed next to the field label if appropriate.
-|`grid`
-|`Boolean`
-|`false`
-|Whether to activate the grid system or not
 |`readonly`
 |`Boolean`
 |`false`
@@ -856,23 +851,23 @@ A form field wraps a `Control` with a label and places it in the grid. A `FormFi
 
 |`component`
 |`Component`
-|
+|Required
 |The contained component
 |`label`
 |`String`
-|
+|Current `controller.id` message key when created by `Form.addField()`
 |The field label
 |`labelArgs`
 |`List`
-|
+|`[]`
 |A list of objects to pass to the localized message (Eg. when using `{0}` in `message.properties`)
 |`help`
 |`String`
-|
+|`''` when created by `Form.addField()`
 |A help message
 |`helpArgs`
 |`List`
-|
+|`[]`
 |A list of objects to pass to the localized message (Eg. when using `{0}` in `message.properties`)
 |`helpCollapsed`
 |`Boolean`
@@ -880,11 +875,11 @@ A form field wraps a `Control` with a label and places it in the grid. A `FormFi
 |Whether the help text should be initially collapsed.
 |`nullable`
 |`Boolean`
-|`true`
+|`true` unless inferred from `Form.validate`
 |Whether to display the field as nullable or not. If set will override the form `validate` logic (See <<form>>)
 |`displayLabel`
 |`Boolean`
-|
+|`true`
 |If set to `false` the label will not be displayed. The space occupied by the label will be taken off the screen resulting in a different vertical positioning of the `Control`.
 |`highlight`
 |`Boolean`
@@ -896,11 +891,11 @@ A form field wraps a `Control` with a label and places it in the grid. A `FormFi
 |Whether the field contains a multiline control.
 |`acceptedCols`
 |`List`
-|
+|Values `1`–`12`; `3`–`12` when `multiline` is `true`
 |List of accepted values for `cols`. If not specified, values from `1` to `12` are accepted.
 |`acceptedRows`
 |`List`
-|
+|`[]` (accepts any row count)
 |List of accepted values for `rows`. If not specified, any value is accepted.
 |`cols`
 |`Integer`
@@ -954,23 +949,23 @@ c.form.with {
 
 |`defaultAction`
 |`Menu`
-|
+|Created by default from the button arguments, unless `dontCreateDefaultAction` is `true`
 |The default action
 |`tailAction`
 |`Menu`
-|
+|`null`
 |The tail action
 |`actionMenu`
 |`Menu`
-|
+|Empty `Menu`
 |The action menu
 |`primary`
 |`Boolean`
-|`false`
+|`null` (not marked primary)
 |When set to `true` the button color will use the `PRIMARY_BACKGROUND_COLOR` and `PRIMARY_TEXT_COLOR` tenant properties indicating that its role in the GUI is primary (See <<tenant-properties>>).
 |`stretch`
 |`Boolean`
-|`false`
+|`true`
 |Set to `true` to let the button fill all the available horizontal space
 |`group`
 |`Boolean`
@@ -978,7 +973,7 @@ c.form.with {
 |If set to `true` all actions of the button will be displayed inline and directly accessible
 |`maxWidth`
 |`Integer`
-|
+|`0`
 |The max width in pixels that the button can reach
 |===
 
@@ -1022,23 +1017,23 @@ c.form.with {
 
 |`icon`
 |`String`
-|
+|`null`
 |Icon that graphically represents the link. Choose one from https://fontawesome.com/[Font Awesome,window=_blank].
 |`image`
 |`String`
-|
+|`null`
 |An SVG image that graphically represents the link. If specified a corresponding file must exist in the `grails-app/assets` folder.
 |`text`
 |`String`
-|
+|Current `controller.id` message key
 |A label that describes the link, usually a code found in `messages.properties`
 |`namespace`
 |`String`
-|
+|`''`
 |The namespace of the controller to use in the link.
 |`controller`
 |`String`
-|
+|Current controller (stored as `''`)
 |The name of the controller to use in the link. If not specified, the current controller will be used.
 |`action`
 |`String`
@@ -1050,51 +1045,51 @@ c.form.with {
 |Request parameters to pass to the link destination.
 |`fragment`
 |`String`
-|
+|`''`
 |The URL fragment, often called anchor tag, to append to the link.
 |`path`
 |`String`
-|
+|`''`
 |An absolute path, starting with `/`, or a relative path.
 |`url`
 |`String`
-|
+|`''`
 |Point to a specific URL
 |`direct`
 |`Boolean`
-|
+|`null`; `true` when `url` is set
 |Whether to render the whole html page (or raw http body) or a Transition
 |`submit`
 |`List<String>`
-|
+|`null`
 |List of component names whose values must be submitted with the link.
 |`target`
 |`String`
-|
+|`null`
 |Set a target name to open the page into a new browser tab. All links with te same target will display in the same tab.
 |`targetNew`
 |`Boolean`
-|
+|`false`
 |If set to `true` the link will display on a new tab each time it is clicked
 |`hotkey`
 |`Hotkey`
-|
+|`null`
 |Function key `F1`–`F24` or `Enter` assigned to the link. Press it with `Command` on macOS or `AltGr` on Windows and Linux. Holding the modifier shows hotkey hints; releasing it hides them. `Shift` + `F1`–`F12` activates `F13`–`F24`.
 |`modal`
 |`Boolean`
-|
+|`false`
 |Whether to display the content in a modal dialog or not
 |`small`
 |`Boolean`
-|
+|`false`
 |When displaying the content as `modal` the dialog will be smaller.
 |`large`
 |`Boolean`
-|
+|`false`
 |When displaying the content as `modal` the dialog will be wider.
 |`fullscreen`
 |`Boolean`
-|
+|`false`
 |When displaying the content as `modal` the dialog will fit the whole browser window size.
 |`closeButton`
 |`Boolean`
@@ -1106,35 +1101,35 @@ c.form.with {
 |If set to `true` the browser address bar will be updated with the link destination URL, otherwise the browser will not update its address bar. NOTE: Accessing from a mobile phone the address bar will never be updated to enhance the user experience.
 |`animate`
 |`String`
-|
+|`null`
 |Can be set to `fade`, `next` and `back`. At the moment only `fade` is implemented as a graphical transition when changing content.
 |`scroll`
 |`String`
-|
+|`null`
 |Scroll behavior to apply when rendering the destination content. Can be `reset` (scrolls instantly to the top), `top` (scrolls smoothly to the top), `{componentName}` (scrolls to the top of the specified component)
 |`loading`
 |`Boolean`
-|
+|`null` (no loading indicator)
 |If set to `true`, a waiting screen will be displayed while the link is being executed.
 |`infoMessage`
 |`String`
-|
+|`null`
 |If specified an info message will pop up, the link will never be executed
 |`infoMessageArgs`
 |`List`
-|
+|`null`
 |A list of objects to pass to the localized info message.
 |`confirmMessage`
 |`String`
-|
+|`null`
 |If specified a confirmation message will pop up giving the user a chance to cancel the action
 |`confirmMessageArgs`
 |`List`
-|
+|`null`
 |A list of objects to pass to the localized confirm message.
 |`confirmMessageOnConfirm`
 |`InvocationDefinition`
-|
+|`null`
 |Invocation to execute after the user confirms the confirmation message.
 |===
 
@@ -1172,35 +1167,35 @@ c.form.with {
 
 |`text`
 |`Object`
-|
+|Current `controller.id` message key
 |The text to display. If it’s a `Boolean` value a check will be displayed.
 |`html`
 |`String`
-|
+|`null`
 |An html string, useful to format text or insert links
 |`url`
 |`String`
-|
+|`null`
 |If specified the `text` will be a link to this URL
 |`icon`
 |`String`
-|
+|`null`
 |An icon to display before the text, you can choose one from https://fontawesome.com/[Font Awesome,window=_blank]
 |`iconClass`
 |`String`
-|
+|`null`
 |Custom CSS class to apply to the icon.
 |`image`
 |`String`
-|
+|`null`
 |An SVG image to display before the text. If specified, the corresponding file must exist in the `grails-app/assets` folder.
 |`imageClass`
 |`String`
-|
+|`null`
 |Custom CSS class to apply to the image.
 |`tooltip`
 |`String`
-|
+|`null`
 |Text to display on mouse hover.
 |`verticalAlign`
 |`VerticalAlign`
@@ -1208,11 +1203,11 @@ c.form.with {
 |Determines the vertical alignment. It can be set to `DEFAULT`, `TOP`, `MIDDLE` or `BOTTOM`.
 |`textAlign`
 |`TextAlign`
-|
+|`DEFAULT`
 |Determines the text horizontal alignment. It can be set to `DEFAULT`, `START`, `END` or `CENTER` (Default: `DEFAULT`).
 |`textWrap`
 |`TextWrap`
-|
+|`SOFT_WRAP`
 |Determines how the text is wrapped:
 
 - `NO_WRAP` The text will be displayed in one line
@@ -1221,7 +1216,7 @@ c.form.with {
 - `LINE_BREAK` Each line will be displayed in one line. Line breaks are taken in consideration.
 |`textStyle`
 |`TextStyle`
-|
+|`NONE`
 |Determines the text style:
 
 - `NORMAL`
@@ -1230,17 +1225,13 @@ c.form.with {
 - `MONOSPACE`
 - `UNDERLINE`
 - `LINE_THROUGH`
-|`border`
-|`Boolean`
-|
-|Draws a coloured background. Useful when we want to display the label in a different color.
 |`userSelect`
 |`Boolean`
 |`false`
 |If set to `true`, the label text can be selected and copied by the user.
 |`tag`
 |`Boolean`
-|
+|`true` without `html`; otherwise `false`
 |If set to `true`, renders the label as a tag. Defaults to `true` when `html` is not specified, otherwise `false`.
 |`renderBoolean`
 |`Boolean`
@@ -1275,7 +1266,7 @@ c.form.with {
 
 |`image`
 |`String`
-|
+|`null`
 |The browser-readable URL or path of the image to display. For a tenant public resource, use `linkPublicResource(...)`.
 |`keepAspectRatio`
 |`Boolean`
@@ -1334,8 +1325,8 @@ Use separators to add space between groups of fields in a form.
 
 |`squeeze`
 |`Boolean`
-|
-|Reduces the space the separator will introduce, leaving just the space for the label. The first separator ina form will be squeezed by default.
+|`false` (the first field added to a `Form` defaults to `true`)
+|Reduces the space the separator will introduce, leaving just the space for the label. The first separator in a form will be squeezed by default.
 |===
 
 [[key-press]]
@@ -1373,7 +1364,7 @@ When `hideInput` is enabled, scanner-speed characters are removed from a focused
 |Whether scanner input detection is enabled.
 |`hideInput`
 |`Boolean`
-|`false`
+|`true`
 |When `true`, scanner-speed input is removed from the focused input field. When `false`, the field is left unchanged by PageKeyPress.
 |===
 

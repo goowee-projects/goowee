@@ -61,8 +61,8 @@ class BookController implements ElementsController {
 
         c.table.with {
             columns = [
-                    'title',
-                    'author',
+                'title',
+                'author',
             ]
             body = bookService.list()
         }
@@ -77,12 +77,12 @@ class BookController implements ElementsController {
 
         c.form.with {
             addField(
-                    class: TextField,
-                    id: 'title',
+                class: TextField,
+                id: 'title',
             )
             addField(
-                    class: TextField,
-                    id: 'author',
+                class: TextField,
+                id: 'author',
             )
         }
 
@@ -120,8 +120,8 @@ We implement a `BookService` with CRUD operations to manage a simple in-memory d
 class BookService {
 
     private static final data = [
-            [id: 1, title: 'The Teachings of Don Juan', author: 'Carlos Castaneda', description: 'This is a nice fictional book'],
-            [id: 2, title: 'The Antipodes of the Mind', author: 'Benny Shanon', description: 'This is a nice scientific book'],
+        [id: 1, title: 'The Teachings of Don Juan', author: 'Carlos Castaneda', description: 'This is a nice fictional book'],
+        [id: 2, title: 'The Antipodes of the Mind', author: 'Benny Shanon', description: 'This is a nice scientific book'],
     ]
 
     List<Map> list() {
@@ -252,8 +252,8 @@ class BookController implements ElementsController {
 
         c.table.with {
             columns = [
-                    'title',
-                    'author',
+                'title',
+                'author',
             ]
             body = bookService.list()
         }
@@ -268,12 +268,12 @@ class BookController implements ElementsController {
 
         c.form.with {
             addField(
-                    class: TextField,
-                    id: 'title',
+                class: TextField,
+                id: 'title',
             )
             addField(
-                    class: TextField,
-                    id: 'author',
+                class: TextField,
+                id: 'author',
             )
         }
 

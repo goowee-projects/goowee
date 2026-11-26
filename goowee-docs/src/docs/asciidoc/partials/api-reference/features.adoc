@@ -19,28 +19,28 @@ class BootStrap {
 
         gooweeApplication.onInit {
             registerFeature(
-                    controller: 'book', // <1>
-                    action: 'index', // <2>
-                    icon: 'fa-book', // <3>
-                    authorities: ['ROLE_CAN_EDIT_BOOKS'] // <4>
+                controller: 'book', // <1>
+                action: 'index', // <2>
+                icon: 'fa-book', // <3>
+                authorities: ['ROLE_CAN_EDIT_BOOKS'] // <4>
             )
             registerFeature(
-                    controller: 'read',
-                    icon: 'fa-glasses',
+                controller: 'read',
+                icon: 'fa-glasses',
             )
 
             registerFeature(
-                    controller: 'configuration', // <5>
+                controller: 'configuration', // <5>
             )
             registerFeature(
-                    parent: 'configuration', // <6>
-                    controller: 'authors',
-                    icon: 'fa-user',
+                parent: 'configuration', // <6>
+                controller: 'authors',
+                icon: 'fa-user',
             )
             registerFeature(
-                    parent: 'configuration',
-                    controller: 'publishers',
-                    icon: 'fa-user-shield',
+                parent: 'configuration',
+                controller: 'publishers',
+                icon: 'fa-user-shield',
             )
         }
 
@@ -144,9 +144,9 @@ class BootStrap {
 
         gooweeApplication.onInit {
             registerUserFeature(
-                    controller: 'manual',
-                    icon: 'fa-book',
-                    targetNew: true,
+                controller: 'manual',
+                icon: 'fa-book',
+                targetNew: true,
             )
         }
 

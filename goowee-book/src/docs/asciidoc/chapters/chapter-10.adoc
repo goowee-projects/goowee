@@ -43,51 +43,51 @@ class ButtonController implements ElementsController {
 
         c.form.with {
             addField(
-                    class: TextField,
-                    id: 'text',
-                    defaultValue: 'You are the journey',
+                class: TextField,
+                id: 'text',
+                defaultValue: 'You are the journey',
             )
             addField(
-                    class: Button,
-                    id: 'show',
-                    action: 'onShow',
-                    submit: ['form'],
-                    primary: true,
-                    cols: 4,
+                class: Button,
+                id: 'show',
+                action: 'onShow',
+                submit: ['form'],
+                primary: true,
+                cols: 4,
             )
             Button caseBtn = addField(
-                    class: Button,
-                    id: 'lowercase',
-                    icon: 'fa-circle-down',
-                    action: 'onLowercase',
-                    submit: ['form'],
-                    cols: 4,
+                class: Button,
+                id: 'lowercase',
+                icon: 'fa-circle-down',
+                action: 'onLowercase',
+                submit: ['form'],
+                cols: 4,
             ).component
             caseBtn.addTailAction(
-                    action: 'onUppercase',
-                    submit: ['form'],
-                    text: '',
-                    icon: 'fa-circle-up',
+                action: 'onUppercase',
+                submit: ['form'],
+                text: '',
+                icon: 'fa-circle-up',
             )
 
             Button capitalizeBtn = addField(
-                    class: Button,
-                    id: 'capitalize',
-                    action: 'onCapitalize',
-                    submit: ['form'],
-                    cols: 4,
+                class: Button,
+                id: 'capitalize',
+                action: 'onCapitalize',
+                submit: ['form'],
+                cols: 4,
             ).component
             capitalizeBtn.addAction(
-                    action: 'onUncapitalize',
-                    submit: ['form'],
+                action: 'onUncapitalize',
+                submit: ['form'],
             )
             capitalizeBtn.addAction(
-                    action: 'onQuote',
-                    submit: ['form'],
+                action: 'onQuote',
+                submit: ['form'],
             )
             capitalizeBtn.addAction(
-                    action: 'onHighlight',
-                    submit: ['form'],
+                action: 'onHighlight',
+                submit: ['form'],
             )
         }
 

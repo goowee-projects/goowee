@@ -20,14 +20,14 @@ class ReadController implements ElementsController {
 
         c.form.with {
             addField(
-                    class: Select,
-                    id: 'book',
-                    optionsFromRecordset: bookService.list(),
-                    onChange: 'onChangeBook', // <1>
+                class: Select,
+                id: 'book',
+                optionsFromRecordset: bookService.list(),
+                onChange: 'onChangeBook', // <1>
             )
             addField(
-                    class: Textarea,
-                    id: 'description',
+                class: Textarea,
+                id: 'description',
             )
         }
 
@@ -84,11 +84,11 @@ class ReadController implements ElementsController {
     ...
 
         addField(
-                class: Select,
-                id: 'book',
-                optionsFromRecordset: bookService.list(),
-                prettyPrinter: 'BOOK', // <1>
-                onChange: 'onChangeBook',
+            class: Select,
+            id: 'book',
+            optionsFromRecordset: bookService.list(),
+            prettyPrinter: 'BOOK', // <1>
+            onChange: 'onChangeBook',
         )
 
     ...

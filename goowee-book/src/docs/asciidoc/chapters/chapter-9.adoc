@@ -78,7 +78,7 @@ class BookService {
     TBook get(Serializable id) {
         // Add any relationships here (Eg. references to other DomainObjects or hasMany)
         Map fetch = [
-                relationshipName: 'join',
+            relationshipName: 'join',
         ]
 
         return buildQuery(id: id).get(fetch: fetch)
@@ -90,7 +90,7 @@ class BookService {
         // Add single-sided relationships here (Eg. references to other DomainObjects)
         // DO NOT add hasMany relationships, you are going to have troubles with pagination
         fetchParams.fetch = [
-                relationshipName: 'join',
+            relationshipName: 'join',
         ]
 
         def query = buildQuery(filterParams)
@@ -164,27 +164,27 @@ class BookController implements ElementsController {
             filters.with {
                 fold = false
                 addField(
-                        class: TextField,
-                        id: 'find',
-                        label: TextDefault.FIND,
+                    class: TextField,
+                    id: 'find',
+                    label: TextDefault.FIND,
                 )
             }
             sortable = [
-                    title: 'asc',
-                    author: 'asc',
+                title: 'asc',
+                author: 'asc',
             ]
             columns = [
-                    'title',
-                    'author',
-                    'description',
-                    'taken',
+                'title',
+                'author',
+                'description',
+                'taken',
             ]
 
             groupActions.addAction(
-                    action: 'onGiveBackAll',
-                    submit: 'table',
-                    icon: 'fa-regular fa-bookmark',
-                    confirmMessage: 'book.index.confirm.give.back.all',
+                action: 'onGiveBackAll',
+                submit: 'table',
+                icon: 'fa-regular fa-bookmark',
+                confirmMessage: 'book.index.confirm.give.back.all',
             )
 
             body.eachRow { TableRow row, Map values ->
@@ -211,20 +211,20 @@ class BookController implements ElementsController {
         c.form.with {
             validate = TBook
             addField(
-                    class: TextField,
-                    id: 'title',
+                class: TextField,
+                id: 'title',
             )
             addField(
-                    class: TextField,
-                    id: 'author',
+                class: TextField,
+                id: 'author',
             )
             addField(
-                    class: TextField,
-                    id: 'description',
+                class: TextField,
+                id: 'description',
             )
             addField(
-                    class: Checkbox,
-                    id: 'taken',
+                class: Checkbox,
+                id: 'taken',
             )
         }
 
@@ -310,18 +310,18 @@ class BookController implements ElementsController {
             ...
 
             bookService.create(
-                    title: 'The Teachings of Don Juan',
-                    author: 'Carlos Castaneda',
-                    description: 'This is a nice fictional book',
-                    borrowed: false,
-                    failOnError: true,
+                title: 'The Teachings of Don Juan',
+                author: 'Carlos Castaneda',
+                description: 'This is a nice fictional book',
+                borrowed: false,
+                failOnError: true,
             )
             bookService.create(
-                    title: 'The Antipodes of the Mind',
-                    author: 'Benny Shanon',
-                    description: 'This is a nice scientific book',
-                    borrowed: false,
-                    failOnError: true,
+                title: 'The Antipodes of the Mind',
+                author: 'Benny Shanon',
+                description: 'This is a nice scientific book',
+                borrowed: false,
+                failOnError: true,
             )
         }
 
@@ -330,8 +330,8 @@ class BookController implements ElementsController {
             ...
 
             registerFeature(
-                    controller: 'book',
-                    icon: 'fa-book',
+                controller: 'book',
+                icon: 'fa-book',
             )
         }
     }

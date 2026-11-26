@@ -76,15 +76,15 @@ A `Grid` lays out components in responsive columns using the Bootstrap grid syst
 [source,groovy]
 ----
 def grid = c.addComponent(
-        class: Grid,
-        id: 'summary',
+    class: Grid,
+    id: 'summary',
 )
 grid.setBreakpoints(12, 6, 4, 4, 3, 2)
 
 grid.addColumn().addComponent(
-        class: Label,
-        id: 'status',
-        text: 'Ready',
+    class: Label,
+    id: 'status',
+    text: 'Ready',
 )
 ----
 

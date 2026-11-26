@@ -62,27 +62,27 @@ class BootStrap {
     def init = {
         gooweeApplication.onDevInstall { String tenantId ->
             personService.create(
-                    firstname: 'Felicity',
-                    lastname: 'Green',
-                    birthdate: LocalDate.of(2021, 1, 2),
+                firstname: 'Felicity',
+                lastname: 'Green',
+                birthdate: LocalDate.of(2021, 1, 2),
             )
             personService.create(
-                    firstname: 'Grace',
-                    lastname: 'Blue',
-                    birthdate: LocalDate.of(2021, 2, 1),
+                firstname: 'Grace',
+                lastname: 'Blue',
+                birthdate: LocalDate.of(2021, 2, 1),
             )
             personService.create(
-                    firstname: 'Joy',
-                    lastname: 'Red',
-                    birthdate: LocalDate.of(2021, 12, 21),
+                firstname: 'Joy',
+                lastname: 'Red',
+                birthdate: LocalDate.of(2021, 12, 21),
             )
         }
 
         gooweeApplication.onInit {
             registerFeature(
-                    controller: 'person',
-                    icon: 'fa-user',
-                    favourite: true,
+                controller: 'person',
+                icon: 'fa-user',
+                favourite: true,
             )
         }
     }
@@ -166,7 +166,7 @@ class PersonService {
     TPerson get(Serializable id) {
         // Add any relationships here (Eg. references to other DomainObjects or hasMany)
         Map fetch = [
-                relationshipName: 'join',
+            relationshipName: 'join',
         ]
 
         return buildQuery(id: id).get(fetch: fetch)
@@ -178,7 +178,7 @@ class PersonService {
         // Add single-sided relationships here (Eg. references to other DomainObjects)
         // DO NOT add hasMany relationships, you are going to have troubles with pagination
         fetchParams.fetch = [
-                relationshipName: 'join',
+            relationshipName: 'join',
         ]
 
         def query = buildQuery(filterParams)
@@ -260,23 +260,23 @@ class PersonController implements ElementsController {
         c.table.with {
             filters.with {
                 addField(
-                        class: DateField,
-                        id: 'birthdate',
-                        cols: 3,
+                    class: DateField,
+                    id: 'birthdate',
+                    cols: 3,
                 )
                 addField(
-                        class: TextField,
-                        id: 'find',
-                        cols: 9,
+                    class: TextField,
+                    id: 'find',
+                    cols: 9,
                 )
             }
             sortable = [
-                    lastname: 'asc',
+                lastname: 'asc',
             ]
             columns = [
-                    'firstname',
-                    'lastname',
-                    'birthdate',
+                'firstname',
+                'lastname',
+                'birthdate',
             ]
         }
 
@@ -294,16 +294,16 @@ class PersonController implements ElementsController {
         c.form.with {
             validate = TPerson
             addField(
-                    class: TextField,
-                    id: 'firstname',
+                class: TextField,
+                id: 'firstname',
             )
             addField(
-                    class: TextField,
-                    id: 'lastname',
+                class: TextField,
+                id: 'lastname',
             )
             addField(
-                    class: DateField,
-                    id: 'birthdate',
+                class: DateField,
+                id: 'birthdate',
             )
         }
 

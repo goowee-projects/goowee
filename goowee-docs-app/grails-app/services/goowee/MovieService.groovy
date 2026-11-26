@@ -16,17 +16,34 @@ package goowee
 
 import grails.gorm.DetachedCriteria
 import grails.gorm.multitenancy.CurrentTenant
+import grails.gorm.transactions.Transactional
+import groovy.contracts.Requires
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
 
 @CurrentTenant
+@CompileStatic
 class MovieService {
 
-    private DetachedCriteria<TMovie> buildQuery(Map filters) {
+    @CompileDynamic
+    private DetachedCriteria<TMovie> buildQuery(Map filterParams, Boolean readOnly = false) {
         def query = TMovie.where {}
 
-        if (filters.containsKey('id')) query = query.where { id == filters.id }
+        if (filterParams.containsKey('id')) {
+            query = query.where { id == filterParams.id }
+        }
+        if (filterParams.containsKey('dateCreated')) {
+            query = query.where { dateCreated == filterParams.dateCreated }
+        }
+        if (filterParams.containsKey('title')) {
+            query = query.where { title == filterParams.title }
+        }
+        if (filterParams.containsKey('released')) {
+            query = query.where { released == filterParams.released }
+        }
 
-        if (filters.find) {
-            String search = filters.find.replaceAll('\\*', '%')
+        if (filterParams.find) {
+            String search = filterParams.find.replaceAll('\\*', '%')
             query = query.where {
                 title =~ "%${search}%"
             }
@@ -34,54 +51,79 @@ class MovieService {
 
         // Add additional filters here
 
+        query.readOnly(readOnly)
         return query
     }
 
-    TMovie get(Serializable id) {
-        // Add any relationships here (Eg. references to other DomainObjects or hasMany)
-        Map fetch = [
+    private Map getFetchAll() {
+        // Add any relationship here
+        // like references to other DomainObjects or hasMany
+        return fetch + [
                 actors: 'join',
         ]
+    }
 
-        return buildQuery(id: id).get(fetch: fetch)
+    private Map getFetch() {
+        // Add only single-sided relationships here
+        // like references to other Domain Objects
+        // Do not fetch hasMany relationships in paginated lists,
+        // they can cause pagination issues.
+        return [:]
+    }
+
+    TMovie get(Serializable id) {
+        return find(id: id)
+    }
+
+    TMovie find(Map filterParams) {
+        return buildQuery(filterParams).get(fetch: fetchAll)
     }
 
     List<TMovie> list(Map filterParams = [:], Map fetchParams = [:]) {
-        if (!fetchParams.sort) fetchParams.sort = [dateCreated: 'asc']
-
-        // Add single-sided relationships here (Eg. references to other Domain Objects)
-        // DO NOT add hasMany relationships, you are going to have troubles with pagination
-//        params.fetch = [
-//                relationshipName: 'join',
-//        ]
+        if (!fetchParams.sort) {
+            fetchParams.sort = [dateCreated: 'asc']
+        }
+        if (!fetchParams.fetch) {
+            fetchParams.fetch = fetch
+        }
 
         def query = buildQuery(filterParams)
         return query.list(fetchParams)
     }
 
-    Integer count(Map filters = [:]) {
-        def query = buildQuery(filters)
+    Number count(Map filterParams = [:]) {
+        def query = buildQuery(filterParams)
         return query.count()
     }
 
+    @Transactional
     TMovie create(Map args = [:]) {
-        if (args.failOnError == null) args.failOnError = false
+        if (args.failOnError == null) {
+            args.failOnError = false
+        }
 
         TMovie obj = new TMovie(args)
         obj.save(flush: true, failOnError: args.failOnError)
+
         return obj
     }
 
+    @Transactional
+    @CompileDynamic
     @Requires({ args.id })
     TMovie update(Map args = [:]) {
-        if (args.failOnError == null) args.failOnError = false
+        if (args.failOnError == null) {
+            args.failOnError = false
+        }
 
         TMovie obj = get(args.id)
         obj.properties = args
         obj.save(flush: true, failOnError: args.failOnError)
+
         return obj
     }
 
+    @Transactional
     void delete(Serializable id) {
         TMovie obj = get(id)
         if (obj) {

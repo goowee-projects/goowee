@@ -1,7 +1,5 @@
-== Quick Start
-
-=== Goals
-*Build enterprise applications with AI or by hand. Describe your application in a prompt for the `goowee-developer` agent, or build it yourself.*
+== Goals
+*Build enterprise applications with AI or through traditional coding: describe your application in a prompt for the `goowee-developer` agent, or implement it yourself with the Goowee API.*
 
 Goowee applications are designed to:
 
@@ -13,73 +11,73 @@ Goowee applications are designed to:
 . Support keyboard navigation for users familiar with legacy systems such as AS/400.
 . Localize applications with built-in internationalization.
 
-NOTE: The main purpose of Goowee is to decouple business logic from the _User Interface (GUI)_. This lowers application maintenance costs: the team uses just one language instead of five (HTML, CSS, JavaScript, Java, and SQL), developers need fewer specialized skills, and the GUI does not need to be upgraded whenever new web technologies or standards become available.
+NOTE: Goowee separates business logic from the _User Interface (GUI)_, which can reduce maintenance costs. Developers can focus on application code instead of maintaining a separate front end with HTML, CSS, and JavaScript.
 
-=== Non-Goals
-*Goowee is NOT a solution for:*
+== Non-Goals
+*Goowee is designed for enterprise applications that benefit from a consistent, component-based interface. It may not be the right fit for:*
 
-. Creating classical websites (text + images + basic user interaction)
-. Creating graphical/animated web applications
-. Developing applications where the client retains strict control on how the user interface will look like
+. Simple, content-focused websites made up primarily of text, images, and basic interactions.
+. Highly visual or animation-heavy web applications.
+. Projects where the client needs strict control over the look and feel of the user interface.
 
-For such cases you can use the https://grails.org/[Apache Grails,window=_blank] framework.
+For these cases, the https://grails.org/[Apache Grails,window=_blank] framework may be a better fit because it offers more flexibility for building a custom interface.
 
-=== Try it out
-Download and run the https://github.com/goowee-projects/goowee-app-template[Goowee Application Template,window=_blank] to have an idea of what a Goowee application looks like. Open a terminal and execute the following commands:
+== Goowee
+Download and run the https://github.com/goowee-projects/goowee-app-template[Goowee Application Template,window=_blank] to see Goowee in action.
 
-=== Apache Groovy & Grails
-Goowee applications are Grails applications so you need to get confident with the https://grails.org/[Apache Grails,window=_blank] framework and the https://groovy-lang.org/[Apache Groovy,window=_blank] programming language.
+== Apache Groovy & Grails
+Goowee applications are built with the https://grails.org/[Apache Grails,window=_blank] framework and the https://groovy-lang.org/[Apache Groovy,window=_blank] programming language. The official resources below can help you get started with both.
 
-NOTE: Apache Grails has been helping web developers for 20 years now, it's based on https://spring.io/projects/spring-boot[Spring Boot,window=_blank] and is a growing technology. What you want to do is https://grails.org/documentation.html[reading the latest documentation on the Grails website,window=_blank]
+NOTE: Apache Grails is a web application framework built on https://spring.io/projects/spring-boot[Spring Boot,window=_blank]. Find the latest guides and documentation on the https://grails.org/documentation.html[Grails website,window=_blank].
 
-NOTE: The Apache Groovy programming language has been the first language, other than Java, to be developed for the JVM. You can https://groovy-lang.org/documentation.html[read the documentation,window=_blank] and access the https://groovy-lang.org/learn.html[Groovy learning resources,window=_blank]
+NOTE: Apache Groovy is a JVM language that interoperates with Java. Start with the https://groovy-lang.org/documentation.html[official documentation,window=_blank] and https://groovy-lang.org/learn.html[learning resources,window=_blank].
 
 == Basics
-In Goowee everything is a component. All visual objects of the application are derived from the same base class `Component` and they can be assembled together like we do with a LEGO set.
+In Goowee, everything is a component. Every visual element derives from the `Component` base class, so you can assemble an interface much like a set of LEGO bricks.
 
-Some of these components are automatically created and managed by the `org.goowee:goowee-core` Grails plugin for each application instance. Let's give them a quick look.
+The `org.goowee:goowee-core` Grails plugin automatically creates and manages some components for each application. Let's take a closer look.
 
 === The Shell
-The `Shell` component is the Goowee GUI. Each Goowee application share a common user experience and content structure.
+The `Shell` component provides the Goowee user interface. All Goowee applications share a common user experience and content structure.
 
 ==== Login
-The login screen.
+This is the login screen.
 
 image::images/quick-start/basics-login.png[Login]
 
 ==== Home, Application Menu & Favourites
-On the left side is the Application Menu. Click on the top-left Home icon to display the most relevant Features (Favourites).
+The Application Menu is on the left. Select the Home icon at the top left to see your most relevant features (favourites).
 
 image::images/quick-start/basics-home.png[Main Menu]
 
 ==== User Menu
-On the top-right you can find the user menu to access the user options.
+Use the menu at the top right to access user options.
 
 image::images/quick-start/basics-user-menu.png[User Menu]
 
 ==== Navigation Bar
-On the top you can find the Navigation Bar. From left to right: (1) the Main Menu button, (2) the Home button  and (3) the User Menu button.
+The Navigation Bar runs across the top. From left to right, it contains the Main Menu, Home, and User Menu buttons.
 
 image::images/quick-start/basics-navigation-bar.png[Navigation Bar]
 
 ==== Content
-Each Feature will display as an interactive screen into the main area surrounded by the shell. We call this area the Shell _Content_.
+Each feature appears as an interactive screen in the main area, framed by the shell. We call this area the Shell _Content_.
 
 image::images/quick-start/basics-content.png[Content]
 
-Contents can be displayed as modals. A modal content is rendered inside a dialog window. This lets the user focus on a specific part of the Feature to accomplish subtasks like editing a specific object.
+You can also display content in a modal dialog. This keeps the user focused on a specific part of a feature while completing a task, such as editing an object.
 
-Modals can be displayed in three sizes: `normal` (default), `small`, `large` and `fullscreen`.
+Modals are available in four sizes: `normal` (the default), `small`, `large`, and `fullscreen`.
 
 image::images/quick-start/basics-content-modal.png[Modal Content]
 
 ==== User Messages
-The application can display messages to the user to send alerts or confirm actions.
+Applications can display messages to alert users or ask them to confirm actions.
 
 image::images/quick-start/basics-content-message.png[Message]
 
 ==== Responsiveness
-All Goowee applications work both on desktop computers and on mobile devices by design and without the developer having to cope with it. Here is how an application looks like on a Desktop, on a Tablet and on a Mobile Phone.
+Goowee applications adapt to desktop and mobile devices automatically, without extra work for developers. The examples below show the same application on a desktop, tablet, and phone.
 
 [.text-center]
 image::images/quick-start/basics-device-desktop.png[Desktop]
@@ -89,7 +87,7 @@ image::images/quick-start/basics-device-tablet.png[Tablet]
 image::images/quick-start/basics-device-phone.png[Phone]
 
 === Project Structure
-Goowee applications are Grails applications. The project structure, follows the _conventions over configuration_ design paradigm so each folder contains a specific source file type.
+Goowee applications are Grails applications. Their project structure follows the _convention over configuration_ principle, with each folder containing a specific type of source file.
 
 ----
 /myapp                      <1>
@@ -107,16 +105,16 @@ Goowee applications are Grails applications. The project structure, follows the 
       /groovy              <9>
 ----
 <1> Project root
-<2> Web Application root
-<3> User Interface. Each class name under this directory must end with `Controller` (Eg. `PersonController`)
-<4> Business Logic. Each class name under this directory must end with `Service` (Eg. `PersonService`)
-<5> Database. Each class name under this directory must begin with `T` (Eg. `TPerson`)
+<2> Web application root
+<3> User interface. Controller classes in this directory must end with `Controller` (for example, `PersonController`).
+<4> Business logic. Service classes in this directory must end with `Service` (for example, `PersonService`).
+<5> Domain model. Domain classes in this directory must begin with `T` (for example, `TPerson`).
 <6> Translations
 <7> Initialization
 <8> Configuration files
 <9> Other application source files
 
-Each folder contains the package structure, so for example if your application main package is `myapp` the source file structure will look like this:
+Files in these folders follow the application's package structure. For example, if the main package is `myapp`, the source tree looks like this:
 
 ----
 /myapp
@@ -147,11 +145,11 @@ Each folder contains the package structure, so for example if your application m
 
 === Features
 
-A Goowee application is a container for a set of _Features_.
+A Goowee application contains a set of _Features_.
 
-Each Feature consists of a set of visual objects the user can interact with to accomplish specific tasks. You can identify each Feature as an item in the application menu on the left. Clicking a menu item will display the content of the selected Feature.
+Each feature groups visual elements that help users complete a specific task. Features appear as items in the Application Menu on the left; selecting one displays its content.
 
-To configure the application Features we register them in the `BootStrap.groovy` file.
+Register application features in `BootStrap.groovy`.
 
 ./grails-app/init/BootStrap.groovy
 [source, groovy]
@@ -161,32 +159,30 @@ class BootStrap {
     GooweeApplication gooweeApplication // <1>
 
     def init = {
-
         gooweeApplication.onInit { // <2>
             registerFeature( // <3>
-                    controller: 'person',
-                    icon: 'fa-user',
+                controller: 'person',
+                icon: 'fa-user',
             )
         }
-
     }
 }
 ----
-<1> `GooweeApplication` is the object in charge of the application setup
-<2> The `init = { ... }` Grails closure is executed each time the application starts up
-<3> Within the `gooweeApplication.onInit { ... }` closure, you can call any `gooweeApplication` method. In this case, the method is xref:z.api-reference.adoc#registerFeature[`registerFeature()`].
+<1> `GooweeApplication` configures the application.
+<2> Grails runs the `init = { ... }` closure each time the application starts.
+<3> Inside `gooweeApplication.onInit { ... }`, you can call any `gooweeApplication` method. Here, we call xref:z.api-reference.adoc#registerFeature[`registerFeature()`].
 
 === Controllers
 
-A _Feature_, in the end, is just a link to a _controller_. A _controller_ is a container for a set of _actions_.
+A _Feature_ links to a _controller_, which contains one or more _actions_.
 
-All _actions_ that a user can take on the application (eg. a click on a button) are coded as methods of a _controller_ class. Each action corresponds to a URL that will be submitted from the browser to the server. The URL follows this structure:
+Actions that users can take in an application, such as selecting a button, are implemented as methods in a _controller_ class. Each action corresponds to a URL that the browser sends to the server. The URL follows this structure:
 
 ----
 http://my.company.com/${controllerName}/${actionName}
 ----
 
-For example the following Controller contains two actions that can be called like this:
+For example, the following controller defines two actions that you can call at these URLs:
 
 ----
 http://my.company.com/person/index <1>
@@ -199,7 +195,7 @@ http://my.company.com/person/edit/1 <2>
 class PersonController implements ElementsController {
 
     def index() { // <1>
-        dispaly ...
+        display ...
     }
 
     def edit() {  // <2>
@@ -209,15 +205,15 @@ class PersonController implements ElementsController {
 
 }
 ----
-<1> The `index` action. It's the default one, it can also be called omitting the action name, eg. `http://my.company.com/person`
-<2> The `edit` action, we are also passing `1` as the `id` parameter
-<3> The `params` implicit variable is a `Map` containing all the submitted parameters, in this case the `id` passed by the `edit` URL
-<4> The `display` method ends each action and tells the browser what component to display
+<1> The `index` action is the default action, so you can omit its name and call `http://my.company.com/person`.
+<2> The `edit` action receives `1` as the `id` parameter.
+<3> The implicit `params` variable is a `Map` of submitted parameters. Here, it contains the `id` from the `edit` URL.
+<4> The `display` method ends the action and tells the browser which component to display.
 
 === Services
-We don't implement business logic in Controllers. We do it in _Services_. Each Service is a class implementing several methods we can call from a Controller.
+Keep business logic out of controllers and put it in _services_. A service is a class whose methods can be called from a controller.
 
-For example the following Service implements the method `sayHello()`.
+For example, the following service provides a `sayHello()` method.
 
 [source, groovy]
 ./grails-app/services/PersonService.groovy
@@ -235,7 +231,7 @@ class PersonService {
 }
 ----
 
-We can call it from a Controller like this:
+A controller can call it like this:
 
 [source, groovy]
 ./grails-app/controllers/PersonController.groovy
@@ -251,12 +247,12 @@ class PersonController implements ElementsController {
 
 }
 ----
-<1> Service injection, the variable name must be the `camelCase` version of the `PascalCase` class name
-<2> the `display` method renders objects on the browser, in this case a message
+<1> The service is injected here. Its variable name is the `camelCase` version of the class name.
+<2> The `display` method renders content in the browser; here, it displays a message.
 
 === Domain
 
-To design the database for our applications we can use https://gorm.grails.org/["GORM, the Grails Object Relational Mapper",window=_blank]. This means we can map database tables to domain classes like this:
+Use https://gorm.grails.org/["GORM, the Grails Object Relational Mapper",window=_blank] to map database tables to domain classes. For example:
 
 [source, groovy]
 ./grails-app/domain/TPerson.groovy
@@ -273,17 +269,17 @@ class TPerson implements GormEntity, MultiTenant<TPerson> { //<1>
 }
 
 ----
-<1> Goowee domain class names must start with `T`. This way we immediately know we are dealing with a domain class in our code.
+<1> Goowee domain class names start with `T`, making domain classes easy to recognize in the code.
 
 === Database Connections
 
-Each application has a `DEFAULT` database connection defined in the `grails-app/conf/application.yml` file. This `DEFAULT` connection cannot be changed at runtime and it is used by Goowee to store its own database.
+Each application has a `DEFAULT` database connection configured in `grails-app/conf/application.yml`. Goowee uses this connection to store its own data, and the connection cannot be changed at runtime.
 
-. You can configure multiple databases per environment (DEV, TEST, PRODUCTION, ect) in the `application.yml`, see: https://docs.grails.org/latest/guide/single.html#environments[window=_blank]
+. Configure multiple databases for each environment (such as development, test, and production) in `application.yml`. See the https://docs.grails.org/latest/guide/single.html#environments[Grails environment guide,window=_blank].
 
-. You can edit/create database connections at runtime from the Goowee GUI accessing with the `super` user from the menu `System Configuration -> Connection Sources`
+. Create or edit database connections at runtime in the Goowee interface. Sign in as `super` and select `System Configuration -> Connection Sources`.
 
-. You can programmatically create database connections at runtime with the `ConnectionSourceService` as follows:
+. You can also create database connections programmatically at runtime with `ConnectionSourceService`:
 
 ./grails-app/init/BootStrap.groovy
 [source, groovy]
@@ -294,39 +290,38 @@ class BootStrap {
     ConnectionSourceService connectionSourceService // <2>
 
     def init = {
-
         gooweeApplication.onTenantInstall { String tenantId -> // <3>
             connectionSourceService.create( // <4>
-                    name: 'runtimeDatasource',
-                    driverClassName: 'org.h2.Driver',
-                    dbCreate: 'update',
-                    username: 'sa',
-                    password: '',
-                    url: 'jdbc:h2:mem:DYNAMIC_CONNECTION;LOCK_TIMEOUT=10000 DB_CLOSE_ON_EXIT=TRUE',
+                name: 'runtimeDatasource',
+                driverClassName: 'org.h2.Driver',
+                dbCreate: 'update',
+                username: 'sa',
+                password: '',
+                url: 'jdbc:h2:mem:DYNAMIC_CONNECTION;LOCK_TIMEOUT=10000 DB_CLOSE_ON_EXIT=TRUE',
             )
         }
     }
 
 }
 ----
-<1> `GooweeApplication` is the object in charge of the application setup
-<2> `ConnectionSourceService` service injection
-<3> The `onInstall { ... }` closure is called only the first time the application runs for the DEFAULT Tenant and each time a new Tenant is created
-<4> The `create()` method creates a new connection and connects to it. Once created the application will automatically connect to it each time it boots up. Connection details can be changed via GUI accessing as `super` from the menu `System Configuration -> Connection Sources`
+<1> `GooweeApplication` configures the application.
+<2> `ConnectionSourceService` is injected here.
+<3> The `onTenantInstall { ... }` closure runs the first time the application starts for the `DEFAULT` tenant and whenever a new tenant is created.
+<4> The `create()` method adds a connection. Goowee reconnects to it on subsequent starts. To change its details, sign in as `super` and select `System Configuration -> Connection Sources`.
 
 === Tenants
 
-_Multi-Tenants_ applications share the code while connecting to different databases, usually one for each different company. This way data is kept separated with no risk of disclosing data from one company to the other.
+_Multi-tenant_ applications share one codebase while connecting each tenant to a separate database, usually one per company. This keeps tenant data separate.
 
-Application users can belong only to one Tenant. If a person needs to access different Tenants, then two different accounts must be created. To configure and manage users for a Tenant you have to access the application as the admin user. For each Tenant a default admin user is created with the same name as the Tenant (E.g. the Tenant called `TEST` is going to have a `test` user which is the Tenant administrator.
+Users can belong to only one tenant. Anyone who needs access to multiple tenants must have a separate account in each one. Sign in as a tenant admin to manage that tenant's users. Goowee creates a default admin user for each tenant, using the tenant name in lowercase (for example, the `TEST` tenant has a `test` admin user).
 
-NOTE: The default password for such users corresponds to their names. To change the password you need to log in with the admin user and change it from the `User Profile`. Go to `User Menu (top right) -> Profile`.
+NOTE: A default admin user's password matches its username. Sign in as that user and change the password under `User Menu (top right) -> Profile`.
 
-New Tenants can be created from the Goowee GUI accessing as `super` from the menu `System Configuration -> Tenants`. If multi-tenancy is not a requirement to your application you will be using the `DEFAULT` Tenant which is automatically created.
+To create a tenant, sign in as `super` and select `System Configuration -> Tenants`. If your application does not need multiple tenants, use the `DEFAULT` tenant, which Goowee creates automatically.
 
 === User Management
 
-Users can access a Goowee application with credentials made of a username and a secret password. Each user must be configured by the Tenant's `admin` user from the menu `Tenant Administration -> Users` and `Tenant Administration -> Groups`.
+Users sign in to a Goowee application with a username and password. A tenant admin manages users and groups under `Tenant Administration -> Users` and `Tenant Administration -> Groups`.
 
 ==== Users
 image::images/quick-start/basics-users.png[Users]
@@ -339,9 +334,9 @@ image::images/quick-start/basics-groups-details.png[Group Details]
 
 [[building-crud]]
 == CRUD Applications
-One of the most useful GUI pattern is the CRUD (Create, Read, Update, and Delete). It is based on the four basic operations available to work with persistent data and databases.
+One common user-interface pattern is CRUD (Create, Read, Update, and Delete), the four basic operations for working with persistent data.
 
-Applications are made of features. We register one to work with movies (see xref:z.api-reference.adoc#features[Features]).
+This example registers a feature for working with movies (see xref:z.api-reference.adoc#features[Features]).
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]
@@ -351,22 +346,20 @@ class BootStrap {
     GooweeApplication gooweeApplication // <1>
 
     def init = {
-
         gooweeApplication.onInit {
             registerFeature( // <2>
-                    controller: 'movie',
-                    icon: 'fa-film',
-                    favourite: true,
+                controller: 'movie',
+                icon: 'fa-film',
+                favourite: true,
             )
         }
-
     }
 }
 ----
 <1> See xref:z.api-reference.adoc#application[Application].
 <2> See xref:z.api-reference.adoc#registerFeature[`registerFeature()`].
 
-We are going to implement a simple database with https://gorm.grails.org/[GORM for Hibernate,window=_blank] on top of which we can build our GUI.
+Next, define a simple data model with https://gorm.grails.org/[GORM for Hibernate,window=_blank], then build the user interface on top of it.
 
 .grails-app/domain/TMovie.groovy
 [source,groovy]
@@ -380,6 +373,7 @@ class TMovie implements GormEntity, MultiTenant<TMovie> {
     static hasMany = [actors: TActor]
 
     static constraints = {
+        title nullable: false
     }
 }
 ----
@@ -394,11 +388,13 @@ class TActor implements GormEntity, MultiTenant<TActor> {
     String lastname
 
     static constraints = {
+        firstname nullable: false
+        lastname nullable: false
     }
 }
 ----
 
-To create a CRUD user interface we are going to implement a controller with the following actions. The business logic will be implemented into a service to keep it decoupled from the GUI.
+To build the CRUD interface, define controller actions for displaying forms and handling updates. Keep the business logic in a service so it stays separate from the user interface.
 
 .grails-app/controllers/BookController.groovy
 [source,groovy]
@@ -431,11 +427,11 @@ class MovieController implements ElementsController { // <2>
     }
 }
 ----
-<1> Only users with the `ROLE_CAN_EDIT_MOVIES` authority can access the actions in this controller.
-<2> Implementing `ElementsController` the Goowee API will become available
-<3> As a convention, all actions building and displaying a GUI are named after a verb or a name while all actions that execute a business logic are identified by a name starting with `on`.
+<1> Only users with the `ROLE_CAN_EDIT_MOVIES` authority can access this controller's actions.
+<2> Implementing `ElementsController` exposes the Goowee API to this controller.
+<3> By convention, name actions that display the interface with a verb or noun. Prefix actions that execute business logic with `on`.
 
-We are going to use `ContentTable` to list records, and `ContentCreate` and `ContentEdit` to create and edit them (see xref:z.api-reference.adoc#contents[Contents]).
+Use `ContentTable` to list records and `ContentCreate` and `ContentEdit` to create and edit them (see xref:z.api-reference.adoc#contents[Contents]).
 
 .grails-app/controllers/BookController.groovy
 [source,groovy]
@@ -450,18 +446,18 @@ class MovieController implements ElementsController {
         c.table.with {
             filters.with {
                 addField(
-                        class: TextField,
-                        id: 'find',
-                        label: TextDefault.FIND,
-                        cols: 12,
+                    class: TextField,
+                    id: 'find',
+                    label: TextDefault.FIND,
+                    cols: 12,
                 )
             }
             sortable = [
-                    title: 'asc',
+                title: 'asc',
             ]
             columns = [
-                    'title',
-                    'released',
+                'title',
+                'released',
             ]
 
             body.eachRow { TableRow row, Map values ->
@@ -483,12 +479,12 @@ class MovieController implements ElementsController {
         c.form.with {
             validate = TMovie
             addField(
-                    class: TextField,
-                    id: 'title',
+                class: TextField,
+                id: 'title',
             )
             addField(
-                    class: NumberField,
-                    id: 'released',
+                class: NumberField,
+                id: 'released',
             )
         }
 
@@ -541,25 +537,43 @@ class MovieController implements ElementsController {
     }
 }
 ----
-<1> Service injection, see the implementation below
+<1> The service is injected here; see its implementation below.
 
-We will implement the database operations using https://gorm.grails.org/[GORM for Hibernate,window=_blank], the default Object Relational Mapper used by Grails.
+Use https://gorm.grails.org/[GORM for Hibernate,window=_blank], Grails' default object-relational mapper, to implement the database operations.
 
 .grails-app/services/MovieService.groovy
 [source,groovy]
 ----
-@Slf4j
+import grails.gorm.DetachedCriteria
+import grails.gorm.multitenancy.CurrentTenant
+import grails.gorm.transactions.Transactional
+import groovy.contracts.Requires
+import groovy.transform.CompileDynamic
+import groovy.transform.CompileStatic
+
 @CurrentTenant
 @CompileStatic
 class MovieService {
 
     @CompileDynamic
-    private DetachedCriteria<TMovie> buildQuery(Map filters) {
+    private DetachedCriteria<TMovie> buildQuery(Map filterParams, Boolean readOnly = false) {
         def query = TMovie.where {}
 
-        if (filters.containsKey('id')) query = query.where { id == filters.id }
+        if (filterParams.containsKey('id')) {
+            query = query.where { id == filterParams.id }
+        }
+        if (filterParams.containsKey('dateCreated')) {
+            query = query.where { dateCreated == filterParams.dateCreated }
+        }
+        if (filterParams.containsKey('title')) {
+            query = query.where { title == filterParams.title }
+        }
+        if (filterParams.containsKey('released')) {
+            query = query.where { released == filterParams.released }
+        }
 
-        if (filters.find) {
+        if (filterParams.find) {
+            String search = filterParams.find.replaceAll('\\*', '%')
             query = query.where {
                 title =~ "%${search}%"
             }
@@ -567,39 +581,56 @@ class MovieService {
 
         // Add additional filters here
 
+        query.readOnly(readOnly)
         return query
     }
 
-    TMovie get(Serializable id) {
-        // Add any relationships here (Eg. references to other DomainObjects or hasMany)
-        Map fetch = [
-                actors: 'join',
+    private Map getFetchAll() {
+        // Add any relationship here
+        // like references to other DomainObjects or hasMany
+        return fetch + [
+            actors: 'join',
         ]
+    }
 
-        return buildQuery(id: id).get(fetch: fetch)
+    private Map getFetch() {
+        // Add only single-sided relationships here
+        // like references to other Domain Objects
+        // Do not fetch hasMany relationships in paginated lists,
+        // they can cause pagination issues.
+        return [:]
+    }
+
+    TMovie get(Serializable id) {
+        return find(id: id)
+    }
+
+    TMovie find(Map filterParams) {
+        return buildQuery(filterParams).get(fetch: fetchAll)
     }
 
     List<TMovie> list(Map filterParams = [:], Map fetchParams = [:]) {
-        if (!params.sort) params.sort = [dateCreated: 'asc']
-
-        // Add single-sided relationships here (Eg. references to other Domain Objects)
-        // DO NOT add hasMany relationships, you are going to have troubles with pagination
-//        params.fetch = [
-//                actors: 'join',
-//        ]
+        if (!fetchParams.sort) {
+            fetchParams.sort = [dateCreated: 'asc']
+        }
+        if (!fetchParams.fetch) {
+            fetchParams.fetch = fetch
+        }
 
         def query = buildQuery(filterParams)
         return query.list(fetchParams)
     }
 
-    Integer count(Map filterParams = [:]) {
+    Number count(Map filterParams = [:]) {
         def query = buildQuery(filterParams)
         return query.count()
     }
 
     @Transactional
     TMovie create(Map args = [:]) {
-        if (args.failOnError == null) args.failOnError = false
+        if (args.failOnError == null) {
+            args.failOnError = false
+        }
 
         TMovie obj = new TMovie(args)
         obj.save(flush: true, failOnError: args.failOnError)
@@ -611,7 +642,9 @@ class MovieService {
     @CompileDynamic
     @Requires({ args.id })
     TMovie update(Map args = [:]) {
-        if (args.failOnError == null) args.failOnError = false
+        if (args.failOnError == null) {
+            args.failOnError = false
+        }
 
         TMovie obj = get(args.id)
         obj.properties = args
@@ -623,17 +656,11 @@ class MovieService {
     @Transactional
     void delete(Serializable id) {
         TMovie obj = get(id)
-        obj.delete(flush: true)
+        if (obj) {
+            obj.delete(flush: true)
+        }
     }
 }
 ----
 
-Run the application with gradle `bootRun`, you should be able to create, list, edit and delete movies.
-
-=== What's next?
-ifeval::["{docname}" == "index"]
-Read link:https://www.goowee.org/book/index.html[The Goowee Book] or xref:api-reference[Goowee API Reference].
-endif::[]
-ifeval::["{docname}" != "index"]
-Read link:https://www.goowee.org/book/index.html[The Goowee Book] or xref:z.api-reference.adoc[Goowee API Reference].
-endif::[]
+Run the application with `./gradlew bootRun`. You can then create, list, edit, and delete movies.

@@ -91,9 +91,9 @@ abstract class Chart extends Component {
     @Override
     String getPropertiesAsJSON(Map properties = [:]) {
         Map thisProperties = [
-                values: values,
-                labels: labels,
-                colors: colors,
+            values: values,
+            labels: labels,
+            colors: colors,
         ]
 
         return super.getPropertiesAsJSON(thisProperties + properties)
@@ -134,10 +134,10 @@ Goowee renders a component using its `view` and passes the component itself to t
 [source,gsp]
 ----
 <div class="component-chart-pie ${c.cssClass}"
-     data-21-component="${c.className}"
-     data-21-id="${c.id}"
-     data-21-properties="${c.propertiesAsJSON}"
-     data-21-events="${c.eventsAsJSON}"
+    data-21-component="${c.className}"
+    data-21-id="${c.id}"
+    data-21-properties="${c.propertiesAsJSON}"
+    data-21-events="${c.eventsAsJSON}"
 ><canvas id="${c.id}"></canvas></div>
 ----
 
@@ -267,16 +267,16 @@ class ChartsController implements ElementsController {
         c.header.removeNextButton()
 
         c.form.addField(
-                class: PieChart,
-                id: 'salesByBrand',
-                labels: ['FIAT', 'BMW', 'AUDI'],
-                values: [100, 133, 167],
-                colors: [
-                        'rgba(200, 0, 0, 0.6)',
-                        'rgba(0, 200, 0, 0.6)',
-                        'rgba(0, 0, 200, 0.6)',
-                ],
-                cols: 6,
+            class: PieChart,
+            id: 'salesByBrand',
+            labels: ['FIAT', 'BMW', 'AUDI'],
+            values: [100, 133, 167],
+            colors: [
+                'rgba(200, 0, 0, 0.6)',
+                'rgba(0, 200, 0, 0.6)',
+                'rgba(0, 0, 200, 0.6)',
+            ],
+            cols: 6,
         )
 
         display content: c

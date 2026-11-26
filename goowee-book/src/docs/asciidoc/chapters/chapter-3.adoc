@@ -28,9 +28,9 @@ class BootStrap {
 
         gooweeApplication.onInit {
             registerFeature(
-                    controller: 'person',
-                    icon: 'fa-user',
-                    favourite: true,
+                controller: 'person',
+                icon: 'fa-user',
+                favourite: true,
             )
 
         }
@@ -152,18 +152,18 @@ import java.time.LocalDate
 class PersonController implements ElementsController {
 
     static final List personRegistry = [
-            [id: 1, firstname: 'Gianluca', lastname: 'Sartori', birthdate: LocalDate.of(1979, 6, 24)],
-            [id: 2, firstname: 'John Luke', lastname: 'Taylor', birthdate: LocalDate.of(1921, 6, 24)],
-            [id: 3, firstname: 'Juan Lucas', lastname: 'Sastre', birthdate: LocalDate.of(1942, 6, 24)],
+        [id: 1, firstname: 'Gianluca', lastname: 'Sartori', birthdate: LocalDate.of(1979, 6, 24)],
+        [id: 2, firstname: 'John Luke', lastname: 'Taylor', birthdate: LocalDate.of(1921, 6, 24)],
+        [id: 3, firstname: 'Juan Lucas', lastname: 'Sastre', birthdate: LocalDate.of(1942, 6, 24)],
     ]
 
     def index() {
         def c = createContent(ContentTable)
         c.table.with {
             columns = [
-                    'firstname',
-                    'lastname',
-                    'birthdate',
+                'firstname',
+                'lastname',
+                'birthdate',
             ]
         }
 
@@ -181,16 +181,16 @@ class PersonController implements ElementsController {
         c.form.with {
             validate = PersonValidator
             addField(
-                    class: TextField,
-                    id: 'firstname',
+                class: TextField,
+                id: 'firstname',
             )
             addField(
-                    class: TextField,
-                    id: 'lastname',
+                class: TextField,
+                id: 'lastname',
             )
             addField(
-                    class: DateField,
-                    id: 'birthdate',
+                class: DateField,
+                id: 'birthdate',
             )
         }
 
@@ -214,10 +214,10 @@ class PersonController implements ElementsController {
 
         def last = personRegistry.max { it.id }
         personRegistry << [
-                id: last ? last.id + 1 : 1,
-                firstname: params.firstname,
-                lastname: params.lastname,
-                birthdate: params.birthdate,
+            id: last ? last.id + 1 : 1,
+            firstname: params.firstname,
+            lastname: params.lastname,
+            birthdate: params.birthdate,
         ]
 
         display action: 'index'

@@ -10,7 +10,7 @@ repositories {
 asciidoctor {
     attributes = [
             "application-name"  : projectName,
-            "goowee-version"   : projectVersion,
+            "goowee-version"   : gooweeDocsVersion,
             "version-java"      : javaVersion,
             "version-grails"    : grailsVersion,
             "source-highlighter": "coderay",

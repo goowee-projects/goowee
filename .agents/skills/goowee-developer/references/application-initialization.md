@@ -2,7 +2,7 @@
 
 - [ ] If the project is not a Grails project, stop here.
 - [ ] Verify that the following dependency is present in `build.gradle`: `implementation "org.apache.grails:grails-core"`. If it is missing, tell the user this is not a Grails project and stop here.
-- [ ] Add the following dependency to `build.gradle`: `implementation "org.goowee:goowee-core:2.0.0-RC1"`.
+- [ ] Add the following dependency to `build.gradle`: `implementation "org.goowee:goowee-core:2.0.0"`.
 - [ ] If you cannot create a Goowee project stop here.
 - [ ] Replace `BootStrap.groovy` with the `BootSatrp.groovy` asset and create the `TenantInstallService` with an `install()` method.
 - [ ] Append the EXACT UNEDITED `application.yml` asset content into the application `application.yml`. Replace `${project-name}` with the value of Gradle `rootProject.name`.

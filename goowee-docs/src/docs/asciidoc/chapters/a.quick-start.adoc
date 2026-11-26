@@ -1,3 +1,10 @@
+ifeval::["{docname}" == "index"]
+:api-reference-xref: chapters/z.api-reference.adoc
+endif::[]
+ifeval::["{docname}" != "index"]
+:api-reference-xref: z.api-reference.adoc
+endif::[]
+
 == Goals
 *Build enterprise applications with AI or through traditional coding: describe your application in a prompt for the `goowee-developer` agent, or implement it yourself with the Goowee API.*
 
@@ -170,7 +177,7 @@ class BootStrap {
 ----
 <1> `GooweeApplication` configures the application.
 <2> Grails runs the `init = { ... }` closure each time the application starts.
-<3> Inside `gooweeApplication.onInit { ... }`, you can call any `gooweeApplication` method. Here, we call xref:z.api-reference.adoc#registerFeature[`registerFeature()`].
+<3> Inside `gooweeApplication.onInit { ... }`, you can call any `gooweeApplication` method. Here, we call xref:{api-reference-xref}#registerFeature[`registerFeature()`].
 
 === Controllers
 
@@ -277,7 +284,7 @@ Each application has a `DEFAULT` database connection configured in `grails-app/c
 
 . Configure multiple databases for each environment (such as development, test, and production) in `application.yml`. See the https://docs.grails.org/latest/guide/single.html#environments[Grails environment guide,window=_blank].
 
-. Create or edit database connections at runtime in the Goowee interface. Sign in as `super` and select `System Configuration -> Connection Sources`.
+. Create or edit database connections at runtime in the Goowee interface. Sign in as `super` and select `Application Management -> Connection Sources`.
 
 . You can also create database connections programmatically at runtime with `ConnectionSourceService`:
 
@@ -307,21 +314,23 @@ class BootStrap {
 <1> `GooweeApplication` configures the application.
 <2> `ConnectionSourceService` is injected here.
 <3> The `onTenantInstall { ... }` closure runs the first time the application starts for the `DEFAULT` tenant and whenever a new tenant is created.
-<4> The `create()` method adds a connection. Goowee reconnects to it on subsequent starts. To change its details, sign in as `super` and select `System Configuration -> Connection Sources`.
+<4> The `create()` method adds a connection. Goowee reconnects to it on subsequent starts. To change its details, sign in as `super` and select `Application Management -> Connection Sources`.
 
 === Tenants
 
 _Multi-tenant_ applications share one codebase while connecting each tenant to a separate database, usually one per company. This keeps tenant data separate.
 
-Users can belong to only one tenant. Anyone who needs access to multiple tenants must have a separate account in each one. Sign in as a tenant admin to manage that tenant's users. Goowee creates a default admin user for each tenant, using the tenant name in lowercase (for example, the `TEST` tenant has a `test` admin user).
+Goowee selects the tenant based on the host name configured for it in `Application Management -> Tenants`. In development, the login screen shows the selected tenant in the lower-right corner. This indicator is hidden in production.
 
-NOTE: A default admin user's password matches its username. Sign in as that user and change the password under `User Menu (top right) -> Profile`.
+Each tenant has its own administrator account with the default credentials `admin` / `admin`. Users belong to a single tenant, so anyone who needs access to multiple tenants must have a separate account in each one.
 
-To create a tenant, sign in as `super` and select `System Configuration -> Tenants`. If your application does not need multiple tenants, use the `DEFAULT` tenant, which Goowee creates automatically.
+NOTE: After signing in as the tenant administrator, change the default password under `User Menu (top right) -> Profile`.
+
+To create a tenant, sign in as `super` and select `Application Management -> Tenants`. If your application does not need multiple tenants, use the `DEFAULT` tenant, which Goowee creates automatically.
 
 === User Management
 
-Users sign in to a Goowee application with a username and password. A tenant admin manages users and groups under `Tenant Administration -> Users` and `Tenant Administration -> Groups`.
+Users sign in to a Goowee application with a username and password. A tenant admin manages users and groups under `Tenant Management -> Users` and `Tenant Management -> Groups`.
 
 ==== Users
 image::images/quick-start/basics-users.png[Users]
@@ -336,7 +345,7 @@ image::images/quick-start/basics-groups-details.png[Group Details]
 == CRUD Applications
 One common user-interface pattern is CRUD (Create, Read, Update, and Delete), the four basic operations for working with persistent data.
 
-This example registers a feature for working with movies (see xref:z.api-reference.adoc#features[Features]).
+This example registers a feature for working with movies (see xref:{api-reference-xref}#features[Features]).
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]
@@ -356,8 +365,8 @@ class BootStrap {
     }
 }
 ----
-<1> See xref:z.api-reference.adoc#application[Application].
-<2> See xref:z.api-reference.adoc#registerFeature[`registerFeature()`].
+<1> See xref:{api-reference-xref}#application[Application].
+<2> See xref:{api-reference-xref}#registerFeature[`registerFeature()`].
 
 Next, define a simple data model with https://gorm.grails.org/[GORM for Hibernate,window=_blank], then build the user interface on top of it.
 
@@ -431,7 +440,7 @@ class MovieController implements ElementsController { // <2>
 <2> Implementing `ElementsController` exposes the Goowee API to this controller.
 <3> By convention, name actions that display the interface with a verb or noun. Prefix actions that execute business logic with `on`.
 
-Use `ContentTable` to list records and `ContentCreate` and `ContentEdit` to create and edit them (see xref:z.api-reference.adoc#contents[Contents]).
+Use `ContentTable` to list records and `ContentCreate` and `ContentEdit` to create and edit them (see xref:{api-reference-xref}#contents[Contents]).
 
 .grails-app/controllers/BookController.groovy
 [source,groovy]
@@ -561,9 +570,6 @@ class MovieService {
 
         if (filterParams.containsKey('id')) {
             query = query.where { id == filterParams.id }
-        }
-        if (filterParams.containsKey('dateCreated')) {
-            query = query.where { dateCreated == filterParams.dateCreated }
         }
         if (filterParams.containsKey('title')) {
             query = query.where { title == filterParams.title }

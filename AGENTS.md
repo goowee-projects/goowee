@@ -42,7 +42,7 @@ In particular:
 - **The contributor remains responsible for what they submit.** Review
   generated output for licensing, correctness, and style before committing.
 
-JDK 25+ is required. Use the Gradle wrapper (`./gradlew` / `gradlew.bat`);
+JDK 21+ is required. Use the Gradle wrapper (`./gradlew` / `gradlew.bat`);
 do not invoke a system `gradle`.
 
 ## Coding conventions

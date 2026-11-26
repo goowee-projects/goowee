@@ -571,7 +571,7 @@ c.table.body = [
 ----
 
 ===== GORM Recordsets
-Using a https://gorm.grails.org/latest/hibernate/manual/[GORM Recordset,window=_blank] is an easy way to load a table. See how to build a <<../user-guide/4-building-applications.adoc#building-crud, CRUD>>.
+Using a https://gorm.grails.org/latest/hibernate/manual/[GORM Recordset,window=_blank] is an easy way to load a table. See how to build a xref:{quick-start-xref}[CRUD].
 
 [source,groovy]
 ----

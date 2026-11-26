@@ -5,7 +5,7 @@ I love _Philosophy_. I could write thousands of words about Goowee but there’s
 
 So let’s write our first Goowee application, shall we?
 
-NOTE: If you are a seasoned developer, or you’re in a hurry, install https://www.oracle.com/java/technologies/downloads/?er=221886#java{version-java}[Java {version-java}, window=_blank], go download the https://github.com/goowee-projects/goowee-app-template[Goowee Template Application, window=_blank], run it with `./gradlew bootRun` and these are your three steps.
+NOTE: Goowee requires Java {version-java} or later. If you are a seasoned developer or you’re in a hurry, install https://www.oracle.com/java/technologies/downloads/?er=221886#java{version-java}[Java {version-java}, window=_blank], download the https://github.com/goowee-projects/goowee-app-template[Goowee Template Application, window=_blank], and run it with `./gradlew bootRun`.
 
 === Apache Grails
 

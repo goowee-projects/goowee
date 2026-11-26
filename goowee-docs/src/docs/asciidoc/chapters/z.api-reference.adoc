@@ -14,6 +14,13 @@ See the License for the specific language governing permissions and
 limitations under the License.
 ////
 
+ifeval::["{docname}" == "index"]
+:quick-start-xref: #building-crud
+endif::[]
+ifeval::["{docname}" != "index"]
+:quick-start-xref: a.quick-start.adoc#building-crud
+endif::[]
+
 include::{api-partials-dir}/overview.adoc[]
 include::{api-partials-dir}/application.adoc[]
 include::{api-partials-dir}/plugins.adoc[]

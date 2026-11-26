@@ -55,7 +55,7 @@ class BootStrap {
 <6> Specifies the feature's parent.
 
 ****
-IMPORTANT: To prevent users without the required authority from accessing the feature, annotate its controller class with `@Secured(['ROLE_CAN_EDIT_BOOKS'])`. See <<controllers>>.
+IMPORTANT: `ROLE_CAN_EDIT_BOOKS` is an example authority. Replace it with the authority required for your feature, and annotate the controller class with `@Secured(...)` to prevent users without that authority from accessing the feature. See <<controllers>>.
 ****
 
 Available options:

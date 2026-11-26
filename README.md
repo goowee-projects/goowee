@@ -1,29 +1,27 @@
 [![Goowee on X](https://img.shields.io/twitter/follow/gooweeframework?style=social)](https://x.com/gooweeframework)
 
-Goowee
-===
-With [Goowee](https://goowee.com), you can build Progressive Web Applications using a single programming language: [Apache Groovy](https://groovy-lang.org).
+# Goowee
 
-The main goal of the framework is to clearly separate Business Logic from the User Interface, raising the level of abstraction so developers don’t need to work directly with HTML, CSS, or JavaScript to create CRUD operations and common UIs.
+**Build enterprise PWAs with AI or traditional coding.**
 
-Goowee is built on top of the [Grails Framework](https://grails.org), leveraging its [Conventions over Configuration](https://en.wikipedia.org/wiki/Convention_over_configuration) paradigm to reduce onboarding costs, speed up development, and simplify maintenance.
+Goowee is an Apache Grails plugin built with Apache Groovy. Ask the [`goowee-developer` agent](https://github.com/goowee-projects/goowee-developer) to build your app, or use the Goowee API yourself.
 
-Getting Started
----
-To create your first Goowee application, download the [Goowee Application Template](https://github.com/goowee-projects/goowee-app-template).
+It provides a consistent, responsive interface, authentication, multi-tenancy, and internationalization. Deploy on your own infrastructure or in the cloud.
 
-Guides
----
-Find the latest documentation here: https://goowee.com
+## Quick start
 
-Community
----
-Join us on Discord: https://discord.gg/6yWnmT2hBj
+Requires **Java 21 or later** and **Grails 8**.
 
-License
----
-Goowee is Open Source software, released under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0.html).
+1. Generate a **Web Application** with [Grails Forge](https://grails.apache.org/start/).
+2. Add `org.goowee:goowee-core` and initialize `GooweeApplication` as described in the [documentation](https://www.goowee.org/docs/index.html).
+3. Run `./gradlew bootRun` and open `http://localhost:8080`.
 
-Do you know?
----
-The name `Goowee` comes from two Italian words: `due` (“two”) and `uno` (“one”). It represents two teams working together toward the same goal.
+To explore a working app, download the [Goowee Application Template](https://github.com/goowee-projects/goowee-app-template).
+
+## Links
+
+[Documentation](https://www.goowee.org/docs/index.html) · [Community on Discord](https://discord.gg/6yWnmT2hBj)
+
+## License
+
+Goowee is open-source software released under the [Apache License, Version 2.0](https://www.apache.org/licenses/LICENSE-2.0).

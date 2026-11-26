@@ -152,18 +152,18 @@ A `Header` can have a `backButton` on the left and a `nextButton` on the right. 
 |`Boolean`
 |
 |When set to `true` the header will stick on top. Adding a `backButton` or `nextButton` does not change this property. Set `sticky` explicitly to `true` to keep the header and its buttons visible while scrolling, or to `false` to make the header scroll with the content.
-|`title`
+|`text`
 |`String`
 |
-|The title to display
-|`titleArgs`
+|The title text to display
+|`textArgs`
 |`List`
 |
-|Args to be used when indexing an i18n message. Eg: in `messages.properties` exists the following property `book.index.header.title=Books for {0} {1}` and `titleArgs = ['Mario', 'Rossi']`. The `title` will result in `Books for Mario Rossi`.
+|Args to be used when indexing an i18n message. Eg: in `messages.properties` exists the following property `book.index.header.title=Books for {0} {1}` and `textArgs = ['Mario', 'Rossi']`. The `text` will result in `Books for Mario Rossi`.
 |`icon`
 |`String`
 |
-|An icon to be displayed before the `title`. We can choose one from https://fontawesome.com/[Font Awesome,window=_blank]
+|An icon to be displayed before the title text. We can choose one from https://fontawesome.com/[Font Awesome,window=_blank]
 |`hasBackButton`
 |`Boolean`
 |

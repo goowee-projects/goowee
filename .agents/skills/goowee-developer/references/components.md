@@ -33,16 +33,16 @@ Each component extends the base `Component` class and shares the following prope
 
 A `Header` is a bar at the top of the `Content` area. It can stick to the top or scroll with the content. Its main purpose is to hold navigation buttons.
 
-A `Header` can have a `backButton` on the left, a `nextButton` on the right, and a `title` in the middle.
+A `Header` can have a `backButton` on the left, a `nextButton` on the right, and a 'text' in the middle.
 
 ### Properties
 
 | Property | Type | Default | Description |
 | --- | --- | --- | --- |
-| `sticky` | `Boolean` |  | When `true`, the header sticks to the top. Adding a `backButton` or `nextButton` automatically sets `sticky` to `true` so the buttons remain reachable after scrolling. To force the header to scroll with the content, explicitly set `sticky` to `false`. |
-| `title` | `String` |  | The title to display. |
-| `titleArgs` | `List` |  | Arguments used when resolving an i18n message. For example, if `messages.properties` contains `book.index.header.title=Books for {0} {1}` and `titleArgs = ['Mario', 'Rossi']`, the title becomes `Books for Mario Rossi`. |
-| `icon` | `String` |  | An icon displayed before the `title`. Choose one from [Font Awesome](https://fontawesome.com/). |
+| `sticky` | `Boolean` |  | When `true`, the header sticks to the top. Adding a `backButton` or `nextButton` does not change this property. Set it explicitly to `true` to keep the header and its buttons visible while scrolling, or to `false` to make the header scroll with the content. |
+| `text` | `String` |  | The text to display. |
+| `textArgs` | `List` |  | Arguments used when resolving an i18n message. For example, if `messages.properties` contains `book.index.header.text=Books for {0} {1}` and `textArgs = ['Mario', 'Rossi']`, the title becomes `Books for Mario Rossi`. |
+| `icon` | `String` |  | An icon displayed before the title. Choose one from [Font Awesome](https://fontawesome.com/). |
 | `hasBackButton` | `Boolean` |  | `true` if a `backButton` has been added. |
 | `hasNextButton` | `Boolean` |  | `true` if a `nextButton` has been added. |
 | `backButton` | `Button` |  | The back button object. See [button](#button). |

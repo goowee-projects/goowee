@@ -186,16 +186,6 @@ class Header extends Component {
     }
 
     /**
-     * Sets the header title by pretty-printing the given value through the
-     * {@link goowee.elements.core.PrettyPrinter}.
-     *
-     * @param value the value to format and use as the header title
-     */
-    void setText(Object value) {
-        text = prettyPrint(value)
-    }
-
-    /**
      * Serialises this header's properties to JSON.
      *
      * @param properties additional properties to merge before serialisation

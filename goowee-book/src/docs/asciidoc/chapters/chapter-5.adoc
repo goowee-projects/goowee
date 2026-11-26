@@ -368,9 +368,9 @@ app.name=People Registry
 feature.person=People
 feature.person.help=Manage the People Registry
 
-person.index.header.title=People
-person.create.header.title=New Person
-person.edit.header.title=Person
+person.index.header=People
+person.create.header=New Person
+person.edit.header=Person
 person.filters.birthdate=Birthdate
 person.filters.find=Find
 person.firstname=Firstname
@@ -386,9 +386,9 @@ app.name=Registro persone
 feature.person=Persone
 feature.person.help=Gestisci il registro persone
 
-person.index.header.title=Persone
-person.create.header.title=Nuova persona
-person.edit.header.title=Persona
+person.index.header=Persone
+person.create.header=Nuova persona
+person.edit.header=Persona
 person.filters.birthdate=Nato il
 person.filters.find=Trova
 person.firstname=Nome

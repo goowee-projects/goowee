@@ -159,7 +159,7 @@ A `Header` can have a `backButton` on the left, a `nextButton` on the right, and
 |`textArgs`
 |`List`
 |
-|Args to be used when indexing an i18n message. Eg: in `messages.properties` exists the following property `book.index.header.title=Books for {0} {1}` and `textArgs = ['Mario', 'Rossi']`. The `text` will result in `Books for Mario Rossi`.
+|Args to use when looking up an i18n message. For example, if `messages.properties` contains `book.index.header=Books for {0} {1}` and `textArgs = ['Mario', 'Rossi']`, the rendered text will be `Books for Mario Rossi`.
 |`icon`
 |`String`
 |

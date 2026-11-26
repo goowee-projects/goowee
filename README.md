@@ -4,7 +4,7 @@
 
 **Build Enterprise Applications with AI or traditional coding.**
 
-Goowee is an <a href="https://grails.org/" target="_blank" rel="noopener noreferrer">Apache Grails</a> plugin built with <a href="https://groovy-lang.org/" target="_blank" rel="noopener noreferrer">Apache Groovy</a>. Ask <a href="https://github.com/goowee-projects/goowee-developer" target="_blank" rel="noopener noreferrer">Goowee Developer</a> to build your app, or use the <a href="https://www.goowee.org/docs/index.html" target="_blank" rel="noopener noreferrer">Goowee API</a> yourself.
+<a href="https://www.goowee.org" target="_blank" rel="noopener noreferrer">Goowee</a> is an <a href="https://grails.org/" target="_blank" rel="noopener noreferrer">Apache Grails</a> plugin built with <a href="https://groovy-lang.org/" target="_blank" rel="noopener noreferrer">Apache Groovy</a>. Ask <a href="https://github.com/goowee-projects/goowee-developer" target="_blank" rel="noopener noreferrer">Goowee Developer</a> to build your app, or use the <a href="https://www.goowee.org/docs/index.html" target="_blank" rel="noopener noreferrer">Goowee API</a> yourself.
 
 It provides a consistent, responsive interface, authentication, multi-tenancy, and internationalization. Deploy on your own infrastructure or in the cloud.
 

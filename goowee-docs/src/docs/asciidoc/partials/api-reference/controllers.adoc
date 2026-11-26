@@ -116,6 +116,8 @@ The `BookService` implements CRUD operations for a simple in-memory database.
 .grails-app/services/BookService.groovy
 [source,groovy]
 ----
+import groovy.contracts.Requires
+
 @CompileStatic
 class BookService {
 
@@ -137,8 +139,8 @@ class BookService {
         data.add(record)
     }
 
+    @Requires({ record.id })
     void update(Map record) {
-        if (!record.id) throw new Exception("'id' required to update a record!")
         Map item = data.find { it.id == record.id }
         if (item) {
             item.title == record.title

@@ -379,81 +379,191 @@ image::images/api-reference/reference-book-languages.png[Available languages]
 === display()
 The `display` method is a key Goowee feature. It renders the GUI on the server and sends it to the browser.
 
-You can call `display` with one or more of the following parameters:
+`display()` accepts a map of arguments. Some options apply to page or content rendering, while invocation options apply to redirects and message actions.
 
 [cols="1,1,1,7a"]
 |===
 |Name|Type|Default|Description
 
-|`controller`
-|`String`
+|`page`
+|`Page`
 |
-|The name of the controller to redirect to. If no `action` is specified the `index` action will be displayed
-
-|`action`
-|`String`
-|
-|The name of the action to redirect to. If no `controller` is specified the current controller will be used
-
-|`params`
-|`Map<String, Object>`
-|
-|The params to pass when redirecting to a `controller` or `action`
+|Page to render. If omitted, the current session's main page is used. Specifying a page forces a full-page response.
 
 |`content`
 |`PageContent`
 |
-|The content to display (See <<contents>>)
+|Content to render in the page or transition. Render options can be passed as additional arguments. See <<contents>>.
 
 |`transition`
 |`Transition`
 |
-|The transition to display (See <<transitions>>)
+|Explicit transition to render in response to an AJAX request. If omitted, a transition is created automatically.
 
-|`modal`
-|`Boolean`
-|
-|Whether to display the content in a modal dialog or not
-
-|`small`
-|`Boolean`
-|
-|When displaying the content as `modal` the dialog will be tighter.
-
-|`large`
-|`Boolean`
-|
-|When displaying the content as `modal` the dialog will be wider.
-
-|`fullscreen`
-|`Boolean`
-|
-|When displaying the content as `modal` the dialog will fit the whole browser window size.
-
-|`closeButton`
-|`Boolean`
-|`true`
-|When displaying the content as `modal` the dialog will present a close button on the top-left side to let the user close the dialog cancelling the operation.
-
-|`errors`
-|`org.springframework.validation.Errors`
-|
-|Validation errors to display (See <<validation>>)
-
-|`errorMessage`
+|`focus`
 |`String`
 |
-|Message to display in a message box to the user
+|ID of the component to focus after rendering the transition.
 
-|`exception`
-|`Exception`
+|`loading`
+|`Boolean`
 |
-|Exception to display in a message box to the user
+|Whether to show the loading indicator while the transition is processed.
 
 |`message`
 |`String`
 |
-|Message to display in a message box to the user
+|Informational message to display in a message box.
+
+|`messageArgs`
+|`List`
+|`[]`
+|Arguments used to interpolate `message`, `confirmMessage`, or `errorMessage`.
+
+|`confirmMessage`
+|`String`
+|
+|Confirmation message to display in a dialog.
+
+|`errorMessage`
+|`String`
+|
+|Error message to display in a message box.
+
+|`exception`
+|`Exception`
+|
+|Exception whose message is displayed in a message box and whose details are logged.
+
+|`errors`
+|`Object`
+|
+|Validation errors to display on a submitted component. Accepts a field-to-message map or an object with an `errors` property, such as a `Validateable` or GORM domain instance.
+
+|`controller`
+|`String`
+|
+|Controller to redirect to. If omitted, the current controller is used.
+
+|`action`
+|`String`
+|`index`
+|Action to redirect to.
+
+|`namespace`
+|`String`
+|
+|Controller namespace for the redirect.
+
+|`params`
+|`Map<String, Object>`
+|
+|Request parameters to pass with the redirect.
+
+|`url`
+|`String`
+|
+|Explicit URL for the redirect. It takes precedence over `controller` and `action`; `direct` defaults to `true` when `url` is set.
+
+|`path`
+|`String`
+|
+|Absolute or relative path to use as the redirect target.
+
+|`fragment`
+|`String`
+|
+|URL fragment to append to the redirect target.
+
+|`call`
+|`String`
+|
+|Client-side JavaScript function to call instead of navigating.
+
+|`direct`
+|`Boolean`
+|
+|Whether to return a full HTML page or raw HTTP body instead of a `Transition`.
+
+|`submit`
+|`String` or `List<String>`
+|
+|Component names whose values should be submitted with the invocation.
+
+|`target`
+|`String`
+|
+|Browser context in which to open the redirect, such as `_self` or `_blank`.
+
+|`targetNew`
+|`Boolean`
+|
+|When `true`, opens the redirect in a new browser tab.
+
+|`renderProperties`
+|`PageRenderProperties`
+|
+|Rendering options to apply to the redirect destination. For `content`, pass the individual rendering options listed below.
+
+|`infoMessage`
+|`String`
+|
+|Informational message to display instead of executing the invocation.
+
+|`infoMessageArgs`
+|`List`
+|
+|Arguments used to interpolate `infoMessage`.
+
+|`confirmMessageArgs`
+|`List`
+|
+|Arguments used to interpolate an invocation's `confirmMessage`.
+
+|`confirmMessageOnConfirm`
+|`InvocationDefinition` or `Map`
+|
+|Invocation to execute when the user confirms `confirmMessage`.
+
+|`modal`
+|`Boolean`
+|
+|Whether to display the destination content in a modal dialog.
+
+|`small`
+|`Boolean`
+|
+|When displaying content in a modal, use a narrower layout.
+
+|`large`
+|`Boolean`
+|
+|When displaying content in a modal, use a wider layout.
+
+|`fullscreen`
+|`Boolean`
+|
+|When displaying content in a modal, use the full browser window.
+
+|`closeButton`
+|`Boolean`
+|`true`
+|Whether to show a close button on the modal dialog.
+
+|`updateUrl`
+|`Boolean`
+|
+|Whether to update the browser address bar with the destination URL.
+
+|`animate`
+|`String`
+|
+|CSS animation to apply when the destination content is displayed.
+
+|`scroll`
+|`String`
+|
+|Scroll behavior to apply after rendering the destination content.
 |===
 ////
 Licensed to the Apache Software Foundation (ASF) under one or more

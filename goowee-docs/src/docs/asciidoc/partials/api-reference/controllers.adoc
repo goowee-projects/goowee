@@ -329,7 +329,9 @@ class BookController implements ElementsController {
 }
 ----
 <1> The `BookValidator` class checks that fields are not `null` and that the title is unique, and highlights invalid fields.
-<2> The `ContentTable`, `ContentCreate`, and `ContentEdit` contents define these method names. To see which URL each button calls, hover over the `Delete`, `Create`, or `Save` button and check the bottom-left corner of your browser.
+<2> The `ContentTable`, `ContentCreate`, and `ContentEdit` contents define these method names.
+
+NOTE: To see which URL each button calls, hover over the _Delete_, _Create_, or _Save_ button and check the bottom-left corner of your browser.
 
 image::images/api-reference/reference-book-validation.png[Book listing]
 

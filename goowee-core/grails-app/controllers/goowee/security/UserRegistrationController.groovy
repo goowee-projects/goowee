@@ -40,8 +40,7 @@ class UserRegistrationController implements ElementsController {
                 class: Label,
                 id: 'emailReset',
                 html: """
-                    Inserisci il tuo indirizzo email, se sei presente nei nostri database ti invieremo una email
-                    con il link per reimpostare la password.
+                    Enter your email address. If it is in our database, we will email you a link to reset your password.
                     """
             )
             addField(
@@ -68,8 +67,8 @@ class UserRegistrationController implements ElementsController {
                 class: Label,
                 id: 'confirmMessage',
                 html: """
-                        Ti abbiamo inviato una email per resettare la password, segui le istruzioni riportate
-                        (se non la trovi potrebbe essere nella cartella di spam).
+                        We sent you an email to reset your password. Follow the instructions provided
+                        (if you cannot find it, check your spam folder).
                     """,
             )
         }
@@ -86,7 +85,7 @@ class UserRegistrationController implements ElementsController {
                 class: Label,
                 id: 'newPassword',
                 html: """
-                    Scegli la nuova password
+                    Choose your new password
                     """
             )
             addField(
@@ -95,7 +94,7 @@ class UserRegistrationController implements ElementsController {
             )
             addField(
                 class: 'PasswordField',
-                id: 'confermaPassword',
+                id: 'passwordConfirm',
             )
         }
 
@@ -124,7 +123,7 @@ class UserRegistrationController implements ElementsController {
                 class: 'Label',
                 id: 'confirmMessage',
                 html: """
-                        Password modificata, per accedere al sito eseguire nuovamente il login.
+                        Password changed. Log in again to access the site.
                     """,
             )
             addField(

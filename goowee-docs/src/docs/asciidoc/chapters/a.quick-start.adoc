@@ -1,17 +1,17 @@
 == Quick Start
 
 === Goals
-*With Goowee, you can develop enterprise web applications by writing code in a single programming language: https://groovy-lang.org/[Apache Groovy,window=_blank]. There is no need to know HTML, CSS, or JavaScript.*
+*Build enterprise applications with AI or by hand. Describe your application in a prompt for the `goowee-developer` agent, or build it yourself.*
 
-With Goowee you can develop and maintain web applications with requirements such as:
+Goowee applications are designed to:
 
-. Authenticate & authorize users (who can access and what they can do)
-. Implement several business features with a coherent user interface
-. Display and edit data in table format (CRUD)
-. Display charts, dashboards, etc. to build Business Intelligence applications
-. Let users customize their localization preferences with country specific formats (languages, dates, numbers, currencies, quantities, etc.)
-. Develop multi-device applications. Each application will automatically work on a desktop pc with a mouse as well as on a mobile device with a finger.
-. Develop multi-tenant applications. The same application can serve different clients with separate databases.
+. Run as Progressive Web Applications on desktops, tablets and phones, with a native-like installable experience.
+. Deploy on your own infrastructure, in the cloud, or as a service.
+. Authenticate users with local credentials, hardware tokens, LDAP and Active Directory, IBM i, or OpenID Connect.
+. Serve multiple tenants from one codebase, with a separate database and isolated data for each tenant.
+. Give users a familiar, consistent interface across applications.
+. Support keyboard navigation for users familiar with legacy systems such as AS/400.
+. Localize applications with built-in internationalization.
 
 NOTE: The main purpose of Goowee is to decouple business logic from the _User Interface (GUI)_. This lowers application maintenance costs: the team uses just one language instead of five (HTML, CSS, JavaScript, Java, and SQL), developers need fewer specialized skills, and the GUI does not need to be upgraded whenever new web technologies or standards become available.
 
@@ -25,40 +25,9 @@ NOTE: The main purpose of Goowee is to decouple business logic from the _User In
 For such cases you can use the https://grails.org/[Apache Grails,window=_blank] framework.
 
 === Try it out
-We can run the https://github.com/goowee-projects/goowee-app-template[Goowee Application Template,window=_blank] to have an idea of what a Goowee application looks like. Open a terminal and execute the following commands:
+Download and run the https://github.com/goowee-projects/goowee-app-template[Goowee Application Template,window=_blank] to have an idea of what a Goowee application looks like. Open a terminal and execute the following commands:
 
-[source,bash,background-color="black"]
-----
-$ git clone https://github.com/goowee-projects/goowee-app-template
-$ cd goowee-app-template
-$ ./gradlew bootRun
-----
-
-NOTE: The first run will take some time since Gradle has to download all the needed dependencies.
-
-You should see something like this:
-
-[source,bash,background-color="black"]
-----
->                                                                            <
->                         _                                                  <
->                        | |   https://goowee.com                            <
->                      __| |_   _  ___ _   _ _ __   ___                      <
->                     / _` | | | |/ _ \ | | | '_ \ / _ \                     <
->                    | (_| | |_| |  __/ |_| | | | | (_) |                    <
->                     \__,_|\__,_|\___|\__,_|_| |_|\___/                     <
->                                                                            <
-
-Grails application running at http://localhost:8080 in environment: development
-----
-
-Point your web browser to https://localhost:8080[https://localhost:8080] to display the login screen:
-
-image::images/quick-start/user-guide-login.png[Application Login]
-
-NOTE: Log in with `admin/admin` to manage the default tenant or with `super/super` to manage the whole application.
-
-==== Apache Groovy & Grails
+=== Apache Groovy & Grails
 Goowee applications are Grails applications so you need to get confident with the https://grails.org/[Apache Grails,window=_blank] framework and the https://groovy-lang.org/[Apache Groovy,window=_blank] programming language.
 
 NOTE: Apache Grails has been helping web developers for 20 years now, it's based on https://spring.io/projects/spring-boot[Spring Boot,window=_blank] and is a growing technology. What you want to do is https://grails.org/documentation.html[reading the latest documentation on the Grails website,window=_blank]
@@ -663,8 +632,8 @@ Run the application with gradle `bootRun`, you should be able to create, list, e
 
 === What's next?
 ifeval::["{docname}" == "index"]
-Read xref:goowee-elements-book[The Goowee Book] or xref:api-reference[Goowee API Reference].
+Read link:https://www.goowee.org/book/index.html[The Goowee Book] or xref:api-reference[Goowee API Reference].
 endif::[]
 ifeval::["{docname}" != "index"]
-Read xref:chapter-1.adoc[The Goowee Book] or xref:z.api-reference.adoc[Goowee API Reference].
+Read link:https://www.goowee.org/book/index.html[The Goowee Book] or xref:z.api-reference.adoc[Goowee API Reference].
 endif::[]

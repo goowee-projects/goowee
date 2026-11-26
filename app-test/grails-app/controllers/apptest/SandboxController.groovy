@@ -580,7 +580,7 @@ Grails application running at http://localhost:9992/test in environment: develop
 //                    onSearch: 'onSearch',
 //                    optionsFromRecordset: securityService.listUser(),
 //                    defaultValue: 3,
-//                    noSelectionText: 'Seleziona qualcosa',
+//                    noSelectionText: 'Select something',
 //                    cols: 12,
 //            )
 //            addField(
@@ -834,7 +834,7 @@ Grails application running at http://localhost:9992/test in environment: develop
 
     def onThrowException() {
         try {
-            throw new Exception("C'è stato un errore!")
+            throw new Exception("An error occurred!")
         } catch (e) {
             display exception: e, action: 'index'
         }

@@ -118,6 +118,25 @@ grid.addColumn().addComponent(
 |Sets all default column spans. With no arguments, the values are `12`, `6`, `4`, `4`, `3`, and `2` respectively.
 |===
 
+[[grid-column]]
+=== GridColumn
+A `GridColumn` is returned by `Grid.addColumn()` and holds the components arranged in that column. Its breakpoint values override the corresponding values set on the parent `Grid`; unset values inherit from the grid.
+
+==== Properties
+[cols="1,1,1,7a"]
+|===
+|Property|Type|Default|Description
+
+|`xs`, `sm`, `md`, `lg`, `xl`, `xxl`
+|`Integer`
+|
+|Column span at the corresponding Bootstrap breakpoint. A value set on the column overrides the same breakpoint on its parent grid.
+|`scrollable`
+|`Boolean`
+|`false`
+|Whether the column content can scroll independently.
+|===
+
 [[header_]]
 === Header
 A `Header` is a bar at the top of the `Content` area. It can be sticky on top or it can scroll with the content. Its main purpose is to hold navigation buttons.
@@ -238,6 +257,10 @@ c.table.with {
     ]
 }
 ----
+|`fetchParams`
+|`Map<String, Object>`
+|`[:]`
+|Additional parameters sent when the table fetches its data. The current sort state is also maintained in this map.
 |`submit`
 |`List<String>`
 |
@@ -304,6 +327,10 @@ c.table.with {
     ]
 }
 ----
+|`title`
+|`Separator`
+|
+|The separator displayed above the table. Set its `text` to change the title.
 |`stickyHeader`
 |`Boolean`
 |`true`
@@ -329,7 +356,7 @@ c.table.with {
     }
 }
 
-Map filters = c.table.filters.values // <1>
+Map filters = c.table.filterParams // <1>
 ----
 <1> The submitted values of the filters fields. See <<table-filters>>
 
@@ -381,6 +408,10 @@ Map filters = c.table.filters.values // <1>
 |`Boolean`
 |`false`
 |Whether to set the zebra style or not
+|`rowBorderless`
+|`Boolean`
+|`true`
+|Whether to omit borders between table rows.
 |`noResults`
 |`Boolean`
 |`true`
@@ -393,6 +424,33 @@ Map filters = c.table.filters.values // <1>
 |`String`
 |
 |The message to display when the table has no results
+|===
+
+==== Table child components
+`Table` creates and manages the components used to render its rows and controls. Use the corresponding `Table` properties and methods to work with them:
+
+[cols="1,1,6a"]
+|===
+|Component|Access|Role
+
+|`TableRowset`
+|`header`, `body`, `footer`
+|Holds the table's column headings, data rows, or footer rows. Assign recordsets through these properties; use `body.eachRow` to configure individual rows.
+|`TableRow`
+|The `row` argument of `body.eachRow`
+|Represents one row and exposes its cells and row actions.
+|`TableCell`
+|`row.cells[columnName]`
+|Represents a cell. It can contain a label or, when `hasComponents` is enabled, a component.
+|`TableActionbar`
+|`actionbar`
+|Hosts actions above the table, including filter actions.
+|`TableDataset`
+|`dataset`
+|Carries data exchanged with the client when table results are fetched.
+|`TablePagination`
+|`pagination`
+|Manages the table's page offset, page size, and total row count.
 |===
 
 [[table-methods]]
@@ -419,6 +477,14 @@ c.table.footer = bookService.listTotals()
 ----
 c.table.paginate = bookService.count()
 ----
+|`getFilter(String id)`
+|Returns the current value of the named filter. The value is initialized from the request, action session, default value, or a filter reset when needed. Returns `null` if the filter id is unknown.
+|`setFilter(String id, Object value)`
+|Sets the named filter value and synchronizes it with the filter control, action session, and request parameters.
+|`resetFilters()`
+|Clears the saved filter values from the action session. It does not change the table's pagination.
+|`resetPagination()`
+|Resets the offset to `0` and the page size to `20`, retaining filter values. Explicit `_21TableOffset` or `_21TableMax` request parameters are preserved.
 |`eachRow`
 |This closure gets called for each row displayed by the table. Don't execute slow code here since it will slow down the whole table rendering.
 [source,groovy]
@@ -578,6 +644,25 @@ c.table.with {
 === TableFilters
 Each table can have its own search `Form` to filter results. When submitting the filters, the action containing them will be reloaded and the filters values will be available in the Grails `params` map.
 
+Use the parent `Table`'s `getFilter(id)` and `setFilter(id, value)` methods to read or update one filter. Pass the `id` used with `addField()`; the `filters.` prefix is used for the localized label, not for the filter id. `getFilter()` resolves the current value from the request, action session, or default value. `setFilter()` updates the control and synchronizes the value with the action session and request parameters.
+
+[source,groovy]
+----
+// Set a filter value programmatically
+c.table.setFilter('status', 'PUBLISHED')
+
+// Read the current value of that filter
+def status = c.table.getFilter('status')
+----
+
+To clear the saved filter state or reset paging, call the parent `Table` methods. `resetFilters()` removes filter values from the action session without changing pagination. `resetPagination()` resets the offset and page size while retaining filters; explicit `_21TableOffset` and `_21TableMax` request parameters take precedence.
+
+[source,groovy]
+----
+c.table.resetFilters()
+c.table.resetPagination()
+----
+
 [source,groovy]
 ----
 c.table.with {
@@ -596,7 +681,7 @@ c.table.with {
         )
     }
 
-    Map filters = c.table.filters.values // <1>
+    Map filters = c.table.filterParams // <1>
 }
 ----
 <1> The submitted values of the filters fields.
@@ -627,6 +712,10 @@ c.table.with {
 
 |`addField()`
 |Adds a form field. See <<form-field>> and <<controls>>
+|`getValue(String id)`
+|Returns the current value of the named filter after applying its initialization rules. Returns `null` if the filter id is unknown.
+|`setValue(String id, Object value)`
+|Sets the filter control's value and synchronizes it with the action session and request parameters. The parent `Table` exposes these operations as `getFilter()` and `setFilter()`.
 |===
 
 [[form]]
@@ -1272,6 +1361,48 @@ When `hideInput` is enabled, scanner-speed characters are removed from a focused
 |`keypress`
 |Triggered when scanner-speed input ends with the configured `triggerKey`. The collected value is sent as `_21KeyPressed`. When `triggerKey` is blank, each key meets the trigger condition.
 |===
+
+[[chart]]
+=== Chart (abstract)
+The chart components supplied by `goowee-extra` render data with the bundled Chart.js library. `Chart` is their abstract base; use `BarChart` or `PieChart` in an application.
+
+==== Properties
+[cols="1,1,1,7a"]
+|===
+|Property|Type|Default|Description
+
+|`values`
+|`List`
+|`[]`
+|Numeric values represented by the chart.
+|`labels`
+|`List`
+|`[]`
+|Labels corresponding to the values.
+|`colors`
+|`List`
+|`[]`
+|Background colors corresponding to the values. Values use CSS color formats accepted by Chart.js.
+|===
+
+[[bar-chart]]
+=== BarChart
+A bar chart. Set `values`, `labels`, and optionally `colors` as described for <<chart>>.
+
+[source,groovy]
+----
+c.addComponent(
+    class: BarChart,
+    id: 'sales',
+    labels: ['Books', 'Games'],
+    values: [12, 8],
+    colors: ['#0d6efd', '#20c997'],
+)
+----
+
+[[pie-chart]]
+=== PieChart
+A pie chart. Set `values`, `labels`, and optionally `colors` as described for <<chart>>. See <<custom-components>> for an example of building a custom component around Chart.js.
 ////
 Licensed to the Apache Software Foundation (ASF) under one or more
 contributor license agreements. See the NOTICE file distributed with

@@ -104,7 +104,7 @@ class CrudDataServicesController implements ElementsController {
             validate = TPerson
             addKeyField('embedded', Type.BOOL)
 
-            //TODO: Fare in modo che l'azione riceva i dati convertiti in base al loro tipo
+            // TODO: Ensure the action receives data converted according to its type
             addKeyField('selection', Type.LIST, [[id: 1]])
 
             addField(

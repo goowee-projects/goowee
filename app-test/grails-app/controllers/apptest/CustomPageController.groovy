@@ -125,17 +125,17 @@ class CustomPageController implements ElementsController {
 
     private String getStatusDescription(String status) {
         Map descriptions = [
-            '0': 'MARKER SPENTO, PREMI "RESET EMERGENZE"',
-            '1': 'MARKER IN RISCALDAMENTO, ATTENDI...',
-            '2': 'MARKER SPENTO, GIRA LA CHIAVE',
+            '0': 'MARKER OFF, PRESS "EMERGENCY RESET"',
+            '1': 'MARKER HEATING UP, PLEASE WAIT...',
+            '2': 'MARKER OFF, TURN THE KEY',
             '3': 'MARKER IN STANDBY',
-            '4': 'MARKER PRONTO, CHIUDI IL COPERCHIO PER STAMPARE',
-            '5': 'MARKER PRONTO A STAMPARE',
-            '6': 'MARKER PRONTO, SHUTTER CHIUSO',
-            '7': 'STAMPA IN CORSO',
-            '8': 'STAMPA IN CORSO, SHUTTER CHIUSO',
-            '9': 'MARKER SPENTO, RIMUOVI IL COPERCHIO',
-            ':': 'ERRORE DI SISTEMA, USA INTERRUTTORE PRINCIPALE "ON/OFF"',
+            '4': 'MARKER READY, CLOSE THE COVER TO PRINT',
+            '5': 'MARKER READY TO PRINT',
+            '6': 'MARKER READY, SHUTTER CLOSED',
+            '7': 'PRINTING',
+            '8': 'PRINTING, SHUTTER CLOSED',
+            '9': 'MARKER OFF, REMOVE THE COVER',
+            ':': 'SYSTEM ERROR, USE THE MAIN "ON/OFF" SWITCH',
         ]
 
         return descriptions[status]

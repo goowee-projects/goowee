@@ -31,7 +31,7 @@ Find the `dependencies` section of the `build.gradle` file and add the following
 dependencies {
 ...
 
-    implementation 'org.goowee:goowee-core:{revnumber}'
+    implementation 'org.goowee:goowee-core:{goowee-version}'
 }
 ----
 

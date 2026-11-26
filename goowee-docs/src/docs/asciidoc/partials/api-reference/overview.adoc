@@ -10,7 +10,7 @@ Use https://start.grails.org[Grails Forge,window=_blank] to generate a *Web Appl
 ----
 dependencies {
     ...
-    implementation "org.goowee:goowee-core:{revnumber}"
+    implementation "org.goowee:goowee-core:{goowee-version}"
 }
 ----
 
@@ -49,7 +49,7 @@ Configure the application to display the logs. Add the following code to:
 === Login
 At this point, you should be able to run the application. Open `http://localhost:8080` in your browser and log in with the system administrator credentials (username: `super`, password: `super`).
 
-image::images/chapter-2/image-3.webp[The application running]
+image::images/api-reference/application-running.webp[The application running]
 
 === URL Path
 We can set up our application to be accessible from a specific URL path. For example `http://localhost:8080/admin`.

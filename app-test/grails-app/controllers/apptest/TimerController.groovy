@@ -170,7 +170,7 @@ class TimerController implements ElementsController {
         t.replace('grid1', 'grid1')
 
         t.setValue('number', num)
-        t.call('messagebox', 'hide')  // IN CASO DI ERRORE
+        t.call('messagebox', 'hide')  // HIDE IN CASE OF ERROR
 
         display transition: t
     }

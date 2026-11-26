@@ -112,7 +112,7 @@ class TableStressTestController implements ElementsController {
 
                 groupActions.addAction(action: 'groupAction1')
 //                groupActions.addAction(action: 'groupAction2')
-//                groupActions.addAction(controller: 'groupAction3', confirmMessage: 'Messaggio di conferma, sei sicuro?')
+//                groupActions.addAction(controller: 'groupAction3', confirmMessage: 'Confirmation message, are you sure?')
 
                 actions.addAction(action: 'action1.with.a.very.very.long.name')
                 actions.addAction(action: 'action2')

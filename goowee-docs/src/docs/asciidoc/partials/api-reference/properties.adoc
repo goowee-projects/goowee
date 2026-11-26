@@ -80,6 +80,7 @@ Integer retentionDays = applicationPropertyService.getNumber('ORDER_RETENTION_DA
 Boolean archivingEnabled = applicationPropertyService.getBoolean('ORDER_ARCHIVING_ENABLED')
 ----
 
+[[tenant-properties]]
 === Tenant
 
 Tenant Properties are configuration values specific to the current tenant.

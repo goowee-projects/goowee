@@ -15,7 +15,7 @@ class TimerService {
         for (Integer i = 1; i <= total; i++) {
             result.add([
                 id         : i,
-                name       : "nome${i.toString()}",
+                name       : "name${i.toString()}",
                 description: "desc${i.toString()}",
                 quantity   : (i * 2 - 1),
             ])
@@ -110,7 +110,7 @@ class TimerService {
                         id: "btn1Id${item.id}",
                         action: 'detail',
                         displayLabel: false,
-                        text: 'Mostra',
+                        text: 'Show',
                         icon: 'fa-eye',
                         params: [id: item.id],
                     )
@@ -119,7 +119,7 @@ class TimerService {
                             id: "btn2Id${item.id}",
                             action: 'confirm1',
                             displayLabel: false,
-                            text: 'Stampa',
+                            text: 'Print',
                             icon: 'fa-print',
                             params: [id: item.id],
                             cols: 6,
@@ -129,7 +129,7 @@ class TimerService {
                             id: "btn3Id${item.id}",
                             action: 'confirm2',
                             displayLabel: false,
-                            text: 'Evadi',
+                            text: 'Process',
                             icon: 'fa-circle-check',
                             params: [id: item.id],
                             cols: 6,

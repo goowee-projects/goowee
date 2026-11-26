@@ -16,10 +16,10 @@ tasks.register("verifyDocumentationCoverage") {
 
     doLast {
         File elementsDir = project(":goowee-core").file("src/main/groovy/goowee/elements")
+        File extraComponentsDir = project(":goowee-extra").file("src/main/groovy/goowee/elements/components")
         File apiReferenceDir = file("src/docs/asciidoc/partials/api-reference")
 
         Set<String> internalComponents = [
-                "GridColumn",
                 "TableActionbar",
                 "TableCell",
                 "TableDataset",
@@ -32,7 +32,7 @@ tasks.register("verifyDocumentationCoverage") {
             directory.listFiles()
                     .findAll { it.name.endsWith(".groovy") }
                     .collectMany { file ->
-                        (file.text =~ /(?m)^class\s+(\w+)/).collect { match -> match[1] }
+                        (file.text =~ /(?m)^(?:abstract\s+)?class\s+(\w+)/).collect { match -> match[1] }
                     } as Set<String>
         }
 
@@ -43,7 +43,8 @@ tasks.register("verifyDocumentationCoverage") {
         Set<String> documentedTypes = (apiReference =~ /(?m)^===\s+(\w+)/)
                 .collect { match -> match[1] } as Set<String>
 
-        Set<String> components = declaredClasses(new File(elementsDir, "components")) - internalComponents
+        Set<String> components = (declaredClasses(new File(elementsDir, "components")) - internalComponents) +
+                declaredClasses(extraComponentsDir)
         Set<String> controls = declaredClasses(new File(elementsDir, "controls"))
         Set<String> missing = (components + controls) - documentedTypes
 

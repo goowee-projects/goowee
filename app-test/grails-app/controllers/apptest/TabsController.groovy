@@ -66,7 +66,7 @@ class TabsController implements ElementsController {
             addField(
                 class: TextField,
                 id: 't1',
-                help: 'Hai letto il manuale? No? Bravo, e come pensi di sapere le cose? Per scienza infusa?',
+                help: 'Have you read the manual? No? Then how do you expect to know anything? By osmosis?',
             )
             addField(
                 class: TextField,
@@ -239,7 +239,7 @@ class TabsController implements ElementsController {
 
         } else {
             def t = createTransition()
-            t.confirmMessage('Sicuro di voler continuare?', new InvocationDefinition(
+            t.confirmMessage('Are you sure you want to continue?', new InvocationDefinition(
                 controller: 'table',
                 action: 'index',
                 params: [f1: params.f1, f2: params.f2, table1: params.table1],

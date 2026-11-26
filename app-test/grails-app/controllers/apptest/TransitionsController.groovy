@@ -51,7 +51,7 @@ class TransitionsController implements ElementsController {
                 addField(
                     class: Label,
                     id: 'transitioned',
-                    text: 'Hai confermato, bravo!',
+                    text: 'You confirmed, well done!',
                     textColor: '#aa0000',
                     backgroundColor: "rgba(${primaryBackgroundColorInt.join(', ')}, ${primaryBackgroundColorAlpha})",
                     tag: true,
@@ -233,13 +233,13 @@ class TransitionsController implements ElementsController {
 
     def showMessage() {
         def t = createTransition()
-        t.infoMessage('transitions.messagebox.ciao', ['Mondo!'])
+        t.infoMessage('transitions.messagebox.hello', ['World!'])
         display transition: t
     }
 
     def showError() {
         def t = createTransition()
-        t.errorMessage('transitions.messagebox.error', ['Non ha funzionato!'])
+        t.errorMessage('transitions.messagebox.error', ["It didn't work!"])
         display transition: t
     }
 

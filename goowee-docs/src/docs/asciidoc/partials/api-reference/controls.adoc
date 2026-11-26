@@ -112,8 +112,12 @@ c.form.addField(
 |A text to display before the edit area of the control
 |`maxSize`
 |`Integer`
-|
+|`0`
 |Max number of characters the user can input
+|`displayMaxSize`
+|`Boolean`
+|`false`
+|Whether to display a remaining-character counter. Set a positive `maxSize` as well for the counter to have a limit.
 |`placeholder`
 |`String`
 |
@@ -487,8 +491,12 @@ c.form.with {
 
 |`maxSize`
 |`Integer`
-|
+|`0`
 |Max number of characters the user can input
+|`displayMaxSize`
+|`Boolean`
+|`true`
+|Whether to display a remaining-character counter. The default is `true` for `Textarea`; set `maxSize` to a positive value to show the counter.
 |`acceptNewLine`
 |`Boolean`
 |`true`

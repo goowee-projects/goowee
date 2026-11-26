@@ -9,6 +9,7 @@ include "goowee-core"
 include "goowee-extra"
 
 include "goowee-docs"
+include "goowee-book"
 //include "goowee-docs-app"
 
 include "app-test"

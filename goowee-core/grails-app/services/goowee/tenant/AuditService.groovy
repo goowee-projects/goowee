@@ -150,20 +150,20 @@ class AuditService implements WebRequestAware {
 
     private String getClientRequestInfo(HttpServletRequest request) {
         List relevantHeaders = [
-            'CF-Connecting-IP',        // Cloudflare: IP reale del client dietro il loro CDN
-            'True-Client-IP',          // Akamai / altri CDN: IP reale del client
-            'X-Forwarded-For',         // De facto standard proxy: lista IP client + proxy
-            'X-Real-IP',               // Nginx: IP reale del client
-            'X-Cluster-Client-IP',     // Alcuni load balancer / proxy cluster: IP client
-            'Client-IP',               // Proxy meno comuni: IP originale del client
-            'X-Originating-IP',        // Alcuni webmail / proxy: IP originale del client
-            'X-Remote-IP',             // Alcuni proxy privati: IP originale del client
-            'X-Client-IP',             // Proxy custom: IP reale del client
-            'Proxy-Client-IP',         // Proxy / servlet container legacy: IP client
-            'WL-Proxy-Client-IP',      // WebLogic: IP client dietro il proxy
-            'X-Forwarded',             // Variante generica di X-Forwarded-For
-            'X-Forwarded-Host',        // Non contiene IP, ma può aiutare a ricostruire la connessione
-            'Via'                      // RFC 7230: lista dei proxy attraversati, informativo
+            'CF-Connecting-IP',        // Cloudflare: actual client IP behind its CDN
+            'True-Client-IP',          // Akamai / other CDNs: actual client IP
+            'X-Forwarded-For',         // De facto proxy standard: client and proxy IPs
+            'X-Real-IP',               // Nginx: actual client IP
+            'X-Cluster-Client-IP',     // Some load balancers / proxy clusters: client IP
+            'Client-IP',               // Less common proxies: original client IP
+            'X-Originating-IP',        // Some webmail services / proxies: original client IP
+            'X-Remote-IP',             // Some private proxies: original client IP
+            'X-Client-IP',             // Custom proxy: actual client IP
+            'Proxy-Client-IP',         // Legacy proxy / servlet container: client IP
+            'WL-Proxy-Client-IP',      // WebLogic: client IP behind the proxy
+            'X-Forwarded',             // Generic variant of X-Forwarded-For
+            'X-Forwarded-Host',        // Does not contain an IP, but can help reconstruct the connection
+            'Via'                      // RFC 7230: list of proxies traversed; informational
         ]
 
         Map results = [:]

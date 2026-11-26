@@ -18,6 +18,6 @@ import goowee.elements.ElementsController
 
 class ExceptionController implements ElementsController {
     def index() {
-        throw new Exception("Questa è una normale eccezione non gestita che visualizza lo stacktrace in DEV e un messaggio di errore generico in PROD")
+        throw new Exception("This is a regular unhandled exception that displays the stack trace in DEV and a generic error message in PROD")
     }
 }

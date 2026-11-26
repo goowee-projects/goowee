@@ -113,7 +113,7 @@ class CrudController implements ElementsController {
                         transformer: 'TRANSFORM_ME',
 //                            renderTextPrefix: true,
                         multiple: true,
-                        placeholder: 'Seleziona qualcosa',
+                        placeholder: 'Select something',
                         cols: 6,
                     )
                     addField(
@@ -146,17 +146,17 @@ class CrudController implements ElementsController {
                     action: 'onGroupAction1',
                     submit: ['table'],
                     params: [
-                        s : 'Stringa',
+                        s : 'Text',
                         n : 12345,
-                        l : [1, 2, 3], // TODO: Le liste non vengono passate come params
+                        l : [1, 2, 3], // TODO: Lists are not passed as params
                         m : [firstname: 'Giangio', lastname: 'Sartori'],
                         ml: [ids: [1, 2, 3]],
-                        lm: [[id: 1], [id: 2], [id: 3]] // TODO: Le liste non vengono passate come params
+                        lm: [[id: 1], [id: 2], [id: 3]] // TODO: Lists are not passed as params
                     ],
-                    //confirmMessage: 'Vado?' // TODO: aggiungendo confirmMessage '_tableSelecttion' non viene passata
+                    //confirmMessage: 'Shall I proceed?' // TODO: Adding confirmMessage prevents '_tableSelecttion' from being passed
                 )
                 groupActions.addAction(action: 'onGroupAction2')
-                groupActions.addAction(controller: 'onGroupAction3', confirmMessage: 'Messaggio di conferma, sei sicuro?')
+                groupActions.addAction(controller: 'onGroupAction3', confirmMessage: 'Confirmation message, are you sure?')
 
                 actions.addAction(action: 'action1.with.a.very.very.long.name', icon: 'fa-arrow-alt-circle-up')
                 actions.addAction(action: 'action2', icon: 'fa-arrow-alt-circle-right')
@@ -165,7 +165,7 @@ class CrudController implements ElementsController {
                 actions.tailAction.order = 9999
                 actions.tailAction.text = TextDefault.DELETE
                 actions.unsetTailAction()
-                actions.defaultAction.tooltip = 'Modifica record'
+                actions.defaultAction.tooltip = 'Edit record'
 
                 sortable = [
                     address: 'asc',
@@ -221,7 +221,7 @@ class CrudController implements ElementsController {
                     row.cells['name'].textWrap = TextWrap.SOFT_WRAP
                     row.cells['company'].textWrap = TextWrap.LINE_WRAP
                     row.cells['company'].icon = 'fa-lightbulb'
-                    row.cells['company'].tooltip = 'Questa è una azienda'
+                    row.cells['company'].tooltip = 'This is a company'
                     row.cells['company'].url = 'https://google.com'
 
                     TCompany company = companyService.get(values.company?.id)

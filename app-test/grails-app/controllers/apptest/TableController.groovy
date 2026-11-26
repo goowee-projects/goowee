@@ -33,10 +33,10 @@ class TableController implements ElementsController {
 
     @PostConstruct
     void init() {
-        gooweeApplication.registerPrettyPrinter(TCompany, 'Dipendente in \'${it.name}\'')
-        gooweeApplication.registerPrettyPrinter('NOME_FIGO', '${it} sei un figo!')
+        gooweeApplication.registerPrettyPrinter(TCompany, 'Employee at \'${it.name}\'')
+        gooweeApplication.registerPrettyPrinter('COOL_NAME', '${it}, you are awesome!')
 
-        gooweeApplication.registerTransformer('MAIUSCOLO') { value ->
+        gooweeApplication.registerTransformer('UPPERCASE') { value ->
             return value.toString().toUpperCase()
         }
         gooweeApplication.registerTransformer('MULTIPLY') { value ->
@@ -90,15 +90,15 @@ class TableController implements ElementsController {
             ]
             labels = [
                 email : 'Runtime generated label EMAIL',
-                active: '', // Per non mostrare l'etichetta
+                active: '', // Hide the label
                 empty : '',
             ]
             transformers = [
-                address: 'MAIUSCOLO',
+                address: 'UPPERCASE',
                 salary : 'MULTIPLY',
             ]
             prettyPrinters = [
-                name: 'NOME_FIGO',
+                name: 'COOL_NAME',
             ]
             prettyPrinterProperties = [
                 salary  : [decimals: 0, symbolicCurrency: false, prefixedUnit: true],
@@ -126,8 +126,8 @@ class TableController implements ElementsController {
             // Assignment of "header", "body" and "footer" data must be done after ".eachRow" setup
             body = personService.list(params)
             footer = [
-                [actions: 'Subtotale', name: '10.000', postcode: '200'],
-                [actions: 'Totale', name: '10.000', postcode: '200'],
+                [actions: 'Subtotal', name: '10.000', postcode: '200'],
+                [actions: 'Total', name: '10.000', postcode: '200'],
             ]
             paginate = personService.count()
         }
@@ -142,7 +142,7 @@ class TableController implements ElementsController {
     }
 
     private processMyRow(TableRow row) {
-        // coloro colonna
+        // Color the column
         row.cells.name.backgroundColor = '#00dd00'
 
         row.first?.actions.removeAllActions()
@@ -159,7 +159,7 @@ class TableController implements ElementsController {
             textStyle = [TextStyle.LINE_THROUGH, TextStyle.BOLD]
 
             actions.defaultAction?.text = 'Click me!'
-            actions.defaultAction?.infoMessage = 'Ciao carissimo, come stai?'
+            actions.defaultAction?.infoMessage = 'Hello, my friend, how are you?'
             actions.defaultAction?.on(event: 'click', action: 'onActionClick')
 
             // Cell features
@@ -170,14 +170,14 @@ class TableController implements ElementsController {
             cells.name.textAlign = TextAlign.CENTER
             //cells.username.html = '<a href="http://www.google.it">' + asset.image(src: "elements/brand/logo.png") + '</a>'
 
-            // coloro riga
+            // Color the row
             backgroundColor = 'rgba(204, 0, 0, 0.3)'
 
-            //coloro cella
+            // Color the cell
             cells.address.backgroundColor = '#000077'
             cells.address.textColor = '#ffffff'
 
-            //decoloro cella
+            // Remove the cell color
             //row.cells.firstname.cssClass = ''
         }
 
@@ -236,7 +236,7 @@ class TableController implements ElementsController {
             processMyRow(row)
 
             if (row.values.username == 'user2') {
-                // coloro riga
+                // Color the row
                 row.backgroundColor = '#aa0000'
             }
         }

@@ -292,7 +292,7 @@ class CrudCustomController implements ElementsController {
                 class: TextField,
                 id: 'address',
                 help: 'Runtime help message',
-                label: 'Indirizzo (runtime label)',
+                label: 'Address (runtime label)',
             )
             addField(
                 class: NumberField,

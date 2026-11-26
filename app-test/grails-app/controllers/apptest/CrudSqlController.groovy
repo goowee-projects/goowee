@@ -74,7 +74,7 @@ class CrudSqlController implements ElementsController {
                 addField(
                     class: TextField,
                     id: 'name',
-                    help: 'Hai bisogno di aiuto? Inserisci oil nome dell\'azienda! :)',
+                    help: 'Need help? Enter the company name! :)',
                     cols: 8,
                 )
             }
@@ -145,7 +145,7 @@ class CrudSqlController implements ElementsController {
             )
             addField(
                 class: MoneyField,
-                id: 'prezzo',
+                id: 'price',
                 transformer: 'MONEY',
                 defaultValue: '3,3'
             )
@@ -231,7 +231,7 @@ class CrudSqlController implements ElementsController {
     def edit() {
         def c = buildForm(create: false)
         c.form.values = SqlUtils.get(dataSource, tblPerson, [id: params.id])
-        c.form.controls.prezzo.value = new Money(5.1)
+        c.form.controls.price.value = new Money(5.1)
         display content: c, modal: true
     }
 

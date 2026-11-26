@@ -1379,7 +1379,7 @@ When `hideInput` is enabled, scanner-speed characters are removed from a focused
 
 [[chart]]
 === Chart (abstract)
-The chart components supplied by `goowee-extra` render data with the bundled Chart.js library. `Chart` is their abstract base; use `BarChart` or `PieChart` in an application.
+The chart components supplied by `goowee-core` render data with the bundled Chart.js library. `Chart` is their abstract base; use `BarChart` or `PieChart` in an application.
 
 ==== Properties
 [cols="1,1,1,7a"]

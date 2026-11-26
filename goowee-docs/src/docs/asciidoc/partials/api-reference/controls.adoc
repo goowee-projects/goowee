@@ -549,7 +549,9 @@ c.form.with {
 |`acceptedFileTypes`
 |`List`
 |`[]`
-|List of accepted MIME types.
+|Allowed MIME types. Examples: `application/pdf`, `image/jpeg`, `image/png`, `text/plain`, `text/csv`. +
+Wildcards: `image/&#42;`, `audio/&#42;`, `video/&#42;`, `text/&#42;`, `application/&#42;`. +
+An empty list accepts all file types; Goowee does not define a fixed allowlist.
 |`maxFiles`
 |`Integer`
 |

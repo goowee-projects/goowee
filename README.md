@@ -2,7 +2,7 @@
 
 # Goowee
 
-**Build enterprise PWAs with AI or traditional coding.**
+**Build Enterprise Applications with AI or traditional coding.**
 
 Goowee is an Apache Grails plugin built with Apache Groovy. Ask the [`goowee-developer` agent](https://github.com/goowee-projects/goowee-developer) to build your app, or use the Goowee API yourself.
 
@@ -17,10 +17,6 @@ Requires **Java 21 or later** and **Grails 8**.
 3. Run `./gradlew bootRun` and open `http://localhost:8080`.
 
 To explore a working app, download the [Goowee Application Template](https://github.com/goowee-projects/goowee-app-template).
-
-## Links
-
-[Documentation](https://www.goowee.org/docs/index.html) · [Community on Discord](https://discord.gg/6yWnmT2hBj)
 
 ## License
 

@@ -4,7 +4,7 @@
 
 **Build Enterprise Applications with AI or traditional coding.**
 
-Goowee is an Apache Grails plugin built with Apache Groovy. Ask the [`goowee-developer` agent](https://github.com/goowee-projects/goowee-developer) to build your app, or use the Goowee API yourself.
+Goowee is an Apache Grails plugin built with Apache Groovy. Ask [Goowee Developer](https://github.com/goowee-projects/goowee-developer) to build your app, or use the [Goowee API](https://www.goowee.org/docs/index.html) yourself.
 
 It provides a consistent, responsive interface, authentication, multi-tenancy, and internationalization. Deploy on your own infrastructure or in the cloud.
 

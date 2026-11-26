@@ -1,6 +1,6 @@
 [[features]]
 == Features
-A Goowee application is a container for the features you want to make available to users. Define features in the `init` closure. The main menu on the right side of the GUI lists the features each user can access, based on their permissions.
+A Goowee application is a container for the features you want to make available to users. Register features in the `onInit` closure. The main menu on the right side of the GUI lists the features each user can access, based on their permissions.
 
 Implement the features in <<controllers>>.
 

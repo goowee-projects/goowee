@@ -3,7 +3,7 @@
 Goowee is an https://grails.org/[Apache Grails,window=_blank] plugin designed for developing enterprise applications.
 
 === Create an application
-Use https://start.grails.org[Grails Forge,window=_blank] to generate a *Web Application* with at least *Java 21*. Goowee does not support earlier Java versions. Then add the following repository and dependency to your newly created Grails application:
+Use https://start.grails.org[Grails Forge,window=_blank] to generate a *Web Application* with *Java 21 or later*. Goowee does not support earlier Java versions. Then add the following repository and dependency to your newly created Grails application:
 
 .build.gradle
 [source,groovy,subs="attributes,normal"]
@@ -32,10 +32,10 @@ class BootStrap {
     }
 }
 ----
-<1> It's okay to leave the `onInit` closure empty, but the declaration must exist otherwise the application will not be initialized and you won't be able to login.
+<1> The `onInit` closure can be empty, but it must be declared; otherwise, the application will not be initialized and you will not be able to sign in.
 
 === Optional steps
-Configure the application to display Spring Boot and Goowee logs. Add these properties to:
+To display Spring Boot and Goowee logs, add these properties to:
 
 .grails-app/conf/application.yml
 [source,yaml]
@@ -47,7 +47,7 @@ logging:
 ----
 
 === Login
-Start the application from its root directory with `./gradlew bootRun`. When it starts, open `http://localhost:8080` and sign in as the system administrator with username `super` and password `super`.
+Start the application from its root directory with `./gradlew bootRun`. Once it starts, open `http://localhost:8080` and sign in as the system administrator with username `super` and password `super`.
 
 image::images/api-reference/application-running.webp[The application running]
 

@@ -1,9 +1,9 @@
 [[plugins]]
 == Plugins
-Goowee leverages the Apache Grails plugins infrastructure adding some useful methods.
+Goowee uses the Apache Grails plugin infrastructure and adds several useful methods.
 
 === onPluginInstall()
-Gets executed only the first time the application is run or when a new Goowee Plugin is added as a dependency in `build.gradle`. It is used to install the plugin.
+Runs only the first time the application starts or when a Goowee plugin is added as a dependency in `build.gradle`. It installs the plugin.
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]
@@ -59,6 +59,50 @@ class BootStrap {
     def init = {
 
         gooweeApplication.afterInit {
+            // ...
+        }
+
+    }
+}
+----
+
+=== beforeTenantInit()
+Available in Goowee plugins. It runs during application startup for each tenant, before the application's `onTenantInit()` callback. The closure receives the tenant ID. No HTTP session is available during this startup callback.
+
+Use this hook in plugins to perform setup before the application initializes a tenant. Application code can use `onTenantInit()` for its own tenant initialization.
+
+.grails-app/init/BootStrap.groovy
+[source,groovy]
+----
+class BootStrap {
+
+    GooweeApplication gooweeApplication
+
+    def init = {
+
+        gooweeApplication.beforeTenantInit { String tenantId ->
+            // ...
+        }
+
+    }
+}
+----
+
+=== afterTenantInit()
+Available in Goowee plugins. It runs during application startup for each tenant, after the application's `onTenantInit()` callback. The closure receives the tenant ID. No HTTP session is available during this startup callback.
+
+Use this hook in plugins to perform setup after the application initializes a tenant.
+
+.grails-app/init/BootStrap.groovy
+[source,groovy]
+----
+class BootStrap {
+
+    GooweeApplication gooweeApplication
+
+    def init = {
+
+        gooweeApplication.afterTenantInit { String tenantId ->
             // ...
         }
 

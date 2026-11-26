@@ -1,10 +1,10 @@
 [[transitions]]
 == Transitions
-A Transition is a set of instructions sent from the server to the client (browser) to alter the currently displayed content. For instance, when selecting a book from a list we want a text field to be populated with its description. To implement such behaviours we use transitions.
+A transition is a set of instructions sent from the server to the client (browser) to update the currently displayed content. For example, selecting a book from a list can populate a text field with its description. Use transitions to implement this behavior.
 
-NOTE: Please refer to <<controls>> and <<components>> to see what events are available to each component.
+NOTE: See <<controls>> and <<components>> for the events available to each component.
 
-NOTE: Refer to <<websockets>> to understand how to trigger events programmatically from sources other than the user input.
+NOTE: See <<websockets>> to learn how to trigger events programmatically from sources other than user input.
 
 .grails-app/controllers/ReadController.groovy
 [source,groovy]
@@ -57,7 +57,7 @@ class ReadController implements ElementsController {
 
 image::images/api-reference/reference-book-transition.png[onChange transition]
 
-To finish it up we register a Pretty Printer for the book record and tell the 'Select' control to use it to display the items.
+To finish, register a pretty printer for the book record and configure the `Select` control to use it when displaying items.
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]

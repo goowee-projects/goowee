@@ -25,7 +25,7 @@ A `CustomType` is a domain value that participates in Goowee's typed-value
 protocol. It knows how to:
 
 * identify itself with a unique type name;
-* serialise itself before it is sent to the browser;
+* serialize itself before it is sent to the browser;
 * restore itself from the value submitted by the browser;
 * render a human-readable representation.
 
@@ -169,7 +169,7 @@ class ShippingOption implements CustomType {
 ----
 
 The no-argument constructor is required because `Types` creates an empty
-instance during registration and deserialisation. The `serialize()` method
+instance during registration and deserialization. The `serialize()` method
 converts the enum to its stable name and includes the related shipping data,
 while `deserialize()` restores the complete object. The
 `shipping.method.STANDARD`, `shipping.method.EXPRESS` and
@@ -274,4 +274,4 @@ assert shipping.deliveryDays == 1
 
 This separation keeps the user interface responsible only for choosing an
 option, while the domain code receives a meaningful object with an explicit
-value, serialisation format and display behaviour.
+value, serialization format, and display behavior.

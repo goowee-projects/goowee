@@ -1,12 +1,12 @@
 [[features]]
 == Features
-A Goowee application is a container for a finite set of features that you want to expose to the users. Features are defined in the `init` closure. The main menu on the right side of the GUI lists all the features accessible by a user depending on its privileges.
+A Goowee application is a container for the features you want to make available to users. Define features in the `init` closure. The main menu on the right side of the GUI lists the features each user can access, based on their permissions.
 
-Once defined, features are then implemented in <<controllers>>.
+Implement the features in <<controllers>>.
 
 [[registerFeature]]
 === registerFeature()
-Registers a Feature.
+Registers a feature.
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]
@@ -49,13 +49,13 @@ class BootStrap {
 ----
 <1> Name of the controller that implements the feature
 <2> Name of the action to execute when the feature is clicked (default: `index`)
-<3> Menu item icon, you can choose one from https://fontawesome.com/[Font Awesome,window=_blank]
-<4> The feature will be displayed only to the users configured with the roles in the list (default: `ROLE_USER`)
-<5> A feature with just a controller can be created to group features. This will become the parent feature.
-<6> Tells the feature which one is its parent
+<3> Menu item icon. Choose one from https://fontawesome.com/[Font Awesome,window=_blank].
+<4> The feature is displayed only to users with one of the roles in the list (default: `ROLE_USER`).
+<5> A feature with only a controller can group other features and act as their parent.
+<6> Specifies the feature's parent.
 
 ****
-IMPORTANT: The controller class must be annotated with `@Secured(['ROLE_CAN_EDIT_BOOKS'])` to actually block all users without that authority from accessing the feature. See: <<controllers>>
+IMPORTANT: To prevent users without the required authority from accessing the feature, annotate its controller class with `@Secured(['ROLE_CAN_EDIT_BOOKS'])`. See <<controllers>>.
 ****
 
 Available options:
@@ -131,7 +131,7 @@ Available options:
 |===
 
 === registerUserFeature()
-Registers a Feature in the _User Menu_. For the available options see: <<registerFeature>>
+Registers a feature in the _User Menu_. See <<registerFeature>> for the available options.
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]
@@ -155,7 +155,7 @@ class BootStrap {
 ----
 
 === registerPrettyPrinter()
-Registers a string template to render an instance of a specific _Class_. A pretty printer can be registered with just a name, in this case it must be explicitly assigned to a Control when defining it.
+Registers a string template for rendering an instance of a specific _Class_. You can also register a pretty printer by name alone; in that case, assign it explicitly to a control when defining the control.
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]
@@ -174,16 +174,16 @@ class BootStrap {
     }
 }
 ----
-<1> Registers a pretty printer for the `TProject` domain class. The `it` variable will refer to an instance of a `TProject` in this case we will display the `name` property
-<2> Registers a pretty printer called `PROJECT_ID`. Since we know that the project id is going to be a `String` we can call the `padLeft()` method on it
+<1> Registers a pretty printer for the `TProject` domain class. Here, `it` refers to a `TProject` instance, and the template displays its `name` property.
+<2> Registers a pretty printer called `PROJECT_ID`. Since the project ID is a `String`, the template can call its `padLeft()` method.
 
 === registerTransformer()
-Registers a callback used to render an instance of a specific _Class_. To make it work it must be explicitly assigned to a Control when defining it.
+Registers a callback for rendering an instance of a specific _Class_. Assign it explicitly to a control when defining the control.
 
-NOTE: The closure will receive the value that is being transformed and must return a _String_.
+NOTE: The closure receives the value being transformed and must return a _String_.
 
 ****
-IMPORTANT: Be careful when using transformers since it may impact performances when the closure takes long time to execute.
+IMPORTANT: Keep transformer closures fast; slow closures can affect performance.
 ****
 
 .grails-app/init/BootStrap.groovy
@@ -207,7 +207,7 @@ class BootStrap {
 ----
 
 === registerCredits()
-Registers a role along with the people who took that role during the development of the project. When a credit reference is registered a new menu item will appear in the _User Menu_.
+Registers project credits, including the people who contributed during development. A new item appears in the _User Menu_ when credits are registered.
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]

@@ -1,13 +1,13 @@
 [[exceptions]]
 == Exceptions
 
-When developing the application all unhandled exceptions will be rendered to the browser as follows.
+During development, all unhandled exceptions are displayed in the browser as follows.
 
-NOTE: In production, all the details will be hidden and just the `sad face` will be displayed.
+NOTE: In production, exception details are hidden and only a `sad face` is displayed.
 
 image::images/api-reference/reference-book-exception.png[onChange transition]
 
-To display a message box instead you can add an Exception handler to the controller:
+To display a message box instead, add an exception handler to the controller:
 
 .grails-app/controllers/ReadController.groovy
 [source,groovy]

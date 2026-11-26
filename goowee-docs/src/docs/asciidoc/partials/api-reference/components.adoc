@@ -3,9 +3,9 @@
 
 === Component (abstract)
 
-Everything in Goowee is a `Component`. A component is itself a tiny web application. Each component has at least an HTML view, CSS styling, and JavaScript logic. A component can provide a supporting `Service` or `Controller`.
+Everything in Goowee is a `Component`. A component is a small web application with an HTML view, CSS styling, and JavaScript logic. It can also provide a supporting `Service` or `Controller`.
 
-Unless we want to create a new component, there is no need to know HTML, CSS, or JavaScript to develop a Goowee application.
+You do not need to know HTML, CSS, or JavaScript to develop a Goowee application unless you want to create a new component.
 
 Each component extends the base class `Component`, so all components share the following properties and methods.
 
@@ -139,9 +139,9 @@ A `GridColumn` is returned by `Grid.addColumn()` and holds the components arrang
 
 [[header_]]
 === Header
-A `Header` is a bar at the top of the `Content` area. It can be sticky on top or it can scroll with the content. Its main purpose is to hold navigation buttons.
+A `Header` is a bar at the top of the `Content` area. It can stay fixed at the top or scroll with the content. Its main purpose is to hold navigation buttons.
 
-A `Header` can have a `backButton` on the left and a `nextButton` on the right. In the middle we can find the `title`.
+A `Header` can have a `backButton` on the left, a `nextButton` on the right, and a `title` in the middle.
 
 ==== Properties
 [cols="1,1,1,7a"]
@@ -201,7 +201,7 @@ A `Header` can have a `backButton` on the left and a `nextButton` on the right. 
 === Table
 A `Table` is a convenient way to display a recordset.
 
-Each table can implement some <<table-filters>> and each row can have its own set of action buttons. For each row, depending on the logged in user and the status of the record we can define which actions are available.
+Each table can have <<table-filters>>, and each row can have its own action buttons. The available actions can depend on the logged-in user and the record's status.
 
 ==== Properties
 [cols="1,1,1,7a"]
@@ -501,12 +501,12 @@ c.table.body.eachRow { TableRow row, Map values -> // <1>
 
 [[recordsets]]
 ==== Recordsets
-What can we load a table with?
+What data can you use to populate a table?
 
 ===== List of Lists
-Loading a table with a List of Lists is possible, the sequence will determine how each column will be mapped to each value. There is no hard relationship between the displayed column name and the value.
+You can populate a table with a list of lists. The position of each value determines the column it appears in, so column names are not tied to specific values.
 
-For this reason we suggest using <<list-of-maps>> instead.
+For this reason, we recommend using a <<list-of-maps>> instead.
 
 [source,groovy]
 ----
@@ -524,7 +524,7 @@ c.table.body = [
 
 [[list-of-maps]]
 ===== List of Maps
-We can load a table with a "recordset" style data structure like the List of Maps. This way each column will display exactly the value associated to the key of the record (`Map`) having the same name of the column.
+You can also populate a table with a recordset-style data structure such as a list of maps. Each column then displays the value associated with the matching key in each record (`Map`).
 
 [source,groovy]
 ----
@@ -541,9 +541,9 @@ c.table.body = [
 ----
 
 ===== List of POGOs
-A List of _Plain Old Groovy Objects_ can also be used to load a table.
+You can also populate a table with a list of _Plain Old Groovy Objects_ (POGOs).
 
-Given this POGO:
+For example, given this POGO:
 [source,groovy]
 ----
 class Book {
@@ -554,7 +554,7 @@ class Book {
 }
 ----
 
-We can load our table:
+Populate the table as follows:
 
 [source,groovy]
 ----
@@ -571,7 +571,7 @@ c.table.body = [
 ----
 
 ===== GORM Recordsets
-Using a https://gorm.grails.org/latest/hibernate/manual/[GORM Recordset,window=_blank] is an easy way to load a table. See how to build a xref:{quick-start-xref}[CRUD].
+You can also populate a table from a https://gorm.grails.org/latest/hibernate/manual/[GORM recordset,window=_blank]. See how to build a xref:{quick-start-xref}[CRUD].
 
 [source,groovy]
 ----
@@ -586,7 +586,7 @@ c.table.paginate = TBook.count()
 
 [[table-row-actions]]
 ==== Row Actions
-There are two ways to configure row actions. All at once and on a row basis. To set all rows to have the same actions we can set them up in the table namespace as follows:
+You can configure row actions for all rows at once or individually. To give every row the same actions, configure them in the table namespace:
 
 [source,groovy]
 ----
@@ -601,7 +601,7 @@ c.table.with {
 ----
 <1> See <<button>> for all the `Button` properties
 
-If we need to configure the row actions depending on the record values or other logics we can do it from the `eachRow` closure.
+To configure row actions based on record values or other conditions, use the `eachRow` closure.
 
 [source,groovy]
 ----
@@ -624,7 +624,7 @@ c.table.with {
 
 [[table-group-actions]]
 ==== Group Actions
-The table can be configured to select multiple rows ad apply to all of them the same action.
+Configure the table to select multiple rows and apply the same action to all of them.
 
 [source,groovy]
 ----
@@ -642,7 +642,7 @@ c.table.with {
 
 [[table-filters]]
 === TableFilters
-Each table can have its own search `Form` to filter results. When submitting the filters, the action containing them will be reloaded and the filters values will be available in the Grails `params` map.
+Each table can have its own search `Form` to filter results. When the filters are submitted, the action that contains them is reloaded, and their values are available in the Grails `params` map.
 
 Use the parent `Table`'s `getFilter(id)` and `setFilter(id, value)` methods to read or update one filter. Pass the `id` used with `addField()`; the `filters.` prefix is used for the localized label, not for the filter id. `getFilter()` resolves the current value from the request, action session, or default value. `setFilter()` updates the control and synchronizes the value with the action session and request parameters.
 
@@ -684,7 +684,7 @@ c.table.with {
     Map filters = c.table.filterParams // <1>
 }
 ----
-<1> The submitted values of the filters fields.
+<1> The submitted values of the filter fields.
 
 ==== Properties
 [cols="1,1,1,7a"]
@@ -720,9 +720,9 @@ c.table.with {
 
 [[form]]
 === Form
-A form is the component we use to layout <<components>> and <<controls>>. `Form` implements the grid system, once activated we have 12 columns we can use to arrange form fields horizontally.
+A `Form` lays out <<components>> and <<controls>>. When its grid system is enabled, it provides 12 columns for arranging form fields horizontally.
 
-When the application is accessed from a mobile phone all the fields will be displayed in a single column. This makes them usable when the available space is not enough to organise them in a meaningful way.
+On mobile devices, all fields are displayed in a single column, making them easier to use when horizontal space is limited.
 
 [source,groovy]
 ----
@@ -823,7 +823,7 @@ See <<form-field>> and <<controls>>.
 
 [[form-field]]
 === FormField
-A form field wraps a `Control` with a label and sets it into the grid system. A `FormField` is automatically created each time we add a field to a `Form` calling its `addField()` method.
+A form field wraps a `Control` with a label and places it in the grid. A `FormField` is created automatically whenever you add a field to a `Form` using its `addField()` method.
 
 ==== Properties
 [cols="1,1,1,7a"]
@@ -894,9 +894,9 @@ A form field wraps a `Control` with a label and sets it into the grid system. A 
 
 [[button]]
 === Button
-Buttons are key components of the GUI. We use buttons to let the user trigger actions. The `Button` component can provide the user with multiple actions to be executed.
+Buttons let users trigger actions in the GUI. A `Button` can expose multiple actions.
 
-A single button can display two directly accessible actions, the `defaultAction` and `tailAction` and a menu with a list of links, the `actionMenu`.
+A single button can display two directly accessible actions, `defaultAction` and `tailAction`, plus a menu of links called `actionMenu`.
 
 [%autowidth]
 [cols="2,2,2"]
@@ -969,13 +969,13 @@ c.form.with {
 
 [[menu]]
 === Menu
-A menu is the component we use to organize the `Shell` and `Button` menus. It can hold a tree of items with a parent-children structure but we use only one level to group items (See <<features>>).
+A `Menu` organizes the menus in the `Shell` and `Button` components. Although it can represent a tree of parent and child items, Goowee uses only one level to group items. See <<features>>.
 
 This component is meant for internal use only.
 
 [[link]]
 === Link
-Links are everywhere, they are in the `Shell` menus, in `Buttons` actions, `TextField` or `Select` actions, and they can be used as stand alone. Links and buttons share the same properties.
+Links appear in `Shell` menus, `Button` actions, and `TextField` or `Select` actions. They can also be used on their own. Links and buttons share the same properties.
 
 [source,groovy]
 ----
@@ -1301,7 +1301,7 @@ A `Timer` is a link that triggers an `interval` event at a fixed interval.
 
 [[separator]]
 === Separator
-Wa can use separators to space between a set of fields and another one in a form.
+Use separators to add space between groups of fields in a form.
 
 ==== Properties
 [cols="1,1,1,7a"]

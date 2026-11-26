@@ -1,9 +1,9 @@
 [[application]]
 == Application
-`GooweeApplication` is the main component in charge of the application setup, mainly used in `BootStrap.groovy`.
+`GooweeApplication` is the main component responsible for setting up the application. It is mainly used in `BootStrap.groovy`.
 
 === onInstall()
-Gets executed only the first time the application is run.
+Runs only the first time the application starts.
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]
@@ -23,7 +23,7 @@ class BootStrap {
 ----
 
 === onTenantInstall()
-Installs the tenant. This closure gets called only once when the application is run for the first time. It is executed for the DEFAULT tenant and when a new tenant is created from the super admin GUI.
+Installs a tenant. This closure runs once when the application first starts to install the `DEFAULT` tenant, and whenever a new tenant is created through the super admin GUI.
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]
@@ -41,12 +41,12 @@ class BootStrap {
     }
 }
 ----
-<1> The `tenantId` tells what tenant is being installed
+<1> The `tenantId` identifies the tenant being installed.
 
 === onDevInstall()
-Gets executed only once if the application is run from the IDE (only when the development environment is active). You can use this to preload data to test the application.
+Runs once when the application is started from the IDE in the development environment. Use it to preload data for testing.
 
-This closure will NOT be executed when the application is run as JAR, WAR or when the test environment is active.
+This closure does not run when the application is packaged as a JAR or WAR, or when the test environment is active.
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]
@@ -66,9 +66,9 @@ class BootStrap {
 ----
 
 === onUpdate()
-On application releases, may you need to update the database or any other component, you can programmatically do it adding an `onUpdate` closure.
+When releasing an application, you may need to update the database or another component. You can do this programmatically by adding an `onUpdate` closure.
 
-These closures get executed only once when the application starts up. The execution order is defined by the argument, in alphabetical order.
+Each closure runs only once when the application starts. Closures run in alphabetical order by the version string passed as the argument.
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]
@@ -100,7 +100,7 @@ class BootStrap {
 <1> The closures will be executed in the following order based on the specified version string: `2021-01-02`, `2021-01-03`, `2021-01-04`, `2021-01-05`.
 
 === onInit()
-Initializes the application. This closure gets called each time the application is executed.
+Initializes the application. This closure runs each time the application starts.
 
 This call is required, even when the application has no custom initialization code.
 Call `gooweeApplication.onInit()` once inside the application's `BootStrap.init`, after registering any lifecycle callbacks.
@@ -122,22 +122,44 @@ class BootStrap {
     }
 }
 ----
-<1> Injects an instance of the `GooweeApplication`
-<2> The `onInit { ... }` closure is executed each time the application starts up
+<1> Injects an instance of `GooweeApplication`.
+<2> The `onInit { ... }` closure runs each time the application starts.
 
-=== afterLogin()
-Gets executed after the user logged in. The session is active, you can set session variables from here.
+=== onTenantInit()
+Runs during application startup for each tenant, after plugin `beforeTenantInit()` callbacks and before plugin `afterTenantInit()` callbacks. The closure receives the tenant ID. No HTTP session is available during this startup callback.
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]
 ----
 class BootStrap {
 
+    GooweeApplication gooweeApplication
+
+    def init = {
+
+        gooweeApplication.onTenantInit { String tenantId ->
+            // ...
+        }
+
+    }
+}
+----
+
+=== afterLogin()
+Runs after the user signs in. The session is active, so you can set session variables here.
+
+.grails-app/init/BootStrap.groovy
+[source,groovy]
+----
+import grails.web.servlet.mvc.GrailsHttpSession
+
+class BootStrap {
+
     SecurityService securityService // <1>
 
     def init = {
 
-        securityService.afterLogin {
+        securityService.afterLogin { String tenantId, GrailsHttpSession session ->
             // ...
         }
 
@@ -147,7 +169,7 @@ class BootStrap {
 <1> Injects an instance of the `SecurityService`
 
 === afterLogout()
-Runs after the user has logged in. The session is not active, so session variables cannot be managed here.
+Runs during logout, before the session is invalidated. Session-scoped data is still available in this callback.
 
 .grails-app/init/BootStrap.groovy
 [source,groovy]
@@ -158,7 +180,7 @@ class BootStrap {
 
     def init = {
 
-        securityService.afterLogout {
+        securityService.afterLogout { String tenantId ->
             // ...
         }
 

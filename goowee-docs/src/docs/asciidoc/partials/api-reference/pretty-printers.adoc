@@ -1,7 +1,7 @@
 [[pretty-printer-properties]]
 == PrettyPrinterProperties
 
-Every value in Goowee gets displayed by the `PrettyPrinter` subsystem. <<components>> and <<controls>> can be configured to override the user settings and the system settings. Refer to the documentation of each component to see how those settings can be configured.
+The `PrettyPrinter` subsystem renders every value in Goowee. You can configure <<components>> and <<controls>> to override user and system settings. See each component's documentation for details.
 
 [cols="1,1,1,7a"]
 |===

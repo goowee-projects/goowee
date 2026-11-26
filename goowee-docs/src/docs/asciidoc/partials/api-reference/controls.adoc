@@ -3,9 +3,9 @@
 
 === Control (abstract)
 
-Controls are Components that can hold a value. Controls are the main way to interact with the application. We mainly use controls in forms to easily submit their values.
+Controls are components that can hold values. They are the main way users interact with the application, and are commonly used in forms to submit those values.
 
-Each control extends the base class `Control`, so each control shares the following properties and methods.
+Each control extends the base class `Control` and shares the following properties and methods.
 
 ==== Properties
 [cols="1,1,1,7a"]
@@ -418,7 +418,7 @@ c.form.with {
 
 [[multiple-checkbox]]
 === MultipleCheckbox
-Manage multiple checkboxes as it was a Select control with many options. See <<Select>>.
+Use this control to manage multiple checkboxes like a `Select` control with multiple options. See <<Select>>.
 
 ==== Properties
 [cols="1,1,1,7a"]
@@ -469,7 +469,7 @@ Manage multiple checkboxes as it was a Select control with many options. See <<S
 
 [[textarea]]
 === Textarea
-A text area who can span multiple lines of a form.
+A text area that can span multiple lines in a form.
 
 [source,groovy]
 ----

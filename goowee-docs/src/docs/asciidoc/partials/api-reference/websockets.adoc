@@ -66,7 +66,7 @@ channel registered through `TransitionService.subscribe()`.
 
 === Channels
 
-Channels are registered during application initialisation. A channel name is
+Channels are registered during application initialization. A channel name is
 an application-defined string; use a name that describes the group of clients
 that should receive the same transition.
 

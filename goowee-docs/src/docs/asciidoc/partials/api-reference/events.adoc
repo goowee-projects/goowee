@@ -1,8 +1,8 @@
 [[events]]
 == Events
-Each `Component` can trigger one or more events. Please see <<components>> and <<controls>> to see what events each specific component can trigger.
+Each `Component` can trigger one or more events. See <<components>> and <<controls>> for the events supported by each component.
 
-Each available event has a lowercase name. We can configure the event directly when creating a component as follows.
+Each event has a lowercase name. Configure an event directly when creating a component as follows.
 
 [source,groovy]
 ----
@@ -58,9 +58,9 @@ c.form.with {
     }
 }
 ----
-<1> We reference the component held by the `FormField`, not the form field itself
-<2> Configuring the `load` event
-<3> Configuring the `change` event for the `books` controller.
+<1> References the component held by the `FormField`, not the form field itself.
+<2> Configures the `load` event.
+<3> Configures the `change` event for the `books` controller.
 
 The following properties can be specified when configuring an event on a component.
 

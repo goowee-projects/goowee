@@ -420,7 +420,9 @@ body {
     position: relative;
     z-index: 1;
     max-width: 610px;
+    margin: 0 auto;
     padding-bottom: 12px;
+    text-align: center;
 }
 
 .eyebrow {
@@ -437,7 +439,7 @@ body {
 
 .hero h1 {
     max-width: 650px;
-    margin: 0;
+    margin: 0 auto;
     font-size: clamp(42px, 5.3vw, 68px);
     font-weight: 720;
     line-height: 1.06;
@@ -450,15 +452,28 @@ body {
 
 .hero-actions {
     max-width: 520px;
+    margin: 0 auto;
 }
 
 .hero-description {
     max-width: none;
     margin: 24px 0 12px;
-    padding-right: clamp(16px, 2.4vw, 36px);
+    padding: 0;
     color: var(--muted);
     font-size: 18px;
     line-height: 1.8;
+    text-align: center;
+}
+
+.hero-description.hero-tagline {
+    margin-top: 8px;
+    padding: .75rem;
+    font-size: clamp(21px, 2.2vw, 28px);
+    line-height: 1.5;
+}
+
+.hero-description.hero-tagline code {
+    white-space: nowrap;
 }
 
 .hero-description.hero-license {
@@ -581,6 +596,25 @@ body {
     border-radius: 14px;
     background: var(--surface);
     box-shadow: 0 4px 15px var(--card-shadow);
+}
+
+.feature-anyone {
+    display: grid;
+    min-height: 0;
+    grid-column: 1 / -1;
+    place-items: center;
+    text-align: center;
+}
+
+.feature-anyone > p {
+    max-width: 760px;
+    font-size: 19px;
+}
+
+.feature-anyone a {
+    color: var(--primary-background-color);
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
 .feature-web {

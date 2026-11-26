@@ -261,6 +261,8 @@ class PersonController implements ElementsController {
 
 Use https://gorm.grails.org/["GORM, the Grails Object Relational Mapper",window=_blank] to map database tables to domain classes. For example:
 
+In Grails 8, domain properties are nullable by default. Add `nullable: false` to the constraints for required properties; leave optional properties out of the constraints.
+
 [source, groovy]
 ./grails-app/domain/TPerson.groovy
 ----
@@ -271,7 +273,8 @@ class TPerson implements GormEntity, MultiTenant<TPerson> { //<1>
     String address
 
     static constraints = {
-        address nullable: true
+        firstname nullable: false
+        lastname nullable: false
     }
 }
 
@@ -383,6 +386,7 @@ class TMovie implements GormEntity, MultiTenant<TMovie> {
 
     static constraints = {
         title nullable: false
+        released nullable: false
     }
 }
 ----

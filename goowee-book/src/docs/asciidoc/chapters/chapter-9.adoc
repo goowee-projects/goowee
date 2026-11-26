@@ -31,6 +31,10 @@ class TBook implements GormEntity, MultiTenant<TBook> {
     Boolean taken
 
     static constraints = {
+        title nullable: false
+        author nullable: false
+        description nullable: false
+        taken nullable: false
     }
 
 }

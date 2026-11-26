@@ -23,6 +23,10 @@ String name
     static hasMany = [
         emplyees: TPerson,
     ]
+
+    static constraints = {
+        name nullable: false
+    }
 }
 ----
 
@@ -55,11 +59,10 @@ LocalDateTime dateCreated
     ]
 
     static constraints = {
-        address nullable: true
-        city nullable: true
-        postCode nullable: true
-        state nullable: true
-        country nullable: true
+        firstname nullable: false
+        lastname nullable: false
+        birthdate nullable: false
+        company nullable: false
     }
 }
 ----

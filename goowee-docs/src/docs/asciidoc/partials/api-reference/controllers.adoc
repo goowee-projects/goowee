@@ -508,22 +508,7 @@ The `display` method is a key Goowee feature. It renders the GUI on the server a
 |`infoMessage`
 |`String`
 |
-|Informational message to display instead of executing the invocation.
-
-|`infoMessageArgs`
-|`List`
-|
-|Arguments used to interpolate `infoMessage`.
-
-|`confirmMessageArgs`
-|`List`
-|
-|Arguments used to interpolate an invocation's `confirmMessage`.
-
-|`confirmMessageOnConfirm`
-|`InvocationDefinition` or `Map`
-|
-|Invocation to execute when the user confirms `confirmMessage`.
+|Informational message to display instead of running the click invocation associated with a message. This option applies when `message`, `confirmMessage`, or `errorMessage` is also specified.
 
 |`modal`
 |`Boolean`

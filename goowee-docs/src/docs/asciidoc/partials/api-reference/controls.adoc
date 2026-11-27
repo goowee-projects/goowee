@@ -209,7 +209,7 @@ Displays a list of options to choose from.
 |`options`
 |`Map`
 |`[]` (resolved options)
-|Options will be set from the Map items (key/value)
+|Map of option values to display labels. For example, `[draft: 'Draft', final: 'Final']` creates two options: `draft` and `final` are the submitted values, and `Draft` and `Final` are their labels.
 |`keys`
 |`List<String>`
 |`[]`

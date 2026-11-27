@@ -602,13 +602,12 @@ body {
     display: grid;
     min-height: 0;
     grid-column: 1 / -1;
-    place-items: center;
-    text-align: center;
+    align-items: center;
+    text-align: left;
 }
 
-.feature-anyone > p {
-    max-width: 760px;
-    font-size: 19px;
+.feature-card.feature-anyone > p {
+    max-width: none;
 }
 
 .feature-anyone a {

@@ -208,7 +208,7 @@ Displays a list of options to choose from.
 |Options will be set from the Enum. The key of each item will match the value of the item itself.
 |`options`
 |`Map`
-|`[]` (resolved options)
+|`[]`
 |Map of option values to display labels. For example, `[draft: 'Draft', final: 'Final']` creates two options: `draft` and `final` are the submitted values, and `Draft` and `Final` are their labels.
 |`keys`
 |`List<String>`

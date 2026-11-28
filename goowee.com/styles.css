@@ -1226,14 +1226,7 @@ body {
     font-weight: 700;
 }
 
-.quickstart-shell-group.quickstart-shell-final {
-    margin-top: 16px;
-    padding-top: 12px;
-    border-top: 1px solid #3b4047;
-}
-
-.quickstart-run,
-.quickstart-deploy {
+.quickstart-run {
     display: grid;
     grid-template-columns: minmax(0, 0.75fr) minmax(360px, 1.25fr);
     grid-template-areas:
@@ -1246,13 +1239,11 @@ body {
     margin-top: 18px;
 }
 
-.quickstart-run > .card-heading,
-.quickstart-deploy > .card-heading {
+.quickstart-run > .card-heading {
     grid-area: heading;
 }
 
-.quickstart-run > p,
-.quickstart-deploy > p {
+.quickstart-run > p {
     grid-area: description;
     max-width: none;
     margin: 0;
@@ -1270,8 +1261,7 @@ body {
     grid-area: terminal;
 }
 
-.quickstart-run .quickstart-prompt,
-.quickstart-deploy .quickstart-prompt {
+.quickstart-run .quickstart-prompt {
     margin: 0;
 }
 
@@ -1487,8 +1477,7 @@ body {
         margin-left: auto;
     }
 
-    .quickstart-run,
-    .quickstart-deploy {
+    .quickstart-run {
         grid-template-columns: 1fr;
         grid-template-areas:
             "heading"
@@ -1497,8 +1486,7 @@ body {
         row-gap: 16px;
     }
 
-    .quickstart-run > .card-heading,
-    .quickstart-deploy > .card-heading {
+    .quickstart-run > .card-heading {
         margin-bottom: 0;
     }
 }

@@ -943,7 +943,7 @@ body {
 
 .quickstart-hero {
     max-width: 820px;
-    margin: 0 auto 60px;
+    margin: 0 auto 52px;
     text-align: center;
 }
 
@@ -983,7 +983,7 @@ body {
 }
 
 .quickstart-section-heading .eyebrow {
-    margin: 0 0 12px;
+    margin: 0;
 }
 
 .quickstart-section-heading h2 {
@@ -996,6 +996,7 @@ body {
 .quickstart-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: stretch;
     gap: 16px;
 }
 
@@ -1006,17 +1007,71 @@ body {
     padding: 22px;
 }
 
+.quickstart-ai {
+    display: grid;
+    grid-template-columns: minmax(0, 0.75fr) minmax(360px, 1.25fr);
+    grid-template-areas:
+        "heading heading"
+        "description prompt";
+    align-items: start;
+    grid-column: span 3;
+    min-height: 0;
+    column-gap: 30px;
+    row-gap: 0;
+}
+
+.quickstart-code-heading {
+    grid-column: 1 / -1;
+    margin: 36px 0 4px;
+}
+
+.quickstart-code-heading .eyebrow {
+    letter-spacing: normal;
+}
+
+.quickstart-ai > .card-heading {
+    grid-area: heading;
+}
+
+.quickstart-step.quickstart-ai > .quickstart-ai-description {
+    grid-area: description;
+    max-width: none;
+    margin: 0;
+    color: var(--muted);
+    font-size: 16px;
+    line-height: 1.7;
+}
+
+.quickstart-grid .quickstart-step.quickstart-ai > .quickstart-prompt {
+    grid-area: prompt;
+    margin: 0;
+}
+
+.quickstart-ai-prompt .quickstart-shell-label {
+    color: var(--muted);
+}
+
+.quickstart-prompt.quickstart-ai-prompt {
+    white-space: normal;
+}
+
+.quickstart-ai-prompt-code {
+    margin: 0;
+    color: var(--diagram-ink);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    font-size: 14px;
+    line-height: 1.75;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+}
+
 .quickstart-traditional {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 12px 32px;
     min-height: 0;
-    margin-top: 0;
-}
-
-.quickstart-traditional-heading .eyebrow {
-    letter-spacing: normal;
+    margin-top: 18px;
 }
 
 .quickstart-traditional > .card-heading,
@@ -1381,7 +1436,7 @@ body {
     }
 
     .quickstart-hero {
-        margin-bottom: 44px;
+        margin-bottom: 52px;
     }
 
     .quickstart-hero h1 {
@@ -1404,6 +1459,16 @@ body {
     .quickstart-step {
         min-height: 0;
         padding: 22px;
+    }
+
+    .quickstart-ai {
+        grid-column: auto;
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "heading"
+            "description"
+            "prompt";
+        row-gap: 16px;
     }
 
     .quickstart-traditional {
